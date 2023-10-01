@@ -160,6 +160,7 @@ def drink_topping_script(drink, topping):
     df = pd.DataFrame()
     df["drink_id"] = drink
     df["topping_id"] = topping
+    df = df.rename_axis("drink_topping_id")
     df.to_csv("drink_topping.csv")
 
 
@@ -199,7 +200,7 @@ if __name__ == "__main__":
             topping_ids.append(y)
 
     
-    print(flattenedList)
+    # print(flattenedList)
 
     customers_script(customers)
     drink_topping_script(drink_ids, topping_ids)

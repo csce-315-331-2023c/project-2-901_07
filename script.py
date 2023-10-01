@@ -110,7 +110,7 @@ def toppings_script():
     dfCast["Price"] = [toppings[x] for x in toppings.keys()]
     df = pd.DataFrame(dfCast)
     df = df.rename_axis("topping_id")
-    df.to_csv("Topping")
+    df.to_csv("Topping.csv")
 
 def customers_script(customers):
     dfCast = {}

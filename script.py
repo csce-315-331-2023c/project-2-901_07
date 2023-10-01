@@ -77,6 +77,7 @@ def type_weight(drinkType):
         weights = [2, 7, 5, 7]
     elif drinkType == "Creama":
         weights = [5, 3, 1, 1, 1, 1]
+
 toppings = {"Pearls": 0.75, "Mini Pearls": 0.75, "Ice Cream": 1.00, "Pudding": 0.75, "Aloe Vera": 0.75, "Red Bean": 0.75, "Herb Jelly": 0.75, "Aiyu Jelly": 0.75, "Lychee Jelly": 0.75, "Creama": 1.00}
 toppingWeights = {"Milk Tea":[10, 4, 1, 3, 2, 6, 3, 3, 2, 1],
                    "Fresh Milk":[10, 4, 1, 3, 2, 6, 3, 3, 2, 1], 
@@ -97,32 +98,51 @@ def drink_creator():
     for x in range(numToppings):
         topping = random.choices(list(toppings.keys()), weights=toppingWeights[drinkType])[0]
         price += toppings[topping]
-        drinkToppings.append(topping)
+        drinkToppings.append(list(toppings.keys()).index(topping))
     iceLevel = random.choices(["Normal", "Less", "No"], weights = [0.4, 0.4, 0.2])[0] if drinkType != "Ice Blend" else "Normal"
     iceLevel += " Ice"
     sweetnessLevel = random.choices([100, 80, 50, 30, 0], weights=[0.3, 0.3, 0.1, 0.1, 0.2])[0]
-    return {"Drink Type": drinkType, "Drink Name": drinkSubType, "Price": price, "Toppings": drinkToppings, "Ice Level":iceLevel, "Sweetness Level":sweetnessLevel}
+    return {"type": drinkType, "name": drinkSubType, "price": price, "toppings": drinkToppings, "ice_level":iceLevel, "sweetness":sweetnessLevel}
     
 def toppings_script():
     dfCast = {}
     dfCast["Toppings"] = list(toppings.keys())
     dfCast["Price"] = [toppings[x] for x in toppings.keys()]
     df = pd.DataFrame(dfCast)
-    print(df)
+    df = df.rename_axis("topping_id")
+    df.to_csv("Topping")
 
 def customers_script(customers):
     dfCast = {}
     dfCast["Name"] = list(customers.keys())
-    dfCast["Points"] = [customers[x] for x in customers.keys()]
+    #dfCast["Points"] = [customers[x] for x in customers.keys()]
     df = pd.DataFrame(dfCast)
+    df = df.rename_axis("customer_id")
+    df.to_csv("Customer.csv")
+
+
 
 def orders_script(orders):
-    df = pd.DataFrame(columns = ["Customer", "Employee", "Time", "Drinks", "Price"])
-    for order in orders:
-        df = pd.concat([df, pd.DataFrame(order).transpose()], ignore_index=True)
-    print(df)
-    df.to_csv("test")
+    # df = pd.DataFrame(columns = ["Customer", "Employee", "Time", "Drinks", "Price"])
+    # for order in orders:
+    #     df = pd.concat([df, pd.DataFrame(order).transpose()], ignore_index=True)
+    # print(orders)
+    df = pd.DataFrame(orders)
+    df = df.rename_axis("order_id")
+    df.to_csv("orders.csv")
     
+
+def employee_script(a):
+    df = pd.DataFrame()
+    df["name"] = list(a.keys())
+    df["manager"] = [a[x] for x in a]
+    df = df.rename_axis("employee_id")
+    df.to_csv("Employee.csv")
+
+def drinks_script(drinks):
+    df = pd.DataFrame(drinks)
+    df = df.rename_axis("drink_id")
+    df.to_csv("Drink.csv")
 
 def order_creator(customers, time):
     customer = random.choices(list(customers.keys()))[0]
@@ -132,11 +152,15 @@ def order_creator(customers, time):
     numOrder = random.choices(list(range(1, 101)), weights=weights)[0]
     for x in range(numOrder):
         drinks.append(drink_creator())
-    price = sum([x["Price"] for x in drinks])
-    print({"Customer": int(list(customers.keys()).index(customer)), "Employee": int(list(employees.keys()).index(employee)), "Time": time, "Drinks": drinks, "Price":price})
-    return {"Customer": int(list(customers.keys()).index(customer)), "Employee": int(list(employees.keys()).index(employee)), "Time": time, "Drinks": drinks, "Price":price}
+    price = sum([x["price"] for x in drinks])
+    # print({"Customer": int(list(customers.keys()).index(customer)), "Employee": int(list(employees.keys()).index(employee)), "Time": time, "Drinks": drinks, "Price":price})
+    return ({"customer_id": int(list(customers.keys()).index(customer)), "employee_id": int(list(employees.keys()).index(employee)), "date": time.date(), "time":time.time(), "total_price":price}, drinks)
     
-
+def drink_topping_script(drink, topping):
+    df = pd.DataFrame()
+    df["drink_id"] = drink
+    df["topping_id"] = topping
+    df.to_csv("drink_topping.csv")
 
 
 if __name__ == "__main__":
@@ -147,13 +171,39 @@ if __name__ == "__main__":
         name = fake.name()
         customers[fake.name()] = 0
     startTime = datetime.datetime.now() - datetime.timedelta(days=365)
-    print(startTime)
-    order_creator(customers, startTime)
-    # for day in range(1, 366):
-    #     current_date = startTime + datetime.timedelta(days=day - 1)
-    #     while True:
-    #         current_date += datetime.timedelta(seconds=random.randint(1, 10000))
-    #         orders.append(order_creator(customers, current_date))
-    #         if current_date.hour < 22 and current_date.hour > 9:
-    #             break
+    # print(startTime)
+    # order_creator(customers, startTime)
+    drinks = []
+    for day in range(1, 366):
+        current_date = startTime + datetime.timedelta(days=day - 1)
+        while True:
+            holder = 200
+            if current_date.month == 8 and current_date.day == 21 or current_date.month == 1 and current_date.day == 16:
+                holder = 100
+            current_date += datetime.timedelta(seconds=random.randint(1, holder))
+            order = order_creator(customers, current_date)
+            orders.append(order[0])
+            drinks.append(order[1])
+            if current_date.hour > 22 or current_date.hour < 9:
+                break
+    for x in range(len(drinks)):
+        for y in range(len(drinks[x])):
+            drinks[x][y]["order_id"] = x
+    flattenedList = [x for y in drinks for x in y]
+    drink_ids = []
+    topping_ids = []
+    for x in range(len(flattenedList)):
+        drinkToppings = flattenedList[x].pop("toppings")
+        for y in drinkToppings:
+            drink_ids.append(x)
+            topping_ids.append(y)
+
     
+    print(flattenedList)
+
+    customers_script(customers)
+    drink_topping_script(drink_ids, topping_ids)
+    employee_script(employees)
+    toppings_script()
+    orders_script(orders)
+    drinks_script(flattenedList)

@@ -1,5 +1,7 @@
 import random
 import pandas as pd
+from faker import Faker
+import datetime
 drinkTypes = ["Milk Tea", "Fresh Milk", "Ice Blend", "Fruit Tea", "Mojito", "Creama"]
 employees = {"Jason": 0, "Quy": 0, "Quenton": 0, "Jacob":1, "Allie": 0}
 subType = {
@@ -89,16 +91,16 @@ def drink_creator():
     drinkWeight = [10, 1, 3, 5, 1, 1]   
     drinkType = random.choices(drinkTypes, weights = drinkWeight)[0]
     typeWeight = type_weight(drinkType)
-    drinkSubType = random.choices(subType[drinkType].keys(), weights = typeWeight)[0]
+    drinkSubType = random.choices(list(subType[drinkType].keys()), weights = typeWeight)[0]
     price = subType[drinkType][drinkSubType]
-    numToppings = random.choices([0, 1, 2, 3], weights = [0.20, 0.70, 0.07, 0.03]) if subType != "Mojito" else 0
+    numToppings = random.choices([0, 1, 2, 3], weights = [0.20, 0.70, 0.07, 0.03])[0] if drinkType != "Mojito" else 0
     for x in range(numToppings):
-        topping = random.choices(toppings.keys(), weights=toppingWeights[drinkType])
+        topping = random.choices(list(toppings.keys()), weights=toppingWeights[drinkType])[0]
         price += toppings[topping]
         drinkToppings.append(topping)
-    iceLevel = random.choices(["Normal", "Less", "No"], weights = [0.4, 0.4, 0.2]) if drinkType != "Ice Blend" else "Normal"
+    iceLevel = random.choices(["Normal", "Less", "No"], weights = [0.4, 0.4, 0.2])[0] if drinkType != "Ice Blend" else "Normal"
     iceLevel += " Ice"
-    sweetnessLevel = random.choices([100, 80, 50, 30, 0], weights=[0.3, 0.3, 0.1, 0.1, 0.2])
+    sweetnessLevel = random.choices([100, 80, 50, 30, 0], weights=[0.3, 0.3, 0.1, 0.1, 0.2])[0]
     return {"Drink Type": drinkType, "Drink Name": drinkSubType, "Price": price, "Toppings": drinkToppings, "Ice Level":iceLevel, "Sweetness Level":sweetnessLevel}
     
 def toppings_script():
@@ -107,13 +109,51 @@ def toppings_script():
     dfCast["Price"] = [toppings[x] for x in toppings.keys()]
     df = pd.DataFrame(dfCast)
     print(df)
+
+def customers_script(customers):
+    dfCast = {}
+    dfCast["Name"] = list(customers.keys())
+    dfCast["Points"] = [customers[x] for x in customers.keys()]
+    df = pd.DataFrame(dfCast)
+
+def orders_script(orders):
+    df = pd.DataFrame(columns = ["Customer", "Employee", "Time", "Drinks", "Price"])
+    for order in orders:
+        df = pd.concat([df, pd.DataFrame(order).transpose()], ignore_index=True)
+    print(df)
+    df.to_csv("test")
     
-def order_creator():
-    employee = random.choices(list(employees.keys()))
+
+def order_creator(customers, time):
+    customer = random.choices(list(customers.keys()))[0]
+    employee = random.choices(list(employees.keys()))[0]
     drinks = []
     weights = [0.5**i for i in range(1, 101)]
-    for x in range(1000):
-        random_number = random.choices(list(range(1, 101)), weights=weights)[0]
-        print(random_number)
+    numOrder = random.choices(list(range(1, 101)), weights=weights)[0]
+    for x in range(numOrder):
+        drinks.append(drink_creator())
+    price = sum([x["Price"] for x in drinks])
+    print({"Customer": int(list(customers.keys()).index(customer)), "Employee": int(list(employees.keys()).index(employee)), "Time": time, "Drinks": drinks, "Price":price})
+    return {"Customer": int(list(customers.keys()).index(customer)), "Employee": int(list(employees.keys()).index(employee)), "Time": time, "Drinks": drinks, "Price":price}
+    
 
-order_creator()
+
+
+if __name__ == "__main__":
+    orders = []
+    fake = Faker()
+    customers = {}
+    for x in range(100):
+        name = fake.name()
+        customers[fake.name()] = 0
+    startTime = datetime.datetime.now() - datetime.timedelta(days=365)
+    print(startTime)
+    order_creator(customers, startTime)
+    # for day in range(1, 366):
+    #     current_date = startTime + datetime.timedelta(days=day - 1)
+    #     while True:
+    #         current_date += datetime.timedelta(seconds=random.randint(1, 10000))
+    #         orders.append(order_creator(customers, current_date))
+    #         if current_date.hour < 22 and current_date.hour > 9:
+    #             break
+    

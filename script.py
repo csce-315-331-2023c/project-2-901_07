@@ -106,43 +106,43 @@ def drink_creator():
     
 def toppings_script():
     dfCast = {}
-    dfCast["Toppings"] = list(toppings.keys())
-    dfCast["Price"] = [toppings[x] for x in toppings.keys()]
+    dfCast["name"] = list(toppings.keys())
+    dfCast["price"] = [toppings[x] for x in toppings.keys()]
     df = pd.DataFrame(dfCast)
     df = df.rename_axis("topping_id")
-    df.to_csv("Topping.csv")
+    df.to_csv("topping.csv")
+
 
 def customers_script(customers):
     dfCast = {}
-    dfCast["Name"] = list(customers.keys())
+    dfCast["name"] = list(customers.keys())
     #dfCast["Points"] = [customers[x] for x in customers.keys()]
     df = pd.DataFrame(dfCast)
     df = df.rename_axis("customer_id")
-    df.to_csv("Customer.csv")
+    df.to_csv("customer.csv")
 
 
 
 def orders_script(orders):
-    # df = pd.DataFrame(columns = ["Customer", "Employee", "Time", "Drinks", "Price"])
-    # for order in orders:
-    #     df = pd.concat([df, pd.DataFrame(order).transpose()], ignore_index=True)
-    # print(orders)
     df = pd.DataFrame(orders)
+    df = df[["customer_id","employee_id","date","total_price","time"]]
+    df["time"] = df["time"].apply(lambda x: x.strftime("%H:%M:%S"))
     df = df.rename_axis("order_id")
     df.to_csv("orders.csv")
     
 
 def employee_script(a):
     df = pd.DataFrame()
-    df["name"] = list(a.keys())
     df["manager"] = [a[x] for x in a]
+    df["name"] = list(a.keys())
     df = df.rename_axis("employee_id")
-    df.to_csv("Employee.csv")
+    df.to_csv("employee.csv")
 
 def drinks_script(drinks):
     df = pd.DataFrame(drinks)
+    df = df[["name","type","order_id","sweetness","price","ice_level"]]
     df = df.rename_axis("drink_id")
-    df.to_csv("Drink.csv")
+    df.to_csv("drink.csv")
 
 def order_creator(customers, time):
     customer = random.choices(list(customers.keys()))[0]
@@ -152,10 +152,10 @@ def order_creator(customers, time):
     numOrder = random.choices(list(range(1, 101)), weights=weights)[0]
     for x in range(numOrder):
         drinks.append(drink_creator())
-    price = sum([x["price"] for x in drinks])
+    price = round(sum([x["price"] for x in drinks]),2)
     # print({"Customer": int(list(customers.keys()).index(customer)), "Employee": int(list(employees.keys()).index(employee)), "Time": time, "Drinks": drinks, "Price":price})
     return ({"customer_id": int(list(customers.keys()).index(customer)), "employee_id": int(list(employees.keys()).index(employee)), "date": time.date(), "time":time.time(), "total_price":price}, drinks)
-    
+
 def drink_topping_script(drink, topping):
     df = pd.DataFrame()
     df["drink_id"] = drink
@@ -178,9 +178,9 @@ if __name__ == "__main__":
     for day in range(1, 366):
         current_date = startTime + datetime.timedelta(days=day - 1)
         while True:
-            holder = 200
+            holder = 160
             if current_date.month == 8 and current_date.day == 21 or current_date.month == 1 and current_date.day == 16:
-                holder = 100
+                holder = 80
             current_date += datetime.timedelta(seconds=random.randint(1, holder))
             order = order_creator(customers, current_date)
             orders.append(order[0])
@@ -206,5 +206,6 @@ if __name__ == "__main__":
     drink_topping_script(drink_ids, topping_ids)
     employee_script(employees)
     toppings_script()
+    print("called toppings")
     orders_script(orders)
     drinks_script(flattenedList)

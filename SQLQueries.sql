@@ -1,14 +1,16 @@
-SELECT date, SUM(total_price) as daily_sales -- Top 15 days with most sales (profit)
+SELECT date, SUM(total_price) as daily_sales -- Top 10 days with most sales (profit)
 FROM orders
 GROUP BY date
 ORDER BY daily_sales DESC
-LIMIT 15;
+LIMIT 10;
 
 SELECT employee_id, COUNT(order_id) as total_orders -- Employee w/ most orders
 FROM orders
 GROUP BY employee_id
 ORDER BY total_orders DESC
 LIMIT 1;
+
+
 
 SELECT employee_id, COUNT(order_id) as total_orders -- Employee w/ least orders
 FROM orders
@@ -22,13 +24,13 @@ FROM orders;
 SELECT COUNT(order_id) as total_orders -- Total amount of orders
 FROM orders;
 
-SELECT order_id, total_price -- Top 10 most expensive orders
+SELECT order_id, total_price -- Least expensive order possible
 FROM orders
-ORDER BY total_price DESC
-LIMIT 10;
+ORDER BY total_price ASC
+LIMIT 1;
 
 
-SELECT order_id, date -- Top 10 most expensive orders on which days
+SELECT order_id, date, total_price -- Top 10 most expensive orders on which days
 FROM orders
 ORDER BY total_price DESC
 LIMIT 10;
@@ -72,7 +74,7 @@ LIMIT 10;
 
 
 
-SELECT Toppings, Price -- Show all toppings
+SELECT name, Price -- Show all toppings
 FROM Topping;
 
 
@@ -86,5 +88,10 @@ WHERE manager = TRUE;
 SELECT employee_id, name -- Print out Employees
 FROM Employee
 WHERE manager = FALSE;
+
+
+
+
+
 
 

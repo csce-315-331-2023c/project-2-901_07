@@ -1,82 +1,173 @@
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.ImageIcon;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.border.EmptyBorder;
+import javax.swing.border.*;
 
 public class GUI implements ActionListener {
     static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    JButton checkoutButton;
-    JButton switchViewButton;
+    JButton checkoutButton, transactionHistoryButton, trendsButton, availabilityButton;
+    JButton switchViewButton, toGoButton, addCustomerButton, totalChargeButton, ticketsButton;
     JLabel currentViewLabel;
     String current_view = "Cashier";
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Bottom Horizontal Bar
+    // Checkout + Transaction History + Trends + Availability
+    public JPanel bottomPanel() {
+        // Bottom panel
+        int panelHeight = screenSize.height / 10;
+        int panelWidth = 0; // value does not matter
+        JPanel bottomPanel = new JPanel(new GridLayout(1, 10, 20, 20));
+        bottomPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        bottomPanel.setBackground(Color.gray);
+        bottomPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
+        bottomPanel.add(checkout_button());
+        bottomPanel.add(transactionHistory_button());
+        bottomPanel.add(trends_button());
+        bottomPanel.add(availability_button());
+        
+        //empty space for grid
+        return bottomPanel;
+    }
+    
+    // 1. Checkout Button
     public JButton checkout_button() {
         checkoutButton = new JButton("Checkout");
-        checkoutButton.setBounds(200, 100, 100, 50);
+        checkoutButton.setMargin(new Insets(50, 50, 50, 50));
+        checkoutButton.setFont(new Font("Calibri", Font.BOLD, 16));
         checkoutButton.addActionListener(this);
-        EmptyBorder margin = new EmptyBorder(200, 50, 200, 50);
-        checkoutButton.setBorder(margin);
         return checkoutButton;
     }
 
+    // 2. Transaction Button
+    public JButton transactionHistory_button() {
+        transactionHistoryButton = new JButton("Transaction");
+        transactionHistoryButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        transactionHistoryButton.addActionListener(this);
+        return transactionHistoryButton;
+    }
+
+    // 3. Trends Button
+    public JButton trends_button() {
+        trendsButton = new JButton("Trends");
+        trendsButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        trendsButton.addActionListener(this);
+        return trendsButton;
+    }
+
+    // 4. Availability Button
+    public JButton availability_button() {
+        availabilityButton = new JButton("Availability");
+        availabilityButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        availabilityButton.addActionListener(this);
+        return availabilityButton;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Right Vertical Bar
+    // Switch View + To Go + Charge Total + Tickets
+    public JPanel rightPanel() {
+        // Right panel
+        int panelHeight = 0; // value does not matter
+        int panelWidth = screenSize.width / 8;
+        JPanel rightPanel = new JPanel(new GridLayout(0, 1, 20, 20));
+        rightPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        rightPanel.setBackground(Color.cyan);
+        rightPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
+
+        currentViewLabel = new JLabel("Current View: " + current_view);
+        currentViewLabel.setFont(new Font("Calibri ", Font.BOLD, 15));
+        currentViewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        rightPanel.add(currentViewLabel);
+        rightPanel.add(switchView_button());
+        rightPanel.add(toGo_button());
+        rightPanel.add(addCustomer_button());
+        rightPanel.add(totalCharge_button());
+        rightPanel.add(tickets_button());
+        return rightPanel;
+    }
+
+    // 1. Switch View 
     public JButton switchView_button() {
         switchViewButton = new JButton("Switch View");
         switchViewButton.setBounds(200, 100, 100, 50);
+        switchViewButton.setFont(new Font("Calibri", Font.BOLD, 16));
         switchViewButton.addActionListener(this);
         return switchViewButton;
     }
 
-    public JPanel bottomPanel() {
-        // Bottom panel
-        int panelHeight = screenSize.height / 6;
-        int panelWidth = 0; // value does not matter
-        JPanel bottomPanel = new JPanel(new GridLayout(1, 2, 500, 10));
-        bottomPanel.setBackground(Color.red);
-        bottomPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
-
-        JLabel emptyLabel = new JLabel("test");
-
-        bottomPanel.add(checkout_button());
-        bottomPanel.add(emptyLabel);
-
-        //empty space for grid
-
-        return bottomPanel;
+    // 2. To Go 
+    public JButton toGo_button() {
+        toGoButton = new JButton("To Go");
+        toGoButton.setBounds(200, 100, 100, 50);
+        toGoButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        toGoButton.addActionListener(this);
+        return toGoButton;
     }
 
-    public JPanel rightPanel() {
-        // Right panel
-        int panelHeight = 0; // value does not matter
-        int panelWidth = screenSize.width / 4;
-        JPanel rightPanel = new JPanel(new GridLayout(5, 1, 500, 10));
-        rightPanel.setBackground(Color.blue);
-        rightPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
-        currentViewLabel = new JLabel("Current View: " + current_view);
-        rightPanel.add(currentViewLabel);
-        rightPanel.add(switchView_button());
-        return rightPanel;
-
+    // 3. Add Customer 
+    public JButton addCustomer_button() {
+        addCustomerButton = new JButton("Add Customer");
+        addCustomerButton.setBounds(200, 100, 100, 50);
+        addCustomerButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        addCustomerButton.addActionListener(this);
+        return addCustomerButton;
     }
 
+    // 4. Total Charge 
+    public JButton totalCharge_button() {
+        totalChargeButton = new JButton("Total Charge");
+        totalChargeButton.setBounds(200, 100, 100, 50);
+        totalChargeButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        totalChargeButton.addActionListener(this);
+        return totalChargeButton;
+    }
+
+    // 5. Tickets
+    public JButton tickets_button() {
+        ticketsButton = new JButton("Tickets");
+        ticketsButton.setBounds(200, 100, 100, 50);
+        ticketsButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        ticketsButton.addActionListener(this);
+        return ticketsButton;
+    }
+
+    
+
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    // Center Horizontal Bar
+    // Milk Tea
+    
     public JPanel centerPanel() {
         // Center panel
         int panelHeight = 300;
-        int panelWidth = screenSize.width - (screenSize.width / 4);
-        JPanel centerPanel = new JPanel();
-        centerPanel.setBackground(Color.green);
+        int panelWidth = screenSize.width - (screenSize.width / 6);
+        JPanel centerPanel = new JPanel(new GridLayout(3, 4, 30, 30));
+        centerPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        centerPanel.setBackground(Color.white);
         centerPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
+        for (int i = 0; i < 13; i++) {
+            JButton rectangle = new JButton();
+            rectangle.setBackground(Color.gray); // Set the color of the rectangles
+            centerPanel.add(rectangle);
+        }
         return centerPanel;
     }
+
+    
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public GUI() {
         // FRAMES TUTORIAL
         JFrame frame = new JFrame();
 
-        frame.setTitle("JFrame title goes here"); // sets title of frame
+        frame.setTitle("Sharetea - Glory of Taiwan!"); // sets title of frame
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // exit out of application
         // frame.setResizable(false); //prevent frame from being resized
         frame.setSize(screenSize.width, screenSize.height); // sets the x-dimension, and y-dimension of frame

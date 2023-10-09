@@ -4,11 +4,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.border.*;
 
-public class GUI implements ActionListener {
+public class GUI{
     static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    JButton checkoutButton, transactionHistoryButton, trendsButton, availabilityButton;
+    ManagerView managerView = new ManagerView();
+    CardLayout bottomPanelCardLayout, centerPanelCardLayout;
+    JButton checkoutButton, transactionHistoryButton, trendsButton, inventoryButton;
     JButton switchViewButton, toGoButton, addCustomerButton, totalChargeButton, ticketsButton;
     JLabel currentViewLabel;
+    JPanel centerPanel, rightPanel, bottomPanel;
+    JPanel homePage, inventoryPage;
+    
     String current_view = "Cashier";
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -18,16 +23,29 @@ public class GUI implements ActionListener {
         // Bottom panel
         int panelHeight = screenSize.height / 10;
         int panelWidth = 0; // value does not matter
-        JPanel bottomPanel = new JPanel(new GridLayout(1, 10, 20, 20));
-        bottomPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
-        bottomPanel.setBackground(Color.gray);
+        //bottomPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        //bottomPanel.setBackground(Color.gray);
+        bottomPanelCardLayout = new CardLayout();
+        bottomPanel = new JPanel(bottomPanelCardLayout);
         bottomPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
-        bottomPanel.add(checkout_button());
-        bottomPanel.add(transactionHistory_button());
-        bottomPanel.add(trends_button());
-        bottomPanel.add(availability_button());
-        
-        //empty space for grid
+        //cashier view bottom panel
+        JPanel cashierView = new JPanel(new GridLayout(1, 5, 30, 10));
+        cashierView.setBorder(new EmptyBorder(20, 20, 20, 20));
+        cashierView.add(checkout_button());
+        cashierView.add(new JLabel());
+        cashierView.add(new JLabel());
+        cashierView.add(new JLabel());
+        //manager view bottom panel
+        JPanel managerView = new JPanel(new GridLayout(1, 5, 30, 10));
+        managerView.setBorder(new EmptyBorder(20, 20, 20, 20));
+        managerView.add(checkout_button());
+        managerView.add(transactionHistory_button());
+        managerView.add(trends_button());
+        managerView.add(inventory_button());
+
+        bottomPanel.add(cashierView, "Cashier View");
+        bottomPanel.add(managerView, "Manager View");
+
         return bottomPanel;
     }
     
@@ -36,7 +54,12 @@ public class GUI implements ActionListener {
         checkoutButton = new JButton("Checkout");
         checkoutButton.setMargin(new Insets(50, 50, 50, 50));
         checkoutButton.setFont(new Font("Calibri", Font.BOLD, 16));
-        checkoutButton.addActionListener(this);
+        checkoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("checkoutButton clicked");
+            }
+        });
         return checkoutButton;
     }
 
@@ -44,7 +67,6 @@ public class GUI implements ActionListener {
     public JButton transactionHistory_button() {
         transactionHistoryButton = new JButton("Transaction");
         transactionHistoryButton.setFont(new Font("Calibri", Font.BOLD, 16));
-        transactionHistoryButton.addActionListener(this);
         return transactionHistoryButton;
     }
 
@@ -52,16 +74,21 @@ public class GUI implements ActionListener {
     public JButton trends_button() {
         trendsButton = new JButton("Trends");
         trendsButton.setFont(new Font("Calibri", Font.BOLD, 16));
-        trendsButton.addActionListener(this);
         return trendsButton;
     }
 
     // 4. Availability Button
-    public JButton availability_button() {
-        availabilityButton = new JButton("Availability");
-        availabilityButton.setFont(new Font("Calibri", Font.BOLD, 16));
-        availabilityButton.addActionListener(this);
-        return availabilityButton;
+    public JButton inventory_button() {
+        inventoryButton = new JButton("Inventory");
+        inventoryButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        inventoryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("inventoryButton clicked");
+                centerPanelCardLayout.show(centerPanel, "Inventory Page");
+            }
+        });
+        return inventoryButton;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,7 +98,7 @@ public class GUI implements ActionListener {
     public JPanel rightPanel() {
         // Right panel
         int panelHeight = 0; // value does not matter
-        int panelWidth = screenSize.width / 8;
+        int panelWidth = screenSize.width / 6;
         JPanel rightPanel = new JPanel(new GridLayout(0, 1, 20, 20));
         rightPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
         rightPanel.setBackground(Color.cyan);
@@ -95,7 +122,20 @@ public class GUI implements ActionListener {
         switchViewButton = new JButton("Switch View");
         switchViewButton.setBounds(200, 100, 100, 50);
         switchViewButton.setFont(new Font("Calibri", Font.BOLD, 16));
-        switchViewButton.addActionListener(this);
+        switchViewButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("switchViewButton clicked");
+                if (current_view == "Manager"){
+                    current_view = "Cashier";
+                }else{
+                    current_view = "Manager";
+                }
+                bottomPanelCardLayout.next(bottomPanel);
+                centerPanelCardLayout.show(centerPanel, "Home Page");
+                currentViewLabel.setText("Current View: " + current_view);
+            }
+        });
         return switchViewButton;
     }
 
@@ -104,7 +144,6 @@ public class GUI implements ActionListener {
         toGoButton = new JButton("To Go");
         toGoButton.setBounds(200, 100, 100, 50);
         toGoButton.setFont(new Font("Calibri", Font.BOLD, 16));
-        toGoButton.addActionListener(this);
         return toGoButton;
     }
 
@@ -113,7 +152,6 @@ public class GUI implements ActionListener {
         addCustomerButton = new JButton("Add Customer");
         addCustomerButton.setBounds(200, 100, 100, 50);
         addCustomerButton.setFont(new Font("Calibri", Font.BOLD, 16));
-        addCustomerButton.addActionListener(this);
         return addCustomerButton;
     }
 
@@ -122,7 +160,6 @@ public class GUI implements ActionListener {
         totalChargeButton = new JButton("Total Charge");
         totalChargeButton.setBounds(200, 100, 100, 50);
         totalChargeButton.setFont(new Font("Calibri", Font.BOLD, 16));
-        totalChargeButton.addActionListener(this);
         return totalChargeButton;
     }
 
@@ -131,23 +168,37 @@ public class GUI implements ActionListener {
         ticketsButton = new JButton("Tickets");
         ticketsButton.setBounds(200, 100, 100, 50);
         ticketsButton.setFont(new Font("Calibri", Font.BOLD, 16));
-        ticketsButton.addActionListener(this);
         return ticketsButton;
     }
 
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////
+    public JPanel homePage() {
+        int panelHeight = 300;
+        int panelWidth = screenSize.width - (screenSize.width / 6);
+        JPanel homePagePanel = new JPanel(new GridLayout(3, 4, 30, 30));
+        homePagePanel.setBorder(new EmptyBorder(40, 40, 40, 40));
+        homePagePanel.setBackground(Color.white);
+        homePagePanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
+        for (int i = 0; i < 13; i++) {
+            JButton rectangle = new JButton();
+            rectangle.setBackground(Color.gray); // Set the color of the rectangles
+            homePagePanel.add(rectangle);
+        }
+        return homePagePanel;
+    }
     
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Center Horizontal Bar
     // Milk Tea
     
     public JPanel centerPanel() {
         // Center panel
         int panelHeight = 300;
-        int panelWidth = screenSize.width - (screenSize.width / 6);
-        JPanel centerPanel = new JPanel(new GridLayout(3, 4, 30, 30));
-        centerPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
-        centerPanel.setBackground(Color.white);
+        int panelWidth = screenSize.width - (screenSize.width / 4);
+        centerPanelCardLayout = new CardLayout();
+        centerPanel = new JPanel(centerPanelCardLayout);
+
         centerPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
         for (int i = 0; i < 13; i++) {
             JButton categoryButton = new JButton();
@@ -160,6 +211,15 @@ public class GUI implements ActionListener {
             });
             centerPanel.add(categoryButton);
         }
+=======
+        //inventory page panel
+        inventoryPage = new JPanel();
+        inventoryPage = ManagerView.inventoryPage(inventoryPage);
+
+        centerPanel.add(homePage(), "Home Page");
+        centerPanel.add(inventoryPage, "Inventory Page");
+
+>>>>>>> a725aff63329723e43618acb0b2aeba2516bc29a
         return centerPanel;
     }
 
@@ -183,34 +243,13 @@ public class GUI implements ActionListener {
         frame.setLayout(new BorderLayout());
         frame.add(rightPanel(), BorderLayout.EAST);
         frame.add(bottomPanel(), BorderLayout.SOUTH);
-        frame.add(centerPanel(), BorderLayout.WEST);
+        frame.add(centerPanel(), BorderLayout.CENTER);
 
         frame.setVisible(true); // make frame visible
         // END OF FRAMES TUTORIAL
 
-        // LABELS TUTORIAL
-        JLabel label = new JLabel(); // create a label
-        label.setText("Test"); // set text of label
-        frame.add(label);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == checkoutButton) {
-            System.out.println("checkoutButton clicked");
-        }
-        if (e.getSource() == switchViewButton) {
-            System.out.println("switchViewButton clicked");
-            if (current_view == "Manager"){
-                current_view = "Cashier";
-                new CashierView();
-            }else{
-                current_view = "Manager";
-                new ManagerView();
-            }
-            currentViewLabel.setText("Current View: " + current_view);
-        }
-    }
 
     
 

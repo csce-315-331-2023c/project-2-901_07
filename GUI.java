@@ -136,8 +136,6 @@ public class GUI implements ActionListener {
     }
 
     
-
-    
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     
     // Center Horizontal Bar
@@ -152,9 +150,15 @@ public class GUI implements ActionListener {
         centerPanel.setBackground(Color.white);
         centerPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
         for (int i = 0; i < 13; i++) {
-            JButton rectangle = new JButton();
-            rectangle.setBackground(Color.gray); // Set the color of the rectangles
-            centerPanel.add(rectangle);
+            JButton categoryButton = new JButton();
+            categoryButton.setBackground(Color.gray); // Set the color of the rectangles
+            categoryButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    CategoryHandler.categoryHandlerPanel(categoryButton);
+                }
+            });
+            centerPanel.add(categoryButton);
         }
         return centerPanel;
     }
@@ -207,6 +211,8 @@ public class GUI implements ActionListener {
             currentViewLabel.setText("Current View: " + current_view);
         }
     }
+
+    
 
     public static void main(String[] args) {
         new GUI(); // Create an instance of the Main class to initialize the UI

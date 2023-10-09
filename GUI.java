@@ -211,7 +211,6 @@ public class GUI{
             });
             centerPanel.add(categoryButton);
         }
-=======
         //inventory page panel
         inventoryPage = new JPanel();
         inventoryPage = ManagerView.inventoryPage(inventoryPage);
@@ -219,7 +218,6 @@ public class GUI{
         centerPanel.add(homePage(), "Home Page");
         centerPanel.add(inventoryPage, "Inventory Page");
 
->>>>>>> a725aff63329723e43618acb0b2aeba2516bc29a
         return centerPanel;
     }
 

@@ -171,16 +171,17 @@ if __name__ == "__main__":
     for x in range(100):
         name = fake.name()
         customers[fake.name()] = 0
-    startTime = datetime.datetime.now() - datetime.timedelta(days=365)
+    startTime = datetime.datetime(2022,1,1,9,0,0)
+    # startTime = -= startTime.time
     # print(startTime)
     # order_creator(customers, startTime)
     drinks = []
     for day in range(1, 366):
         current_date = startTime + datetime.timedelta(days=day - 1)
         while True:
-            holder = 160
+            holder = 400
             if current_date.month == 8 and current_date.day == 21 or current_date.month == 1 and current_date.day == 16:
-                holder = 80
+                holder = 200
             current_date += datetime.timedelta(seconds=random.randint(1, holder))
             order = order_creator(customers, current_date)
             orders.append(order[0])
@@ -209,3 +210,5 @@ if __name__ == "__main__":
     print("called toppings")
     orders_script(orders)
     drinks_script(flattenedList)
+
+    print(sum([x["total_price"] for x in orders]))

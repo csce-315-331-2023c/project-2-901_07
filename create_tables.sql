@@ -14,7 +14,7 @@ menu_item_id SERIAL PRIMARY KEY,
 name VARCHAR(255),
 type VARCHAR(255),
 price FLOAT
-)
+);
 
 CREATE TABLE orders(
 order_id SERIAL PRIMARY KEY,
@@ -27,8 +27,8 @@ time TIME
 
 CREATE TABLE drink(
 drink_id SERIAL PRIMARY KEY,
-order_id INT REFERENCES orders(order_id),
 menu_item_id INT REFERENCES menu_item(menu_item_id),
+order_id INT REFERENCES orders(order_id),
 sweetness FLOAT,
 price FLOAT,
 ice_level VARCHAR(255)
@@ -53,10 +53,10 @@ CREATE TABLE ingredients(
 ingredients_id SERIAL PRIMARY KEY,
 name VARCHAR(255),
 availability INT
-)
+);
 
 CREATE TABLE menu_ingredients_mapper(
 menu_ingredients_mapper_id SERIAL PRIMARY KEY,
 menu_item_id INT REFERENCES menu_item(menu_item_id),
 ingredients_id INT REFERENCES ingredients(ingredients_id)
-)
+);

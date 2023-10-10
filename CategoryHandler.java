@@ -12,10 +12,12 @@ public class categoryHandler {
     
     private static int screenWidth = (Toolkit.getDefaultToolkit().getScreenSize()).width;
     private static int screenHeight = (Toolkit.getDefaultToolkit().getScreenSize()).height;
-    
-    public static void categoryHandlerPanel(String category) {
+    private static JFrame customFrame;
+    private static JPanel drinkDetail;
+
+    public static JPanel categoryHandlerPanel(String category) {
         SwingUtilities.invokeLater(() -> {
-            JFrame customFrame = new JFrame();
+            customFrame = new JFrame();
             customFrame.setTitle("Drink Customization Panel");
             customFrame.setSize(screenWidth, screenHeight);
             customFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -27,6 +29,7 @@ public class categoryHandler {
 
             customFrame.setVisible(true);
         });
+        return drinkDetail;
     }
 
     public static JPanel createDrinksPanel(String category) {
@@ -49,7 +52,8 @@ public class categoryHandler {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     // Call the category handler and pass the selected category.
-                    drinkHandler.DrinkHandlerPanel(drink, price);
+                    drinkDetail = drinkHandler.DrinkHandlerPanel(drink, price);
+                    customFrame.dispose();
                 }
             });
             panel.add(drinkButton, BorderLayout.SOUTH);

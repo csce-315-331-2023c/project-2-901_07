@@ -1,11 +1,20 @@
 import javax.swing.*;
 import java.awt.*;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import javax.naming.spi.DirStateFactory.Result;
+import java.util.Set;
+import javax.swing.border.*;
+import javax.tools.JavaFileManager;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.border.*;
+
 
 public class GUI{
-    static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    public static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     ManagerView managerView = new ManagerView();
     CardLayout bottomPanelCardLayout, centerPanelCardLayout;
     JButton checkoutButton, transactionHistoryButton, trendsButton, inventoryButton;
@@ -13,13 +22,15 @@ public class GUI{
     JLabel currentViewLabel;
     JPanel centerPanel, rightPanel, bottomPanel;
     JPanel homePage, inventoryPage;
-    
+    public static JPanel checkoutPanel;
     String current_view = "Cashier";
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Bottom Horizontal Bar
     // Checkout + Transaction History + Trends + Availability
     public JPanel bottomPanel() {
+        checkoutPanel = new JPanel();
+        checkoutPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
         // Bottom panel
         int panelHeight = screenSize.height / 10;
         int panelWidth = 0; // value does not matter
@@ -57,7 +68,8 @@ public class GUI{
         checkoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("checkoutButton clicked");
+                // Call the category handler and pass the selected category.
+                checkoutHandler.checkoutFrame_();
             }
         });
         return checkoutButton;
@@ -189,7 +201,8 @@ public class GUI{
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     // Call the category handler and pass the selected category.
-                    categoryHandler.categoryHandlerPanel(category);
+                    JPanel tempPanel = categoryHandler.categoryHandlerPanel(category);
+                    checkoutPanel.add(tempPanel);
                 }
             });
             homePagePanel.add(categoryButton);
@@ -230,7 +243,6 @@ public class GUI{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // exit out of application
         // frame.setResizable(false); //prevent frame from being resized
         frame.setSize(screenSize.width, screenSize.height); // sets the x-dimension, and y-dimension of frame
-
         ImageIcon image = new ImageIcon("logo.png");
         frame.setIconImage(image.getImage());
         frame.getContentPane().setBackground(new Color(255, 255, 255));
@@ -245,8 +257,60 @@ public class GUI{
 
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    
+    public static List<List<String>> query(String tableName, List<String> columnNames){
+        //Building the connection with your credentials
+        Connection conn = null;
+        String teamName = "01g";
+        String dbName = "csce315331_"+teamName+"_db";
+        // "csce315331_01g_db"
+        String dbConnectionString = "jdbc:postgresql://csce-315-db.engr.tamu.edu/" + dbName;
+        dbSetup myCredentials = new dbSetup();
+
+        try {
+            conn = DriverManager.getConnection(dbConnectionString, dbSetup.user, dbSetup.pswd);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName()+": "+e.getMessage());
+            System.exit(0);
+        }
+
+        System.out.println("Opened database successfully");
+
+        try{
+            Statement createStmt = conn.createStatement();
+            String selectTable = "SELECT * FROM "+tableName+";";
+            ResultSet result = conn.createStatement().executeQuery(selectTable);
+            List<List<String>> output = new ArrayList<>();
+            System.out.println("--------------------Query Results--------------------");
+            while (result.next()) {
+               List<String> rowInfo = new ArrayList<>();
+               for (String columnName: columnNames) {
+                    rowInfo.add(result.getString(columnName));
+               }
+               output.add(rowInfo);
+            }
+            System.out.println(output);
+            System.out.println(result);
+            return output;
+        } catch (Exception e){
+            e.printStackTrace();
+            System.err.println(e.getClass().getName()+": "+e.getMessage());
+            System.exit(0);
+        }
+
+        //closing the connection
+        try {
+            conn.close();
+            System.out.println("Connection Closed.");
+        } catch(Exception e) {
+            System.out.println("Connection NOT Closed.");
+        }//end try catch
+        return null;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static void main(String[] args) {
         new GUI(); // Create an instance of the Main class to initialize the UI

@@ -6,7 +6,7 @@ import javax.swing.border.*;
 
 public class GUI{
     static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    // ManagerView managerView = new ManagerView();
+    ManagerView managerView = new ManagerView();
     CardLayout bottomPanelCardLayout, centerPanelCardLayout;
     JButton checkoutButton, transactionHistoryButton, trendsButton, inventoryButton;
     JButton switchViewButton, toGoButton, addCustomerButton, totalChargeButton, ticketsButton;
@@ -36,15 +36,15 @@ public class GUI{
         cashierView.add(new JLabel());
         cashierView.add(new JLabel());
         //manager view bottom panel
-        // JPanel managerView = new JPanel(new GridLayout(1, 5, 30, 10));
-        // managerView.setBorder(new EmptyBorder(20, 20, 20, 20));
-        // managerView.add(checkout_button());
-        // managerView.add(transactionHistory_button());
-        // managerView.add(trends_button());
-        // managerView.add(inventory_button());
+        JPanel managerView = new JPanel(new GridLayout(1, 5, 30, 10));
+        managerView.setBorder(new EmptyBorder(20, 20, 20, 20));
+        managerView.add(checkout_button());
+        managerView.add(transactionHistory_button());
+        managerView.add(trends_button());
+        managerView.add(inventory_button());
 
         bottomPanel.add(cashierView, "Cashier View");
-        // bottomPanel.add(managerView, "Manager View");
+        bottomPanel.add(managerView, "Manager View");
 
         return bottomPanel;
     }
@@ -210,7 +210,7 @@ public class GUI{
         centerPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
         //inventory page panel
         inventoryPage = new JPanel();
-        // inventoryPage = ManagerView.inventoryPage(inventoryPage);
+        inventoryPage = ManagerView.inventoryPage();
 
         centerPanel.add(homePage(), "Home Page");
         centerPanel.add(inventoryPage, "Inventory Page");

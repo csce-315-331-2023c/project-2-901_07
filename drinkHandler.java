@@ -14,14 +14,21 @@ import java.util.List;
 class drinkHandler {
     static int screenWidth = (Toolkit.getDefaultToolkit().getScreenSize()).width;
     static int screenHeight = (Toolkit.getDefaultToolkit().getScreenSize()).height;
+    
     private static JLabel sugarLevelLabel;
     private static JLabel iceLevelLabel;
+    private static JLabel drinkDetaiLabel;
+
+    private static JLabel checkoutLabel;
+    private static ArrayList<String> checkoutList;
+
     public static JPanel drinkDetailPanel;
     public static Double drinkTotalPrice = 0.0;
     private static JFrame customFrame;
 
     public static JPanel DrinkHandlerPanel(String drink, Double price) {
         drinkTotalPrice = price;
+        checkoutList = new ArrayList<String>();
         // Create a JDialog for the popup panel
         customFrame = new JFrame();
         
@@ -42,6 +49,10 @@ class drinkHandler {
             public void actionPerformed(ActionEvent e) {
                 // You can perform any further actions with the result here
                 JOptionPane.showMessageDialog(null, "An order has been added - Total Price: $" + drinkTotalPrice);
+                checkoutList.add(drink + " ($" + drinkTotalPrice + ")");
+                checkoutLabel = new JLabel(String.join("\n", checkoutList));
+                GUI.totalPrice += drinkTotalPrice;
+                GUI.checkoutPanel.add(checkoutLabel);
                 customFrame.dispose();
             }
         });
@@ -117,11 +128,14 @@ class drinkHandler {
         List<String> columnNames = new ArrayList<>();
         columnNames.add("name");
         columnNames.add("price");
+        columnNames.add("topping_id");
         List<List<String>> toppings = GUI.query("topping", columnNames);
 
         for (List<String> topping : toppings) {
             String toppingName = topping.get(0);
             Double price = Double.parseDouble(topping.get(1));
+            Integer toppingID = Integer.parseInt(topping.get(2));
+            GUI.toppingIdMap.put(toppingName, toppingID);
 
             // Create a button with the topping name, price, and topping types
             JButton toppingButton = new JButton(toppingName + " ($" + price + ")");
@@ -169,7 +183,7 @@ class drinkHandler {
     }
 
     public static JPanel drinkDetail_(String drink, Double drinkPrice){
-        JLabel drinkDetaiLabel = new JLabel("Drink Details:" + " ($" + drinkPrice + ")");
+        drinkDetaiLabel = new JLabel("Drink Details:" + " ($" + drinkPrice + ")");
         drinkDetailPanel = new JPanel(new GridLayout(10, 2, 20, 20));
         drinkDetailPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
         drinkDetailPanel.setPreferredSize(new Dimension(screenWidth/5, screenHeight/2));

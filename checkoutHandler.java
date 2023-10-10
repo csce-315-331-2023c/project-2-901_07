@@ -21,7 +21,6 @@ public class checkoutHandler {
 
             // Create a panel with drinks for the selected category
             checkoutFrame.add(GUI.checkoutPanel, BorderLayout.CENTER);
-
             checkoutFrame.setVisible(true);
         });
     }

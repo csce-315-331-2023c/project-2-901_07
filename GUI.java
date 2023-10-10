@@ -3,6 +3,7 @@ import java.awt.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import javax.naming.spi.DirStateFactory.Result;
 import java.util.Set;
@@ -17,20 +18,30 @@ public class GUI{
     public static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     ManagerView managerView = new ManagerView();
     CardLayout bottomPanelCardLayout, centerPanelCardLayout;
+    
     JButton checkoutButton, transactionHistoryButton, trendsButton, inventoryButton;
     JButton switchViewButton, toGoButton, addCustomerButton, totalChargeButton, ticketsButton;
+    
     JLabel currentViewLabel;
+    
     JPanel centerPanel, rightPanel, bottomPanel;
     JPanel homePage, inventoryPage;
+
     public static JPanel checkoutPanel;
+    public static Double totalPrice = 0.0;
+    public static HashMap<String, Integer> drinkNameIdMap = new HashMap<>();
+    public static HashMap<Integer, List<Integer>> drinkIngredientMap = new HashMap<>(); 
+    public static HashMap<String, Integer> toppingIdMap = new HashMap<>();
+    
     String current_view = "Cashier";
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Bottom Horizontal Bar
     // Checkout + Transaction History + Trends + Availability
     public JPanel bottomPanel() {
-        checkoutPanel = new JPanel();
+        checkoutPanel = new JPanel(new GridLayout(10, 1, 30, 10));
         checkoutPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        checkoutPanel.add(new JLabel("List of drinks"), BorderLayout.LINE_START);
         // Bottom panel
         int panelHeight = screenSize.height / 10;
         int panelWidth = 0; // value does not matter

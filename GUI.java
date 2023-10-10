@@ -6,7 +6,7 @@ import javax.swing.border.*;
 
 public class GUI{
     static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    ManagerView managerView = new ManagerView();
+    // ManagerView managerView = new ManagerView();
     CardLayout bottomPanelCardLayout, centerPanelCardLayout;
     JButton checkoutButton, transactionHistoryButton, trendsButton, inventoryButton;
     JButton switchViewButton, toGoButton, addCustomerButton, totalChargeButton, ticketsButton;
@@ -36,15 +36,15 @@ public class GUI{
         cashierView.add(new JLabel());
         cashierView.add(new JLabel());
         //manager view bottom panel
-        JPanel managerView = new JPanel(new GridLayout(1, 5, 30, 10));
-        managerView.setBorder(new EmptyBorder(20, 20, 20, 20));
-        managerView.add(checkout_button());
-        managerView.add(transactionHistory_button());
-        managerView.add(trends_button());
-        managerView.add(inventory_button());
+        // JPanel managerView = new JPanel(new GridLayout(1, 5, 30, 10));
+        // managerView.setBorder(new EmptyBorder(20, 20, 20, 20));
+        // managerView.add(checkout_button());
+        // managerView.add(transactionHistory_button());
+        // managerView.add(trends_button());
+        // managerView.add(inventory_button());
 
         bottomPanel.add(cashierView, "Cashier View");
-        bottomPanel.add(managerView, "Manager View");
+        // bottomPanel.add(managerView, "Manager View");
 
         return bottomPanel;
     }
@@ -180,10 +180,19 @@ public class GUI{
         homePagePanel.setBorder(new EmptyBorder(40, 40, 40, 40));
         homePagePanel.setBackground(Color.white);
         homePagePanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
-        for (int i = 0; i < 13; i++) {
-            JButton rectangle = new JButton();
-            rectangle.setBackground(Color.gray); // Set the color of the rectangles
-            homePagePanel.add(rectangle);
+        String[] categories = {"Milk Tea", "Fresh Milk", "Ice Blend", "Fruit Tea", "Mojito", "Creama"};
+
+        for (String category : categories) {
+            JButton categoryButton = new JButton(category);
+            categoryButton.setBackground(Color.gray);
+            categoryButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // Call the category handler and pass the selected category.
+                    categoryHandler.categoryHandlerPanel(category);
+                }
+            });
+            homePagePanel.add(categoryButton);
         }
         return homePagePanel;
     }
@@ -198,22 +207,10 @@ public class GUI{
         int panelWidth = screenSize.width - (screenSize.width / 4);
         centerPanelCardLayout = new CardLayout();
         centerPanel = new JPanel(centerPanelCardLayout);
-
         centerPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
-        for (int i = 0; i < 13; i++) {
-            JButton categoryButton = new JButton();
-            categoryButton.setBackground(Color.gray); // Set the color of the rectangles
-            categoryButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    CategoryHandler.categoryHandlerPanel(categoryButton);
-                }
-            });
-            centerPanel.add(categoryButton);
-        }
         //inventory page panel
         inventoryPage = new JPanel();
-        inventoryPage = ManagerView.inventoryPage(inventoryPage);
+        // inventoryPage = ManagerView.inventoryPage(inventoryPage);
 
         centerPanel.add(homePage(), "Home Page");
         centerPanel.add(inventoryPage, "Inventory Page");

@@ -27,3 +27,18 @@ GRANT SELECT ON topping TO public;
 GRANT INSERT ON topping TO public;
 GRANT UPDATE ON topping TO public;
 GRANT DELETE ON topping TO public;
+
+GRANT SELECT ON menu_item TO public;
+GRANT INSERT ON menu_item TO public;
+GRANT UPDATE ON menu_item TO public;
+GRANT DELETE ON menu_item TO public;
+
+GRANT SELECT ON ingredients TO public;
+GRANT INSERT ON ingredients TO public;
+GRANT UPDATE ON ingredients TO public;
+GRANT DELETE ON ingredients TO public;
+
+GRANT SELECT ON menu_ingredients_mapper TO public;
+GRANT INSERT ON menu_ingredients_mapper TO public;
+GRANT UPDATE ON menu_ingredients_mapper TO public;
+GRANT DELETE ON menu_ingredients_mapper TO public;

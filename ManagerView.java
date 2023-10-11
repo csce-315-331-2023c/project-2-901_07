@@ -20,7 +20,7 @@ public class ManagerView {
     static JPanel changePricePanel(JButton toppingButton, List<String> topping){
         System.out.println("THIS IS > " + topping.get(0));
 		JPanel changePricePanel = new JPanel();
-		changePricePanel.setBackground(new Color(50, 240, 240));
+		//changePricePanel.setBackground(new Color(50, 240, 240));
         changePricePanel.setBounds(0, 0, 354, 160);
 		changePricePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -117,7 +117,7 @@ public class ManagerView {
 
     static JPanel changeStockPanelTopping(JButton toppingButton, List<String> topping){
 		JPanel changePricePanel = new JPanel();
-		changePricePanel.setBackground(new Color(50, 240, 240));
+		changePricePanel.setBackground(new Color(144, 44, 62));
         changePricePanel.setBounds(0, 0, 354, 160);
 		changePricePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -215,7 +215,7 @@ public class ManagerView {
 
     static JPanel changePriceMenuItem(JButton menuItemButton, List<String> menuItem){
 		JPanel changePricePanel = new JPanel();
-		changePricePanel.setBackground(new Color(50, 240, 240));
+		//changePricePanel.setBackground();
         changePricePanel.setBounds(0, 0, 354, 160);
 		changePricePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -312,7 +312,7 @@ public class ManagerView {
 
   static JPanel changeStockPanelIngredient(JButton ingredientButton, List<String> ingredient){
 		JPanel changePricePanel = new JPanel();
-		changePricePanel.setBackground(new Color(50, 240, 240));
+		//changePricePanel.setBackground(new Color(50, 240, 240));
         changePricePanel.setBounds(0, 0, 354, 160);
 		changePricePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -716,7 +716,7 @@ public class ManagerView {
 		menuItemFrame.setBounds(100, 100, 354, 250);
         menuItemFrame.setLocationRelativeTo(null);
 		JPanel topPanel = new JPanel();
-		topPanel.setBackground(new Color(50, 102, 240));
+		topPanel.setBackground(new Color(144, 44, 62));
         topPanel.setPreferredSize(new Dimension(354, 160));
         menuItemFrame.add(topPanel, BorderLayout.NORTH);
         CardLayout contentPanelCardLayout = new CardLayout();
@@ -766,7 +766,7 @@ public class ManagerView {
 		changePriceFrame.setBounds(100, 100, 354, 250);
         changePriceFrame.setLocationRelativeTo(null);
 		JPanel topPanel = new JPanel();
-		topPanel.setBackground(new Color(50, 102, 240));
+		topPanel.setBackground(new Color(144, 44, 62));
         topPanel.setPreferredSize(new Dimension(354, 160));
         changePriceFrame.add(topPanel, BorderLayout.NORTH);
         CardLayout contentPanelCardLayout = new CardLayout();
@@ -844,7 +844,7 @@ public class ManagerView {
 		changeStockFrame.setBounds(100, 100, 354, 250);
         changeStockFrame.setLocationRelativeTo(null);
 		JPanel topPanel = new JPanel();
-		topPanel.setBackground(new Color(50, 102, 240));
+		topPanel.setBackground(new Color(144, 44, 62));
         topPanel.setPreferredSize(new Dimension(354, 160));
         changeStockFrame.add(topPanel, BorderLayout.NORTH);
         CardLayout contentPanelCardLayout = new CardLayout();

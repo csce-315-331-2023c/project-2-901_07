@@ -1,25 +1,53 @@
 import javax.swing.*;
 import java.awt.*;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.HashMap;
+import java.util.List;
+import javax.naming.spi.DirStateFactory.Result;
+import java.util.Set;
+import javax.swing.border.*;
+import javax.tools.JavaFileManager;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.border.*;
+
 
 public class GUI{
-    static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    public static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     ManagerView managerView = new ManagerView();
     CardLayout bottomPanelCardLayout, centerPanelCardLayout;
+    
     JButton checkoutButton, transactionHistoryButton, trendsButton, inventoryButton;
     JButton switchViewButton, toGoButton, addCustomerButton, totalChargeButton, ticketsButton;
+    
     JLabel currentViewLabel;
+    
     JPanel centerPanel, rightPanel, bottomPanel;
     JPanel homePage, inventoryPage;
-    
-    String current_view = "Cashier";
 
+    public static JPanel checkoutPanel;
+    public static Double totalPrice = 0.0;
+    public static HashMap<String, Integer> drinkNameIdMap = new HashMap<>();
+    public static HashMap<Integer, List<Integer>> drinkIngredientMap = new HashMap<>(); 
+    public static HashMap<String, Integer> toppingIdMap = new HashMap<>();
+    public static HashMap<Integer, Integer> toppingUsed = new HashMap<>();
+    public static HashMap<Integer, Integer> ingredientUsed = new HashMap<>();
+    public static HashMap<String, HashMap<String, Double>> drinkPrices = new HashMap<>();
+    public static List<List<String>> toppings = new ArrayList<>();
+    public static Integer nextOrderID;
+    public static String employee_id;
+
+    String current_view = "Cashier";
+    
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Bottom Horizontal Bar
     // Checkout + Transaction History + Trends + Availability
     public JPanel bottomPanel() {
+        checkoutPanel = new JPanel(new GridLayout(10, 1, 30, 10));
+        checkoutPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        checkoutPanel.add(new JLabel("List of drinks"), BorderLayout.LINE_START);
         // Bottom panel
         int panelHeight = screenSize.height / 10;
         int panelWidth = 0; // value does not matter
@@ -45,7 +73,7 @@ public class GUI{
 
         bottomPanel.add(cashierView, "Cashier View");
         bottomPanel.add(managerView, "Manager View");
-
+        employee_id = JOptionPane.showInputDialog("Enter Employee ID:");
         return bottomPanel;
     }
     
@@ -57,7 +85,8 @@ public class GUI{
         checkoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("checkoutButton clicked");
+                // Call the category handler and pass the selected category.
+                checkoutHandler.checkoutFrame_();
             }
         });
         return checkoutButton;
@@ -128,6 +157,7 @@ public class GUI{
                 System.out.println("switchViewButton clicked");
                 if (current_view == "Manager"){
                     current_view = "Cashier";
+                    employee_id = JOptionPane.showInputDialog("Enter Employee ID:");
                 }else{
                     current_view = "Manager";
                 }
@@ -189,7 +219,8 @@ public class GUI{
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     // Call the category handler and pass the selected category.
-                    categoryHandler.categoryHandlerPanel(category);
+                    JPanel tempPanel = categoryHandler.categoryHandlerPanel(category);
+                    checkoutPanel.add(tempPanel);
                 }
             });
             homePagePanel.add(categoryButton);
@@ -230,7 +261,6 @@ public class GUI{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // exit out of application
         // frame.setResizable(false); //prevent frame from being resized
         frame.setSize(screenSize.width, screenSize.height); // sets the x-dimension, and y-dimension of frame
-
         ImageIcon image = new ImageIcon("logo.png");
         frame.setIconImage(image.getImage());
         frame.getContentPane().setBackground(new Color(255, 255, 255));
@@ -245,10 +275,203 @@ public class GUI{
 
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    
+    public static List<List<String>> query(String tableName, List<String> columnNames){
+        //Building the connection with your credentials
+        Connection conn = null;
+        String teamName = "01g";
+        String dbName = "csce315331_"+teamName+"_db";
+        // "csce315331_01g_db"
+        String dbConnectionString = "jdbc:postgresql://csce-315-db.engr.tamu.edu/" + dbName;
+        dbSetup myCredentials = new dbSetup();
+
+        try {
+            conn = DriverManager.getConnection(dbConnectionString, dbSetup.user, dbSetup.pswd);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName()+": "+e.getMessage());
+            System.exit(0);
+        }
+
+        System.out.println("Opened database successfully");
+
+        try{
+            Statement createStmt = conn.createStatement();
+            String selectTable = "SELECT * FROM "+tableName+";";
+            ResultSet result = conn.createStatement().executeQuery(selectTable);
+            List<List<String>> output = new ArrayList<>();
+            System.out.println("--------------------Query Results--------------------");
+            while (result.next()) {
+               List<String> rowInfo = new ArrayList<>();
+               for (String columnName: columnNames) {
+                    rowInfo.add(result.getString(columnName));
+               }
+               output.add(rowInfo);
+            }
+            System.out.println(output);
+            System.out.println(result);
+            return output;
+        } catch (Exception e){
+            e.printStackTrace();
+            System.err.println(e.getClass().getName()+": "+e.getMessage());
+            System.exit(0);
+        }
+
+        //closing the connection
+        try {
+            conn.close();
+            System.out.println("Connection Closed.");
+        } catch(Exception e) {
+            System.out.println("Connection NOT Closed.");
+        }//end try catch
+        return null;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static void setupDatabase(){
+        HashMap<String, Double> milkTea = new HashMap<>();
+        HashMap<String, Double> freshMilk = new HashMap<>();
+        HashMap<String, Double> iceBlend = new HashMap<>();
+        HashMap<String, Double> fruitTea = new HashMap<>();
+        HashMap<String, Double> mojito = new HashMap<>();
+        HashMap<String, Double> creama = new HashMap<>();
+
+        List<String> columnNames = new ArrayList<>();
+        columnNames.add("name");
+        columnNames.add("type");
+        columnNames.add("price");
+        columnNames.add("menu_item_id");
+        List<List<String>> drinks = GUI.query("menu_item", columnNames);
+
+        for (List<String> drink : drinks) {
+            String drinkName = drink.get(0);
+            String drinkType = drink.get(1);
+            Double drinkPrice = Double.parseDouble(drink.get(2));
+            Integer drinkID = Integer.parseInt(drink.get(3));
+            GUI.drinkNameIdMap.put(drinkName, drinkID);
+            switch(drinkType) {
+                case "Milk Tea":
+                    milkTea.put(drinkName, drinkPrice);
+                    break;
+                case "Fresh Milk":
+                    freshMilk.put(drinkName, drinkPrice);
+                    break;
+                case "Ice Blend":
+                    iceBlend.put(drinkName, drinkPrice);
+                    break;
+                case "Fruit Tea":
+                    fruitTea.put(drinkName, drinkPrice);
+                    break;
+                case "Mojito":
+                    mojito.put(drinkName, drinkPrice);
+                    break;
+                case "Creama":
+                    creama.put(drinkName, drinkPrice);
+                    break;
+            }
+        }
+        drinkPrices.put("Milk Tea", milkTea);
+        drinkPrices.put("Fresh Milk", freshMilk);
+        drinkPrices.put("Ice Blend", iceBlend);
+        drinkPrices.put("Fruit Tea", fruitTea);
+        drinkPrices.put("Mojito", mojito);
+        drinkPrices.put("Creama", creama);
+        
+        /////////////////////////////////////////////////////////////
+        columnNames.clear();
+        columnNames.add("menu_item_id");
+        columnNames.add("ingredients_id");
+        List<List<String>> drinkIngredientMappers = GUI.query("menu_ingredients_mapper", columnNames);
+
+        for (List<String> DIMap : drinkIngredientMappers){
+            Integer menuItemID = Integer.parseInt(DIMap.get(0));
+            Integer ingrID = Integer.parseInt(DIMap.get(1));
+
+            if (GUI.drinkIngredientMap.containsKey(menuItemID)) {
+                // If it's in the map, add the ingrID to the existing list
+                GUI.drinkIngredientMap.get(menuItemID).add(ingrID);
+            } else {
+                // If it's not in the map, create a new list and add the ingrID
+                List<Integer> ingrList = new ArrayList<>();
+                ingrList.add(ingrID);
+                GUI.drinkIngredientMap.put(menuItemID, ingrList);
+            }
+        }
+
+        ////////////////////////////////////////////////////////////
+        columnNames.clear();
+        columnNames.add("name");
+        columnNames.add("price");
+        columnNames.add("topping_id");
+        toppings = GUI.query("topping", columnNames);
+        for (List<String> topping : GUI.toppings){
+            String toppingName = topping.get(0);
+            Integer toppingID = Integer.parseInt(topping.get(2));
+            GUI.toppingIdMap.put(toppingName, toppingID);
+            toppingUsed.put(toppingID, 0);
+        }
+
+        ////////////////////////////////////////////////////////////
+        columnNames.clear();
+        columnNames.add("ingredients_id");
+        List<List<String>> ingredients = GUI.query("ingredients", columnNames);
+        for (List<String> ingredient : ingredients){
+            GUI.ingredientUsed.put(Integer.parseInt(ingredient.get(0)), 0);
+        }
+
+        columnNames.clear();
+        columnNames.add("order_id");
+        List<List<String>> orderList = GUI.query("orders", columnNames);
+        nextOrderID = orderList.size();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public static boolean run_SQL_Command(String tableName, String command){
+        //Building the connection with your credentials
+        Connection conn = null;
+        String teamName = "01g";
+        String dbName = "csce315331_"+teamName+"_db";
+        // "csce315331_01g_db"
+        String dbConnectionString = "jdbc:postgresql://csce-315-db.engr.tamu.edu/" + dbName;
+        dbSetup myCredentials = new dbSetup();
+
+        try {
+            conn = DriverManager.getConnection(dbConnectionString, dbSetup.user, dbSetup.pswd);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getClass().getName()+": "+e.getMessage());
+            System.exit(0);
+        }
+
+        System.out.println("\nOpened database successfully");
+        System.out.println("Executing SQL Command: \"%s\"".formatted(command));
+
+        try{
+            Statement createStmt = conn.createStatement();
+            boolean executed = conn.createStatement().execute(command);
+            System.out.println("Command executed successfully \n");
+        } catch (Exception e){
+            e.printStackTrace();
+            System.err.println(e.getClass().getName()+": "+e.getMessage());
+            System.exit(0);
+        }
+
+        //closing the connection
+        try {
+            conn.close();
+            System.out.println("Connection Closed.\n\n");
+            return true;
+        } catch(Exception e) {
+            System.out.println("Connection NOT Closed.");
+        }//end try catch
+        return false;
+    }
+
 
     public static void main(String[] args) {
+        setupDatabase();
         new GUI(); // Create an instance of the Main class to initialize the UI
     }
 }

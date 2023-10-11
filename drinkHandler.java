@@ -15,6 +15,8 @@ class drinkHandler {
     static int screenWidth = (Toolkit.getDefaultToolkit().getScreenSize()).width;
     static int screenHeight = (Toolkit.getDefaultToolkit().getScreenSize()).height;
     
+    public static List<String> selectedToppings = new ArrayList<>();
+
     private static JLabel sugarLevelLabel;
     private static JLabel iceLevelLabel;
     private static JLabel drinkDetaiLabel;
@@ -53,6 +55,19 @@ class drinkHandler {
                 checkoutLabel = new JLabel(String.join("\n", checkoutList));
                 GUI.totalPrice += drinkTotalPrice;
                 GUI.checkoutPanel.add(checkoutLabel);
+
+                Integer drinkID = GUI.drinkNameIdMap.get(drink);
+                List<Integer> ingredientThisDrink = GUI.drinkIngredientMap.get(drinkID);
+                for (Integer ingredient : ingredientThisDrink){
+                    GUI.ingredientUsed.put(ingredient,GUI.ingredientUsed.get(ingredient)+1);
+                }
+                System.out.println(selectedToppings);
+                for (String topping : selectedToppings){
+                    Integer toppingID = GUI.toppingIdMap.get(topping);
+                    GUI.toppingUsed.put(toppingID, GUI.toppingUsed.get(toppingID)+1);
+                }
+                ingredientThisDrink.clear();
+                selectedToppings.clear();
                 customFrame.dispose();
             }
         });
@@ -125,17 +140,15 @@ class drinkHandler {
         toppingPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
         toppingPanel.add(toppingLabel);
 
-        List<String> columnNames = new ArrayList<>();
-        columnNames.add("name");
-        columnNames.add("price");
-        columnNames.add("topping_id");
-        List<List<String>> toppings = GUI.query("topping", columnNames);
+        // List<String> columnNames = new ArrayList<>();
+        // columnNames.add("name");
+        // columnNames.add("price");
+        // columnNames.add("topping_id");
+        // List<List<String>> toppings = GUI.query("topping", columnNames);
 
-        for (List<String> topping : toppings) {
+        for (List<String> topping : GUI.toppings) {
             String toppingName = topping.get(0);
             Double price = Double.parseDouble(topping.get(1));
-            Integer toppingID = Integer.parseInt(topping.get(2));
-            GUI.toppingIdMap.put(toppingName, toppingID);
 
             // Create a button with the topping name, price, and topping types
             JButton toppingButton = new JButton(toppingName + " ($" + price + ")");
@@ -156,6 +169,7 @@ class drinkHandler {
                             if (label.getText().startsWith(toppingName)) {
                                 // Topping is already selected, so remove it
                                 drinkDetailPanel.remove(component);
+                                selectedToppings.remove(toppingName);
                                 drinkTotalPrice -= price;
                                 isToppingSelected = true;
                                 break;
@@ -166,6 +180,7 @@ class drinkHandler {
                     if (!isToppingSelected) {
                         JLabel toppingLabel = new JLabel(toppingName + " ($" + price + ")");
                         drinkDetailPanel.add(toppingLabel);
+                        selectedToppings.add(toppingName);
                         drinkTotalPrice += price;
                     }
 
@@ -183,7 +198,7 @@ class drinkHandler {
     }
 
     public static JPanel drinkDetail_(String drink, Double drinkPrice){
-        drinkDetaiLabel = new JLabel("Drink Details:" + " ($" + drinkPrice + ")");
+        drinkDetaiLabel = new JLabel("Drink Details:" + drink + " ($" + drinkPrice + ")");
         drinkDetailPanel = new JPanel(new GridLayout(10, 2, 20, 20));
         drinkDetailPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
         drinkDetailPanel.setPreferredSize(new Dimension(screenWidth/5, screenHeight/2));

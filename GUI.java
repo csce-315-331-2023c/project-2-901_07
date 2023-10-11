@@ -19,13 +19,13 @@ public class GUI{
     ManagerView managerView = new ManagerView();
     CardLayout bottomPanelCardLayout, centerPanelCardLayout;
     
-    JButton checkoutButton, transactionHistoryButton, trendsButton, inventoryButton;
+    JButton checkoutButton, transactionHistoryButton, menuItemButton, inventoryButton;
     JButton switchViewButton, toGoButton, addCustomerButton, totalChargeButton, ticketsButton;
     
     JLabel currentViewLabel;
     
     JPanel centerPanel, rightPanel, bottomPanel;
-    JPanel homePage, inventoryPage;
+    JPanel homePage, inventoryPage, menuItemPage;
 
     public static JPanel checkoutPanel;
     public static Double totalPrice = 0.0;
@@ -68,7 +68,7 @@ public class GUI{
         managerView.setBorder(new EmptyBorder(20, 20, 20, 20));
         managerView.add(checkout_button());
         managerView.add(transactionHistory_button());
-        managerView.add(trends_button());
+        managerView.add(menuItem_button());
         managerView.add(inventory_button());
 
         bottomPanel.add(cashierView, "Cashier View");
@@ -100,10 +100,17 @@ public class GUI{
     }
 
     // 3. Trends Button
-    public JButton trends_button() {
-        trendsButton = new JButton("Trends");
-        trendsButton.setFont(new Font("Calibri", Font.BOLD, 16));
-        return trendsButton;
+    public JButton menuItem_button() {
+        menuItemButton = new JButton("Menu Items");
+        menuItemButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        menuItemButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("menuItemButton clicked");
+                centerPanelCardLayout.show(centerPanel, "Menu Item Page");
+            }
+        });
+        return menuItemButton;
     }
 
     // 4. Availability Button
@@ -130,12 +137,25 @@ public class GUI{
         int panelWidth = screenSize.width / 6;
         JPanel rightPanel = new JPanel(new GridLayout(0, 1, 20, 20));
         rightPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
-        rightPanel.setBackground(Color.cyan);
+        rightPanel.setBackground(new Color(144, 44, 62));
         rightPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
 
         currentViewLabel = new JLabel("Current View: " + current_view);
         currentViewLabel.setFont(new Font("Calibri ", Font.BOLD, 15));
+        currentViewLabel.setForeground(Color.white);
         currentViewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        //Logo
+        ImageIcon imageIcon = new ImageIcon("assets/sharetealogo.png");
+        Image image = imageIcon.getImage(); // Get the original image
+        int width = screenSize.width / 6; // Set the desired width
+        int height = screenSize.height / 9; // Set the desired height
+        Image scaledImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH); // Scale the image
+        imageIcon = new ImageIcon(scaledImage); // Create a new ImageIcon with the scaled image
+        
+        JLabel label = new JLabel(imageIcon);
+        
+        rightPanel.add(label);
 
         rightPanel.add(currentViewLabel);
         rightPanel.add(switchView_button());
@@ -144,6 +164,7 @@ public class GUI{
         rightPanel.add(totalCharge_button());
         rightPanel.add(tickets_button());
         return rightPanel;
+        
     }
 
     // 1. Switch View 
@@ -242,10 +263,12 @@ public class GUI{
         //inventory page panel
         inventoryPage = new JPanel();
         inventoryPage = ManagerView.inventoryPage();
+        menuItemPage = new JPanel();
+        menuItemPage = ManagerView.menuItemPage();
 
         centerPanel.add(homePage(), "Home Page");
         centerPanel.add(inventoryPage, "Inventory Page");
-
+        centerPanel.add(menuItemPage, "Menu Item Page");
         return centerPanel;
     }
 
@@ -261,7 +284,7 @@ public class GUI{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // exit out of application
         // frame.setResizable(false); //prevent frame from being resized
         frame.setSize(screenSize.width, screenSize.height); // sets the x-dimension, and y-dimension of frame
-        ImageIcon image = new ImageIcon("logo.png");
+        ImageIcon image = new ImageIcon("assets/sharetealogo.png");
         frame.setIconImage(image.getImage());
         frame.getContentPane().setBackground(new Color(255, 255, 255));
 

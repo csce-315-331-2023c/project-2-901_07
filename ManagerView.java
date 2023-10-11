@@ -117,7 +117,7 @@ public class ManagerView {
 
     static JPanel changeStockPanelTopping(JButton toppingButton, List<String> topping){
 		JPanel changePricePanel = new JPanel();
-		changePricePanel.setBackground(new Color(144, 44, 62));
+		//changePricePanel.setBackground(new Color(144, 44, 62));
         changePricePanel.setBounds(0, 0, 354, 160);
 		changePricePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -844,7 +844,7 @@ public class ManagerView {
 		changeStockFrame.setBounds(100, 100, 354, 250);
         changeStockFrame.setLocationRelativeTo(null);
 		JPanel topPanel = new JPanel();
-		topPanel.setBackground(new Color(144, 44, 62));
+		//topPanel.setBackground(new Color(144, 44, 62));
         topPanel.setPreferredSize(new Dimension(354, 160));
         changeStockFrame.add(topPanel, BorderLayout.NORTH);
         CardLayout contentPanelCardLayout = new CardLayout();
@@ -1053,7 +1053,7 @@ public class ManagerView {
         // "csce315331_01g_db"
         String dbConnectionString = "jdbc:postgresql://csce-315-db.engr.tamu.edu/" + dbName;
         dbSetup myCredentials = new dbSetup();
-
+        List<List<String>> output = new ArrayList<>();
         try {
             conn = DriverManager.getConnection(dbConnectionString, dbSetup.user, dbSetup.pswd);
         } catch (Exception e) {
@@ -1073,7 +1073,6 @@ public class ManagerView {
             ORDER BY name ASC;
             """.formatted(tableName);
             ResultSet result = conn.createStatement().executeQuery(selectTable);
-            List<List<String>> output = new ArrayList<>();
             System.out.println("--------------------Query Results--------------------");
             while (result.next()) {
                List<String> rowInfo = new ArrayList<>();
@@ -1084,7 +1083,7 @@ public class ManagerView {
             }
             System.out.println(output);
             System.out.println(result);
-            return output;
+            
         } catch (Exception e){
             e.printStackTrace();
             System.err.println(e.getClass().getName()+": "+e.getMessage());
@@ -1095,6 +1094,7 @@ public class ManagerView {
         try {
             conn.close();
             System.out.println("Connection Closed.");
+            return output;
         } catch(Exception e) {
             System.out.println("Connection NOT Closed.");
         }//end try catch

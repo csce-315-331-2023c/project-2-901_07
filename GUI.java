@@ -1,17 +1,31 @@
-import javax.swing.*;
-import java.awt.*;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.HashMap;
-import java.util.List;
-import javax.naming.spi.DirStateFactory.Result;
-import java.util.Set;
-import javax.swing.border.*;
-import javax.tools.JavaFileManager;
-
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 
 public class GUI{
@@ -22,7 +36,7 @@ public class GUI{
     JButton checkoutButton, transactionHistoryButton, menuItemButton, inventoryButton;
     JButton switchViewButton, toGoButton, addCustomerButton, totalChargeButton, ticketsButton;
     
-    JLabel currentViewLabel;
+    JLabel currentViewLabel, currentEmployeeLabel;
     
     JPanel centerPanel, rightPanel, bottomPanel;
     JPanel homePage, inventoryPage, menuItemPage;
@@ -37,7 +51,7 @@ public class GUI{
     public static HashMap<String, HashMap<String, Double>> drinkPrices = new HashMap<>();
     public static List<List<String>> toppings = new ArrayList<>();
     public static Integer nextOrderID;
-    public static String employee_id;
+    public static String employee_id, employeeName;
 
     String current_view = "Cashier";
     
@@ -73,7 +87,7 @@ public class GUI{
 
         bottomPanel.add(cashierView, "Cashier View");
         bottomPanel.add(managerView, "Manager View");
-        employee_id = JOptionPane.showInputDialog("Enter Employee ID:");
+        
         return bottomPanel;
     }
     
@@ -132,6 +146,24 @@ public class GUI{
     // Right Vertical Bar
     // Switch View + To Go + Charge Total + Tickets
     public JPanel rightPanel() {
+        List<String> columnNames = new ArrayList<>(Arrays.asList("employee_id", "manager", "name"));
+
+
+        List<List<String>> employeeInformation = GUI.query("employee", columnNames);
+        List<String> ids = new ArrayList<>();
+        
+        for (List<String> row : employeeInformation) {
+            if (!row.isEmpty()) {
+                ids.add(row.get(0));
+            }
+        }
+        do{
+            employee_id = JOptionPane.showInputDialog("Enter Employee ID:");
+            System.out.println(ids);
+        }while(!ids.contains(employee_id));
+        System.out.println("\n\n\n\n\n\n");
+        System.out.println(employeeInformation.get(Integer.parseInt(employee_id)));
+        employeeName = (employeeInformation.get(Integer.parseInt(employee_id))).get(2);
         // Right panel
         int panelHeight = 0; // value does not matter
         int panelWidth = screenSize.width / 6;
@@ -141,10 +173,15 @@ public class GUI{
         rightPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
 
         currentViewLabel = new JLabel("Current View: " + current_view);
+        
         currentViewLabel.setFont(new Font("Calibri ", Font.BOLD, 15));
         currentViewLabel.setForeground(Color.white);
         currentViewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
+        currentEmployeeLabel = new JLabel("Welcome,  " + employeeName);
+        currentEmployeeLabel.setFont(new Font("Calibri ", Font.BOLD, 15));
+        currentEmployeeLabel.setForeground(Color.white);
+        currentEmployeeLabel.setHorizontalAlignment(SwingConstants.CENTER);
         //Logo
         ImageIcon imageIcon = new ImageIcon("assets/sharetealogo.png");
         Image image = imageIcon.getImage(); // Get the original image
@@ -158,6 +195,7 @@ public class GUI{
         rightPanel.add(label);
 
         rightPanel.add(currentViewLabel);
+        rightPanel.add(currentEmployeeLabel);
         rightPanel.add(switchView_button());
         rightPanel.add(toGo_button());
         rightPanel.add(addCustomer_button());
@@ -176,11 +214,33 @@ public class GUI{
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("switchViewButton clicked");
+                List<String> columnNames = new ArrayList<>(Arrays.asList("employee_id", "manager", "name"));
+                List<List<String>> employeeInformation = GUI.query("employee", columnNames);
+                List<String> ids = new ArrayList<>();
+                List<String> manager_ids = new ArrayList<>();
+                for (List<String> row : employeeInformation) {
+                    if (!row.isEmpty()) {
+                        ids.add(row.get(0));
+                        if(row.size() >= 2 && row.get(1).equals("t")){
+                            manager_ids.add(row.get(0));
+                        }
+                    }
+                }
                 if (current_view == "Manager"){
                     current_view = "Cashier";
-                    employee_id = JOptionPane.showInputDialog("Enter Employee ID:");
+                    
+                    do{
+                        employee_id = JOptionPane.showInputDialog("Enter Employee ID:");
+                        System.out.println(ids);
+                    }while(!ids.contains(employee_id));
+                    
                 }else{
                     current_view = "Manager";
+                    do{
+                        employee_id = JOptionPane.showInputDialog("Enter Employee ID:");
+                        System.out.println(manager_ids);
+                    }while(!manager_ids.contains(employee_id));
+                    
                 }
                 bottomPanelCardLayout.next(bottomPanel);
                 centerPanelCardLayout.show(centerPanel, "Home Page");

@@ -16,11 +16,12 @@ import java.awt.event.ActionListener;
 
 public class GUI{
     public static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    ManagerView managerView = new ManagerView();
+
+    DatabaseHandler databaseHandler =  new DatabaseHandler();
     CardLayout bottomPanelCardLayout, centerPanelCardLayout;
     
-    JButton checkoutButton, transactionHistoryButton, menuItemButton, inventoryButton;
-    JButton switchViewButton, toGoButton, addCustomerButton, totalChargeButton, ticketsButton;
+    JButton checkoutButton, orderHistoryButton, menuItemButton, inventoryButton;
+    JButton changeEmployeeButton, toGoButton, addCustomerButton, totalChargeButton, ticketsButton;
     
     JLabel currentViewLabel;
     
@@ -43,7 +44,7 @@ public class GUI{
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Bottom Horizontal Bar
-    // Checkout + Transaction History + Trends + Availability
+    // Checkout + order History + Trends + Availability
     public JPanel bottomPanel() {
         checkoutPanel = new JPanel(new GridLayout(10, 1, 30, 10));
         checkoutPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
@@ -67,8 +68,7 @@ public class GUI{
         JPanel managerView = new JPanel(new GridLayout(1, 5, 30, 10));
         managerView.setBorder(new EmptyBorder(20, 20, 20, 20));
         managerView.add(checkout_button());
-        managerView.add(transactionHistory_button());
-        managerView.add(menuItem_button());
+        managerView.add(orderHistory_button());
         managerView.add(inventory_button());
 
         bottomPanel.add(cashierView, "Cashier View");
@@ -92,11 +92,11 @@ public class GUI{
         return checkoutButton;
     }
 
-    // 2. Transaction Button
-    public JButton transactionHistory_button() {
-        transactionHistoryButton = new JButton("Transaction");
-        transactionHistoryButton.setFont(new Font("Calibri", Font.BOLD, 16));
-        return transactionHistoryButton;
+    // 2. order Button
+    public JButton orderHistory_button() {
+        orderHistoryButton = new JButton("Order History");
+        orderHistoryButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        return orderHistoryButton;
     }
 
     // 3. Trends Button
@@ -158,24 +158,24 @@ public class GUI{
         rightPanel.add(label);
 
         rightPanel.add(currentViewLabel);
-        rightPanel.add(switchView_button());
-        rightPanel.add(toGo_button());
-        rightPanel.add(addCustomer_button());
-        rightPanel.add(totalCharge_button());
-        rightPanel.add(tickets_button());
+        rightPanel.add(changeEmployee_button());
+        // rightPanel.add(toGo_button());
+        // rightPanel.add(addCustomer_button());
+        // rightPanel.add(totalCharge_button());
+        // rightPanel.add(tickets_button());
         return rightPanel;
         
     }
 
     // 1. Switch View 
-    public JButton switchView_button() {
-        switchViewButton = new JButton("Switch View");
-        switchViewButton.setBounds(200, 100, 100, 50);
-        switchViewButton.setFont(new Font("Calibri", Font.BOLD, 16));
-        switchViewButton.addActionListener(new ActionListener() {
+    public JButton changeEmployee_button() {
+        changeEmployeeButton = new JButton("Change Employee");
+        changeEmployeeButton.setBounds(200, 100, 100, 50);
+        changeEmployeeButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        changeEmployeeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("switchViewButton clicked");
+                System.out.println("changeEmployeeButton clicked");
                 if (current_view == "Manager"){
                     current_view = "Cashier";
                     employee_id = JOptionPane.showInputDialog("Enter Employee ID:");
@@ -187,7 +187,7 @@ public class GUI{
                 currentViewLabel.setText("Current View: " + current_view);
             }
         });
-        return switchViewButton;
+        return changeEmployeeButton;
     }
 
     // 2. To Go 
@@ -259,15 +259,14 @@ public class GUI{
         int panelWidth = screenSize.width - (screenSize.width / 4);
         centerPanelCardLayout = new CardLayout();
         centerPanel = new JPanel(centerPanelCardLayout);
-        centerPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
         //inventory page panel
-        inventoryPage = new JPanel();
-        inventoryPage = ManagerView.inventoryPage();
+        JScrollPane scrollPane = new JScrollPane(ManagerView.inventoryPage());
+        scrollPane.setPreferredSize(new Dimension(300, 200)); 
         menuItemPage = new JPanel();
         menuItemPage = ManagerView.menuItemPage();
 
         centerPanel.add(homePage(), "Home Page");
-        centerPanel.add(inventoryPage, "Inventory Page");
+        centerPanel.add(scrollPane, "Inventory Page");
         centerPanel.add(menuItemPage, "Menu Item Page");
         return centerPanel;
     }

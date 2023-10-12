@@ -1,22 +1,29 @@
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.List;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+/*
+ * @author Quy Van
+ */
 public class categoryHandler {
     
     private static int screenWidth = (Toolkit.getDefaultToolkit().getScreenSize()).width;
     private static int screenHeight = (Toolkit.getDefaultToolkit().getScreenSize()).height;
     private static JFrame customFrame;
     private static JPanel drinkDetail;
+    /* @param category the category of drink
+    *@return returns a panel with the list of drinks
 
+    */
     public static JPanel categoryHandlerPanel(String category) {
         SwingUtilities.invokeLater(() -> {
             customFrame = new JFrame();
@@ -33,7 +40,10 @@ public class categoryHandler {
         });
         return drinkDetail;
     }
-
+    /*
+     * @param category the category of drink
+        *@return returns a panel with the list of drinks
+     */
     public static JPanel createDrinksPanel(String category) {
         // Assuming you have a data structure containing drinks for each category.
         // You can modify the logic to retrieve drinks based on the selected category.

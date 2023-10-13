@@ -1,6 +1,20 @@
+# Running the Point of Sale GUI
+
+This part of the README provides instructions on how to run the GUI.
+
+## Instructions
+
+1. **Within a terminal, run these commands in the main directory:**
+
+   ```
+   javac *.java
+   java -cp ".;postgresql-42.2.8.jar" GUI  
+   ```
+
+   
 # Database Table Initialization
 
-This README provides instructions on how to initialize database tables using the provided scripts and CSV files.
+This part of the README provides instructions on how to initialize database tables using the provided scripts and CSV files.
 
 
 ## Instructions
@@ -55,4 +69,7 @@ This README provides instructions on how to initialize database tables using the
    This step may take a few moments to complete.
 
 Now your database tables should be initialized and populated with data from the CSV files.
+
+
+
 

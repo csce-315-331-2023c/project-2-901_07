@@ -143,7 +143,7 @@ public class DatabaseHandler {
     SELECT d.menu_item_id
     FROM orders o
     JOIN drink d ON o.order_id = d.order_id
-    WHERE o.date BETWEEN 'start_date' AND 'end_date'  -- replace start_date and end_date with actual dates
+    WHERE o.date BETWEEN 'START' AND 'END'  -- Replace START and END with the actual dates
 )
 
     SELECT mi.name, COUNT(dri.menu_item_id) as order_count
@@ -151,17 +151,50 @@ public class DatabaseHandler {
     JOIN menu_item mi ON dri.menu_item_id = mi.menu_item_id
     GROUP BY mi.name
     ORDER BY order_count DESC;
- */
+*/
 
 
 
- // Restock Report
- /*
+
+
+
+
+// Restock Report
+/*
     SELECT name, availability
     FROM ingredients
     WHERE availability < (Restock Amount);  -- replace with the amount you want to set to be the restock limit
-  */
+*/
 
 
 
-  
+
+
+
+// What Sales Together
+/*
+    WITH PairedDrinks AS (
+        SELECT
+            d1.order_id,
+            d1.menu_item_id AS menu_item_id1,
+            d2.menu_item_id AS menu_item_id2
+        FROM drink d1
+        JOIN drink d2 ON d1.order_id = d2.order_id AND d1.menu_item_id < d2.menu_item_id
+        JOIN orders o ON d1.order_id = o.order_id
+        WHERE o.date BETWEEN 'START' AND 'END'  -- Replace START and END with the actual dates
+    )
+
+    SELECT
+        p.menu_item_id1,
+        mi1.name AS menu_item_name1,
+        p.menu_item_id2,
+        mi2.name AS menu_item_name2,
+        COUNT(*) AS frequency
+    FROM PairedDrinks p
+    JOIN menu_item mi1 ON p.menu_item_id1 = mi1.menu_item_id
+    JOIN menu_item mi2 ON p.menu_item_id2 = mi2.menu_item_id
+    GROUP BY p.menu_item_id1, mi1.name, p.menu_item_id2, mi2.name
+    ORDER BY frequency DESC;
+
+
+*/

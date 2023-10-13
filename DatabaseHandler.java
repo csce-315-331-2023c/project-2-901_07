@@ -137,11 +137,9 @@ public class DatabaseHandler {
 }
 
 
-
+// Sales Report
 /*
- * 
- * 
- *  WITH DrinksInRange AS (
+    WITH DrinksInRange AS (
     SELECT d.menu_item_id
     FROM orders o
     JOIN drink d ON o.order_id = d.order_id
@@ -153,8 +151,17 @@ public class DatabaseHandler {
     JOIN menu_item mi ON dri.menu_item_id = mi.menu_item_id
     GROUP BY mi.name
     ORDER BY order_count DESC;
- * 
- * 
- * 
- * 
  */
+
+
+
+ // Restock Report
+ /*
+    SELECT name, availability
+    FROM ingredients
+    WHERE availability < (Restock Amount);  -- replace with the amount you want to set to be the restock limit
+  */
+
+
+
+  

@@ -136,3 +136,25 @@ public class DatabaseHandler {
     }
 }
 
+
+
+/*
+ * 
+ * 
+ *  WITH DrinksInRange AS (
+    SELECT d.menu_item_id
+    FROM orders o
+    JOIN drink d ON o.order_id = d.order_id
+    WHERE o.date BETWEEN 'start_date' AND 'end_date'  -- replace start_date and end_date with actual dates
+)
+
+    SELECT mi.name, COUNT(dri.menu_item_id) as order_count
+    FROM DrinksInRange dri
+    JOIN menu_item mi ON dri.menu_item_id = mi.menu_item_id
+    GROUP BY mi.name
+    ORDER BY order_count DESC;
+ * 
+ * 
+ * 
+ * 
+ */

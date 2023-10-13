@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -15,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 
 public class checkoutHandler {
     private static JFrame checkoutFrame;
-    private static String customer_id = null;
+    private static String name = null;
 
     public static void checkoutFrame_() {
         SwingUtilities.invokeLater(() -> {
@@ -33,7 +35,7 @@ public class checkoutHandler {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     // Prompt the user to enter a customer ID using a JOptionPane
-                    customer_id = JOptionPane.showInputDialog(checkoutFrame, "Enter Customer ID:");
+                    name = JOptionPane.showInputDialog(checkoutFrame, "Enter Customer Name:");
                     
                     // You can validate the customer_id_temp input here if needed
                 }
@@ -47,8 +49,8 @@ public class checkoutHandler {
             public void actionPerformed(ActionEvent e) {
                 // Call the category handler and pass the selected category.
                 // UPDATE Topping Availability
-                if (customer_id == null){
-                    customer_id = JOptionPane.showInputDialog(checkoutFrame, "Enter Customer ID:");
+                if (name == null){
+                    name = JOptionPane.showInputDialog(checkoutFrame, "Enter Customer Name:");
                 }
                 for (Integer toppingID : GUI.toppingUsed.keySet()){
                     // Call the category handler and pass the selected category.
@@ -82,7 +84,20 @@ public class checkoutHandler {
                     }
                     // System.out.println(ingredientID + ": " + GUI.ingredientUsed.get(ingredientID));
                 }
-                
+
+                // INSERT CUSTOMER
+                List<String> columnNames = new ArrayList<>();
+                columnNames.add("customer_id");
+                int customer_id = (GUI.query("customer",columnNames)).size();
+                try {
+                    boolean ranSuccessfully = GUI.run_SQL_Command("customer", 
+                    """
+                    INSERT INTO customer (customer_id, name)
+                    VALUES ('%s', '%s');
+                    """.formatted(customer_id, name));
+                } catch (NumberFormatException e_2) {
+                    System.err.println("ERROR");
+                }
                 // INSERT Order
                 LocalDate localDate = LocalDate.now();
                 LocalTime localTime = LocalTime.now();

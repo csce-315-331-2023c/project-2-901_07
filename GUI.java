@@ -1,31 +1,27 @@
-import javax.swing.*;
 import java.awt.*;
 import java.sql.*;
+import javax.swing.*;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import javax.naming.spi.DirStateFactory.Result;
-import java.util.Set;
+import java.awt.event.*;
 import javax.swing.border.*;
-import javax.tools.JavaFileManager;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 
 public class GUI{
     public static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    ManagerView managerView = new ManagerView();
+
+    DatabaseHandler databaseHandler =  new DatabaseHandler();
     CardLayout bottomPanelCardLayout, centerPanelCardLayout;
     
-    JButton checkoutButton, transactionHistoryButton, trendsButton, inventoryButton;
-    JButton switchViewButton, toGoButton, addCustomerButton, totalChargeButton, ticketsButton;
+    JButton checkoutButton, homeButton, orderHistoryButton, menuItemButton, inventoryButton;
+    JButton changeEmployeeButton, toGoButton, addCustomerButton, totalChargeButton, ticketsButton;
     
-    JLabel currentViewLabel;
-    
+    JLabel currentViewLabel, currentEmployeeLabel;
+    List<List<String>> employeeInformation = new ArrayList<>();
     JPanel centerPanel, rightPanel, bottomPanel;
-    JPanel homePage, inventoryPage;
+    JPanel homePage, inventoryPage, menuItemPage;
 
     public static JPanel checkoutPanel;
     public static Double totalPrice = 0.0;
@@ -37,13 +33,13 @@ public class GUI{
     public static HashMap<String, HashMap<String, Double>> drinkPrices = new HashMap<>();
     public static List<List<String>> toppings = new ArrayList<>();
     public static Integer nextOrderID;
-    public static String employee_id;
+    public static String employee_id, employeeName;
 
     String current_view = "Cashier";
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Bottom Horizontal Bar
-    // Checkout + Transaction History + Trends + Availability
+    // Checkout + order History + Trends + Availability
     public JPanel bottomPanel() {
         checkoutPanel = new JPanel(new GridLayout(10, 1, 30, 10));
         checkoutPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
@@ -59,21 +55,22 @@ public class GUI{
         //cashier view bottom panel
         JPanel cashierView = new JPanel(new GridLayout(1, 5, 30, 10));
         cashierView.setBorder(new EmptyBorder(20, 20, 20, 20));
+        cashierView.add(new JLabel());
+        cashierView.add(new JLabel());
+        cashierView.add(new JLabel());
         cashierView.add(checkout_button());
-        cashierView.add(new JLabel());
-        cashierView.add(new JLabel());
-        cashierView.add(new JLabel());
         //manager view bottom panel
         JPanel managerView = new JPanel(new GridLayout(1, 5, 30, 10));
         managerView.setBorder(new EmptyBorder(20, 20, 20, 20));
-        managerView.add(checkout_button());
-        managerView.add(transactionHistory_button());
-        managerView.add(trends_button());
+        //managerView.add(home_button());
+        managerView.add(home_button());
+        //managerView.add(orderHistory_button());
         managerView.add(inventory_button());
+        managerView.add(checkout_button());
 
         bottomPanel.add(cashierView, "Cashier View");
         bottomPanel.add(managerView, "Manager View");
-        employee_id = JOptionPane.showInputDialog("Enter Employee ID:");
+        
         return bottomPanel;
     }
     
@@ -92,18 +89,25 @@ public class GUI{
         return checkoutButton;
     }
 
-    // 2. Transaction Button
-    public JButton transactionHistory_button() {
-        transactionHistoryButton = new JButton("Transaction");
-        transactionHistoryButton.setFont(new Font("Calibri", Font.BOLD, 16));
-        return transactionHistoryButton;
+    // 2. order Button
+    public JButton orderHistory_button() {
+        orderHistoryButton = new JButton("Order History");
+        orderHistoryButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        return orderHistoryButton;
     }
 
     // 3. Trends Button
-    public JButton trends_button() {
-        trendsButton = new JButton("Trends");
-        trendsButton.setFont(new Font("Calibri", Font.BOLD, 16));
-        return trendsButton;
+    public JButton menuItem_button() {
+        menuItemButton = new JButton("Menu Items");
+        menuItemButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        menuItemButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("menuItemButton clicked");
+                centerPanelCardLayout.show(centerPanel, "Menu Item Page");
+            }
+        });
+        return menuItemButton;
     }
 
     // 4. Availability Button
@@ -120,53 +124,128 @@ public class GUI{
         return inventoryButton;
     }
 
+    public JButton home_button() {
+        homeButton = new JButton("Home");
+        homeButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        homeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("homeButton clicked");
+                centerPanelCardLayout.show(centerPanel, "Home Page");
+            }
+        });
+        return homeButton;
+    }
     ////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Right Vertical Bar
     // Switch View + To Go + Charge Total + Tickets
     public JPanel rightPanel() {
+        List<String> columnNames = new ArrayList<>(Arrays.asList("employee_id", "manager", "name"));
+
+
+        employeeInformation = GUI.query("employee", columnNames);
+        List<String> ids = new ArrayList<>();
+        
+        for (List<String> row : employeeInformation) {
+            if (!row.isEmpty()) {
+                ids.add(row.get(0));
+            }
+        }
+        do{
+            employee_id = JOptionPane.showInputDialog("Enter Employee ID:");
+            System.out.println(ids);
+        }while(!ids.contains(employee_id));
+        System.out.println("\n\n\n\n\n\n");
+        System.out.println(employeeInformation.get(Integer.parseInt(employee_id)));
+        employeeName = (employeeInformation.get(Integer.parseInt(employee_id))).get(2);
         // Right panel
         int panelHeight = 0; // value does not matter
         int panelWidth = screenSize.width / 6;
         JPanel rightPanel = new JPanel(new GridLayout(0, 1, 20, 20));
         rightPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
-        rightPanel.setBackground(Color.cyan);
+        rightPanel.setBackground(new Color(144, 44, 62));
         rightPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
 
         currentViewLabel = new JLabel("Current View: " + current_view);
+        
         currentViewLabel.setFont(new Font("Calibri ", Font.BOLD, 15));
+        currentViewLabel.setForeground(Color.white);
         currentViewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
+        currentEmployeeLabel = new JLabel("Welcome,  " + employeeName);
+        currentEmployeeLabel.setFont(new Font("Calibri ", Font.BOLD, 15));
+        currentEmployeeLabel.setForeground(Color.white);
+        currentEmployeeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        //Logo
+        ImageIcon imageIcon = new ImageIcon("assets/sharetealogo.png");
+        Image image = imageIcon.getImage(); // Get the original image
+        int width = screenSize.width / 6; // Set the desired width
+        int height = screenSize.height / 9; // Set the desired height
+        Image scaledImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH); // Scale the image
+        imageIcon = new ImageIcon(scaledImage); // Create a new ImageIcon with the scaled image
+        
+        JLabel label = new JLabel(imageIcon);
+        
+        rightPanel.add(label);
+        rightPanel.add(currentEmployeeLabel);
         rightPanel.add(currentViewLabel);
-        rightPanel.add(switchView_button());
-        rightPanel.add(toGo_button());
-        rightPanel.add(addCustomer_button());
-        rightPanel.add(totalCharge_button());
-        rightPanel.add(tickets_button());
+
+        rightPanel.add(changeEmployee_button());
+        // rightPanel.add(toGo_button());
+        // rightPanel.add(addCustomer_button());
+        // rightPanel.add(totalCharge_button());
+        // rightPanel.add(tickets_button());
+
         return rightPanel;
+        
     }
 
     // 1. Switch View 
-    public JButton switchView_button() {
-        switchViewButton = new JButton("Switch View");
-        switchViewButton.setBounds(200, 100, 100, 50);
-        switchViewButton.setFont(new Font("Calibri", Font.BOLD, 16));
-        switchViewButton.addActionListener(new ActionListener() {
+    public JButton changeEmployee_button() {
+        changeEmployeeButton = new JButton("Change Employee");
+        changeEmployeeButton.setBounds(200, 100, 100, 50);
+        changeEmployeeButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        changeEmployeeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("switchViewButton clicked");
-                if (current_view == "Manager"){
-                    current_view = "Cashier";
-                    employee_id = JOptionPane.showInputDialog("Enter Employee ID:");
-                }else{
-                    current_view = "Manager";
+                System.out.println("changeEmployeeButton clicked");
+                List<String> columnNames = new ArrayList<>(Arrays.asList("employee_id", "manager", "name"));
+                List<List<String>> employeeInformation = GUI.query("employee", columnNames);
+                List<String> ids = new ArrayList<>();
+                List<String> manager_ids = new ArrayList<>();
+                for (List<String> row : employeeInformation) {
+                    if (!row.isEmpty()) {
+                        ids.add(row.get(0));
+                        if(row.size() >= 2 && row.get(1).equals("t")){
+                            manager_ids.add(row.get(0));
+                        }
+                    }
                 }
-                bottomPanelCardLayout.next(bottomPanel);
+                System.out.println("REAL " + ids);
+
+                do{
+                        employee_id = JOptionPane.showInputDialog("Enter Employee ID:");
+                        System.out.println(ids);
+                }while(!ids.contains(employee_id));
+                Integer employee_id_index = Integer.parseInt(employee_id);
+                if(employeeInformation.get(employee_id_index).get(1).equals("t")){
+                    System.out.println("MANAGER");
+                    current_view = "Manager";
+                    bottomPanelCardLayout.show(bottomPanel, "Manager View");
+                }
+                else{
+                    System.out.println("NOT MANAGER");
+                    current_view = "Cashier";
+                    bottomPanelCardLayout.show(bottomPanel, "Cashier View");
+                }
                 centerPanelCardLayout.show(centerPanel, "Home Page");
                 currentViewLabel.setText("Current View: " + current_view);
+                currentEmployeeLabel.setText("Welcome,  " + employeeInformation.get(employee_id_index).get(2));
+    
             }
         });
-        return switchViewButton;
+        return changeEmployeeButton;
     }
 
     // 2. To Go 
@@ -238,14 +317,15 @@ public class GUI{
         int panelWidth = screenSize.width - (screenSize.width / 4);
         centerPanelCardLayout = new CardLayout();
         centerPanel = new JPanel(centerPanelCardLayout);
-        centerPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
         //inventory page panel
-        inventoryPage = new JPanel();
-        inventoryPage = ManagerView.inventoryPage();
+        JScrollPane scrollPane = new JScrollPane(ManagerView.inventoryPage());
+        scrollPane.setPreferredSize(new Dimension(300, 200)); 
+        menuItemPage = new JPanel();
+        menuItemPage = ManagerView.menuItemPage();
 
         centerPanel.add(homePage(), "Home Page");
-        centerPanel.add(inventoryPage, "Inventory Page");
-
+        centerPanel.add(scrollPane, "Inventory Page");
+        centerPanel.add(menuItemPage, "Menu Item Page");
         return centerPanel;
     }
 
@@ -261,7 +341,7 @@ public class GUI{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // exit out of application
         // frame.setResizable(false); //prevent frame from being resized
         frame.setSize(screenSize.width, screenSize.height); // sets the x-dimension, and y-dimension of frame
-        ImageIcon image = new ImageIcon("logo.png");
+        ImageIcon image = new ImageIcon("assets/sharetealogo.png");
         frame.setIconImage(image.getImage());
         frame.getContentPane().setBackground(new Color(255, 255, 255));
 
@@ -270,6 +350,19 @@ public class GUI{
         frame.add(bottomPanel(), BorderLayout.SOUTH);
         frame.add(centerPanel(), BorderLayout.CENTER);
 
+        currentEmployeeLabel.setText("Welcome,  " + employeeName);
+        currentEmployeeLabel.setFont(new Font("Calibri ", Font.BOLD, 15));
+        currentEmployeeLabel.setForeground(Color.white);
+        currentEmployeeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        if((employeeInformation.get(Integer.parseInt(employee_id))).get(1).equals("t")){
+            current_view = "Manager";
+            bottomPanelCardLayout.show(bottomPanel, "Manager View");
+        }
+        else{
+            current_view = "Cashier";
+            bottomPanelCardLayout.show(bottomPanel, "Cashier View");            
+        }
+        currentViewLabel.setText("Current View: " + current_view);
         frame.setVisible(true); // make frame visible
         // END OF FRAMES TUTORIAL
 

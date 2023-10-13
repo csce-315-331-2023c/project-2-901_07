@@ -4,6 +4,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -24,31 +25,25 @@ public class categoryHandler {
     *@return returns a panel with the list of drinks
 
     */
-    public static JPanel categoryHandlerPanel(String category) {
-        SwingUtilities.invokeLater(() -> {
-            customFrame = new JFrame();
-            customFrame.setTitle("Drink Customization Panel");
-            customFrame.setSize(screenWidth, screenHeight);
-            customFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            customFrame.setLayout(new BorderLayout());
+    public static void categoryHandlerPanel(String category) {
+        customFrame = new JFrame();
+        customFrame.setTitle("Drink Customization Panel");
+        customFrame.setSize(screenWidth, screenHeight);
+        customFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        customFrame.setLayout(new BorderLayout());
 
-            // Create a panel with drinks for the selected category
-            JPanel drinksPanel = createDrinksPanel(category);
-            customFrame.add(drinksPanel, BorderLayout.CENTER);
+        // Create a panel with drinks for the selected category
+        JPanel drinksPanel = createDrinksPanel(category);
+        customFrame.add(drinksPanel, BorderLayout.CENTER);
 
-            customFrame.setVisible(true);
-        });
-        return drinkDetail;
+        customFrame.setVisible(true);
     }
     /*
      * @param category the category of drink
         *@return returns a panel with the list of drinks
      */
     public static JPanel createDrinksPanel(String category) {
-        // Assuming you have a data structure containing drinks for each category.
-        // You can modify the logic to retrieve drinks based on the selected category.
-        HashMap<String, Double> drinkMap = GUI.drinkPrices.get(category);
-        String[] drinkList = drinkMap.keySet().toArray(new String[0]);
+        List<String> drinkList = DatabaseHandler.drinkTypeMap.get(category);
         
         JLabel label = new JLabel("List of " + category);
         
@@ -57,14 +52,15 @@ public class categoryHandler {
         panel.add(label, BorderLayout.NORTH);
 
         for (String drink : drinkList) {
-            Double price = drinkMap.get(drink);
+            Double price = DatabaseHandler.drinkPriceMap.get(drink);
             JButton drinkButton = new JButton(drink + " ($" + price + ")");
 
             drinkButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     // Call the category handler and pass the selected category.
-                    drinkDetail = drinkHandler.DrinkHandlerPanel(drink, price);
+                    drinkHandler drinkDetail = new drinkHandler();
+                    drinkDetail.DrinkHandlerPanel(drink, price);
                     customFrame.dispose();
                 }
             });

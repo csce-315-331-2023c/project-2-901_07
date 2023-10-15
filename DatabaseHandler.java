@@ -116,6 +116,7 @@ public class DatabaseHandler {
         System.out.println("Opened database successfully");
         try{
             Statement createStmt = conn.createStatement();
+            System.out.println("Running command: " + command);
             ResultSet result = conn.createStatement().executeQuery(command);
             System.out.println("--------------------Query Results--------------------");
             while (result.next()) {
@@ -162,6 +163,7 @@ public class DatabaseHandler {
            try{
                Statement createStmt = conn.createStatement();
                boolean executed = conn.createStatement().execute(command);
+               System.out.println("COMMAND OUTPUT: " + executed);
                System.out.println("Command executed successfully \n");
            } catch (Exception e){
                e.printStackTrace();
@@ -270,8 +272,21 @@ public class DatabaseHandler {
 
 
     public DatabaseHandler(){
+
         queryData();
         setUpHashMap();
+    }
+
+    public static void main(String[] args) {
+        List<String> test = new ArrayList<>();
+        test.add("name");
+        DatabaseHandler.query_SQL( 
+        """
+                SELECT name FROM topping WHERE name = 'Aloe Vera'
+                UNION
+                SELECT name FROM ingredients WHERE name = 'Aloe Vera';
+                
+        """, test);
     }
 }
 

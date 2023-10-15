@@ -55,10 +55,10 @@ public class GUI{
         managerView.setBorder(new EmptyBorder(20, 20, 20, 20));
         //managerView.add(home_button());
         managerView.add(home_button());
-        //managerView.add(orderHistory_button());
+        managerView.add(orderHistory_button());
         managerView.add(inventory_button());
+        managerView.add(menuItem_button());
         managerView.add(checkout_button());
-
         bottomPanel.add(cashierView, "Cashier View");
         bottomPanel.add(managerView, "Manager View");
         
@@ -86,6 +86,13 @@ public class GUI{
     public JButton orderHistory_button() {
         orderHistoryButton = new JButton("Order History");
         orderHistoryButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        orderHistoryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("orderHistoryButton clicked");
+                centerPanelCardLayout.show(centerPanel, "Order History Page");
+            }
+        });
         return orderHistoryButton;
     }
 
@@ -306,14 +313,14 @@ public class GUI{
         centerPanelCardLayout = new CardLayout();
         centerPanel = new JPanel(centerPanelCardLayout);
         //inventory page panel
-        JScrollPane scrollPane = new JScrollPane(ManagerView.inventoryPage());
-        scrollPane.setPreferredSize(new Dimension(300, 200)); 
-        menuItemPage = new JPanel();
-        menuItemPage = ManagerView.menuItemPage();
+        JScrollPane scrollPaneInventoryPage = new JScrollPane(ManagerView.inventoryPage());
+        JScrollPane scrollPaneMenuItemPage = new JScrollPane(ManagerView.menuItemPage());
+
 
         centerPanel.add(homePage(), "Home Page");
-        centerPanel.add(scrollPane, "Inventory Page");
-        centerPanel.add(menuItemPage, "Menu Item Page");
+        centerPanel.add(scrollPaneInventoryPage, "Inventory Page");
+        centerPanel.add(scrollPaneMenuItemPage, "Menu Item Page");
+        centerPanel.add(ManagerView.orderHistoryPage() , "Order History Page");
         return centerPanel;
     }
 

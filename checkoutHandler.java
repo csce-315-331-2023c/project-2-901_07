@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -102,8 +104,8 @@ public class checkoutHandler {
                         }
                     }
                 }
-                
-                
+                                                                                      
+                                                                                   
                 LocalDate localDate = LocalDate.now();
                 LocalTime localTime = LocalTime.now();
                 DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

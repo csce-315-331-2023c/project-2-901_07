@@ -290,3 +290,102 @@ public class DatabaseHandler {
     }
 }
 
+
+// Sales Report
+/*
+    WITH DrinksInRange AS (
+    SELECT d.menu_item_id
+    FROM orders o
+    JOIN drink d ON o.order_id = d.order_id
+    WHERE o.date BETWEEN 'START' AND 'END'  -- Replace START and END with the actual dates
+)
+
+    SELECT mi.name, COUNT(dri.menu_item_id) as order_count
+    FROM DrinksInRange dri
+    JOIN menu_item mi ON dri.menu_item_id = mi.menu_item_id
+    GROUP BY mi.name
+    ORDER BY order_count DESC;
+*/
+
+
+
+
+
+
+
+// Restock Report
+/*
+    SELECT name, availability
+    FROM ingredients
+    WHERE availability < (Restock Amount);  -- replace with the amount you want to set to be the restock limit
+*/
+
+
+
+
+
+
+// What Sales Together
+/*
+    WITH PairedDrinks AS (
+        SELECT
+            d1.order_id,
+            d1.menu_item_id AS menu_item_id1,
+            d2.menu_item_id AS menu_item_id2
+        FROM drink d1
+        JOIN drink d2 ON d1.order_id = d2.order_id AND d1.menu_item_id < d2.menu_item_id
+        JOIN orders o ON d1.order_id = o.order_id
+        WHERE o.date BETWEEN 'START' AND 'END'  -- Replace START and END with the actual dates
+    )
+
+    SELECT
+        p.menu_item_id1,
+        mi1.name AS menu_item_name1,
+        p.menu_item_id2,
+        mi2.name AS menu_item_name2,
+        COUNT(*) AS frequency
+    FROM PairedDrinks p
+    JOIN menu_item mi1 ON p.menu_item_id1 = mi1.menu_item_id
+    JOIN menu_item mi2 ON p.menu_item_id2 = mi2.menu_item_id
+    GROUP BY p.menu_item_id1, mi1.name, p.menu_item_id2, mi2.name
+    ORDER BY frequency DESC;
+
+
+*/
+
+
+
+
+// Excess Report
+/*
+    WITH ItemSales AS (
+        SELECT
+            d.menu_item_id,
+            COUNT(d.drink_id) as number_sold
+        FROM drink d
+        JOIN orders o ON d.order_id = o.order_id
+        WHERE o.date >= '2022-12-31 09:00:00' AND o.date <= CURRENT_TIMESTAMP – Change date & timestamp to whatever
+        GROUP BY d.menu_item_id
+    ),
+
+    IngredientUse AS (
+        SELECT
+            mim.ingredients_id,
+            SUM(its.number_sold) as ingredients_used
+        FROM ItemSales its  -- Changed alias here
+        JOIN menu_ingredients_mapper mim ON its.menu_item_id = mim.menu_item_id  -- And here
+        GROUP BY mim.ingredients_id
+    )
+
+    SELECT
+        i.ingredients_id,
+        i.name,
+        i.availability,
+        COALESCE(iu.ingredients_used, 0) as ingredients_used
+    FROM ingredients i
+    LEFT JOIN IngredientUse iu ON i.ingredients_id = iu.ingredients_id
+    WHERE COALESCE(iu.ingredients_used, 0) < 0.10 * i.availability
+    ORDER BY i.availability DESC;
+
+
+*/

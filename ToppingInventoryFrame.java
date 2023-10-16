@@ -91,7 +91,7 @@ public class ToppingInventoryFrame{
                                 validationLabel.setText("SUCCESS: price changed to $%s.".formatted(newPrice));
                                 topping.set(2,newPrice);
                                 toppingButton.setText("<html>%s<br>Price: $%s<br>Stock: %s</html>".formatted(topping.get(1),topping.get(2),topping.get(3))); 
-                                
+                                DatabaseHandler.updateToppings();
                             }
                         }
                     } catch (NumberFormatException e_2) {

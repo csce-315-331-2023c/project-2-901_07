@@ -90,7 +90,7 @@ public class IngredientInventoryFrame {
                                 validationLabel.setText("SUCCESS: stock changed to %s.".formatted(newStock));
                                 ingredient.set(2,newStock);
                                 ingredientButton.setText("<html>%s<br>Stock:%s</html>".formatted(ingredient.get(1),ingredient.get(2))); 
-                                
+                                DatabaseHandler.updateIngredients();
                             }
                         }
                     } catch (NumberFormatException e_2) {

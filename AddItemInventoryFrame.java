@@ -150,6 +150,7 @@ public class AddItemInventoryFrame {
                                                         }
                                                     });
                                                 ManagerView.inventoryPage.add(toppingButton);
+                                                DatabaseHandler.updateToppings();
                                         }
                                     }catch (NumberFormatException e_2) {
                                         System.err.println("Invalid float format: " + itemPrice);
@@ -185,14 +186,15 @@ public class AddItemInventoryFrame {
                                         });
                                     ManagerView.inventoryPage.add(ingredientsButton);
                                     //TODO: ADD NEW WINDOW
-                                    itemNameTextField.setText("");
-                                    stockTextField.setText("");
-                                    ManagerView.inventoryPage.revalidate();
-                                    ManagerView.inventoryPage.repaint();
-                                    inputValidationLabel.setText("SUCCESS: successfully added item.");
-                                    inputValidationLabel.setForeground(Color.green);
-
+                                    DatabaseHandler.updateIngredients();
                                 }
+                                itemNameTextField.setText("");
+                                stockTextField.setText("");
+                                ManagerView.inventoryPage.revalidate();
+                                ManagerView.inventoryPage.repaint();
+                                inputValidationLabel.setText("SUCCESS: successfully added item.");
+                                inputValidationLabel.setForeground(Color.green);
+                    
                             } catch (NumberFormatException e_2) {
                                 inputValidationLabel.setForeground(Color.red);
                                 inputValidationLabel.setText("ERROR: invalid input");

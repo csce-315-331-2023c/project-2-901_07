@@ -130,7 +130,7 @@ public class DatabaseHandler {
             Statement createStmt = conn.createStatement();
             System.out.println("Running command: " + command);
             ResultSet result = conn.createStatement().executeQuery(command);
-            System.out.println("--------------------Query Results--------------------");
+            //System.out.println("--------------------Query Results--------------------");
             while (result.next()) {
                List<String> rowInfo = new ArrayList<>();
                for (String columnName: columnNames) {
@@ -138,8 +138,8 @@ public class DatabaseHandler {
                }
                output.add(rowInfo);
             }
-            System.out.println(output);
-            System.out.println(result);
+            //System.out.println(output);
+            //System.out.println(result);
             
         } catch (Exception e){
             e.printStackTrace();
@@ -175,7 +175,7 @@ public class DatabaseHandler {
            try{
                Statement createStmt = conn.createStatement();
                boolean executed = conn.createStatement().execute(command);
-               System.out.println("COMMAND OUTPUT: " + executed);
+               //System.out.println("COMMAND OUTPUT: " + executed);
                System.out.println("Command executed successfully \n");
            } catch (Exception e){
                e.printStackTrace();
@@ -194,7 +194,98 @@ public class DatabaseHandler {
            return false;
        }
 
-       
+    public static void updateMenuItems(){
+        //query menu_item table
+        String queryCommand = 
+        """
+            SELECT *
+            FROM menu_item
+            ORDER BY name ASC;        
+        """;
+        List<String> columnNames = new ArrayList<>();
+        columnNames.add("menu_item_id");
+        columnNames.add("name");
+        columnNames.add("type");
+        columnNames.add("price");
+        DatabaseHandler.menuItemData = DatabaseHandler.query_SQL(queryCommand,columnNames);
+        //query menu_ingredient_mapper table
+        queryCommand = 
+        """
+            SELECT *
+            FROM menu_ingredients_mapper;
+        """;
+        columnNames.clear();
+        columnNames.add("menu_item_id");
+        columnNames.add("ingredients_id");
+        DatabaseHandler.menuIngredientsMapperData = DatabaseHandler.query_SQL(queryCommand,columnNames);
+        drinkNameIdMap = new HashMap<>();
+        drinkPriceMap = new HashMap<>();
+        drinkTypeMap = new HashMap<>();
+        for(List<String> drink : menuItemData){
+            if (!typeList.contains(drink.get(2))){
+                drinkTypeMap.put(drink.get(2), new ArrayList<>());
+            }
+            drinkNameIdMap.put(drink.get(1), Integer.parseInt(drink.get(0)));
+            drinkPriceMap.put(drink.get(1), Double.parseDouble(drink.get(3)));
+            
+            drinkTypeMap.get(drink.get(2)).add(drink.get(1));
+        }
+    }
+
+    public static void updateIngredients(){
+        //query ingredients table
+        String queryCommand = 
+        """
+            SELECT *
+            FROM ingredients;
+        """;
+        List<String> columnNames = new ArrayList<>();
+        columnNames.add("ingredients_id");
+        columnNames.add("name");
+        columnNames.add("availability");
+        DatabaseHandler.ingredientData = DatabaseHandler.query_SQL(queryCommand,columnNames);       
+     
+        
+        ingredientUsed = new HashMap<>();
+        // Setup ingredientNameIdMap
+        ingredientNameIdMap = new HashMap<>();
+        ingredientNames = new ArrayList<>();
+        for (List<String> ingredient : ingredientData){
+            ingredientUsed.put(Integer.parseInt(ingredient.get(0)), 0);
+            ingredientNameIdMap.put(ingredient.get(1),Integer.parseInt(ingredient.get(0)));
+            ingredientNames.add(ingredient.get(1));
+        }
+    }
+
+    public static void updateToppings(){
+        //query topping table
+        String queryCommand = 
+        """
+            SELECT *
+            FROM topping
+            ORDER BY name ASC;        
+        """;
+        List<String> columnNames = new ArrayList<>();
+        columnNames.add("topping_id");
+        columnNames.add("name");
+        columnNames.add("price");
+        columnNames.add("availability");
+        DatabaseHandler.toppingData = DatabaseHandler.query_SQL(queryCommand,columnNames); 
+        
+        // Setup Topping
+        toppingIdMap = new HashMap<>();
+        toppingPriceMap = new HashMap<>();
+        toppingUsed = new HashMap<>();
+        for(List<String> topping : toppingData){
+            // Setup ID for each topping
+            toppingIdMap.put(topping.get(1), Integer.parseInt(topping.get(0)));
+            // Setup price for each topping
+            toppingPriceMap.put(topping.get(1), Double.parseDouble(topping.get(2)));
+            // Initialize Topping Used
+            toppingUsed.put(Integer.parseInt(topping.get(0)), 0);
+        }
+    }
+
 
     public static void queryData(){
         //query topping table

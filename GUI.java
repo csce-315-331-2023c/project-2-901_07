@@ -23,7 +23,7 @@ public class GUI{
     
     JLabel currentViewLabel, currentEmployeeLabel;
     List<List<String>> employeeInformation = new ArrayList<>();
-    JPanel centerPanel, rightPanel, bottomPanel;
+    public static JPanel centerPanel, rightPanel, bottomPanel;
     JPanel homePage, inventoryPage, menuItemPage, lowStockPage;
 
     public static Double totalPrice = 0.0;
@@ -55,7 +55,7 @@ public class GUI{
         managerView.setBorder(new EmptyBorder(20, 20, 20, 20));
         //managerView.add(home_button());
         managerView.add(home_button());
-        managerView.add(orderHistory_button());
+        //managerView.add(orderHistory_button());
         managerView.add(inventory_button());
         managerView.add(menuItem_button());
         managerView.add(trends_button());
@@ -133,6 +133,7 @@ public class GUI{
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Low Stock Button Clicked");
+                GUI.centerPanel.add(new JScrollPane(ManagerView.lowStockPage()), "Low Stock Page");
                 centerPanelCardLayout.show(centerPanel, "Low Stock Page");
             }
         });
@@ -430,7 +431,6 @@ public class GUI{
         JScrollPane scrollPaneInventoryPage = new JScrollPane(ManagerView.inventoryPage());
         JScrollPane scrollPaneMenuItemPage = new JScrollPane(ManagerView.menuItemPage());
         JScrollPane scrollPaneLowStockPage = new JScrollPane(ManagerView.lowStockPage());
-
 
         centerPanel.add(homePage(), "Home Page");
         centerPanel.add(trendsPage(), "Trends Page");

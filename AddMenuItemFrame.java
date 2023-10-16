@@ -98,7 +98,6 @@ public class AddMenuItemFrame {
                 if(ingredientList.getSelectedValue() != null){
                     System.out.println(ingredientList.getSelectedValue());
                     newDrinkIngredientListModel.addElement(ingredientList.getSelectedValue());
-                    allIngredientListModel.removeElement(ingredientList.getSelectedValue());
                 }
             }
         });
@@ -110,9 +109,11 @@ public class AddMenuItemFrame {
             public void actionPerformed(ActionEvent e) {
                 if(newDrinkIngredientList.getSelectedValue() != null){
                     System.out.println(newDrinkIngredientList.getSelectedValue());
-                    allIngredientListModel.addElement(newDrinkIngredientList.getSelectedValue());
                     newDrinkIngredientListModel.removeElement(newDrinkIngredientList.getSelectedValue());
 
+                }
+                else if (newDrinkIngredientListModel.getSize() > 0){
+                    newDrinkIngredientListModel.removeElement(newDrinkIngredientListModel.getElementAt(0));
                 }
 
             }
@@ -222,6 +223,7 @@ public class AddMenuItemFrame {
                             ManagerView.menuItemPage.repaint();
                             inputValidationLabel.setText("SUCCESS: successfully added menu item.");
                             inputValidationLabel.setForeground(Color.green);
+                            DatabaseHandler.updateMenuItems();
                         }
                     }catch (NumberFormatException e_2) {
                         System.err.println("Invalid float format: " + itemPrice);

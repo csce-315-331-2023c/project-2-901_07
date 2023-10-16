@@ -17,140 +17,8 @@ public class ManagerView {
     static JPanel inventoryPage = new JPanel(new FlowLayout(0));
     static JPanel menuItemPage = new JPanel(new FlowLayout(0));
     static JPanel orderHistoryPage;
-    static Set<String> drinkTypes = new HashSet<>();
-
-    // static JFrame openAddMenuItemFrame(JButton addMenuItemButton){
-    //     JFrame openAddMenuItemFrame = new JFrame();
-	// 	openAddMenuItemFrame.setBounds(100, 100, 379, 290);
-    //     openAddMenuItemFrame.setVisible(true); // Display the new frame
-    //     openAddMenuItemFrame.setResizable(false);
-    //     openAddMenuItemFrame.setLocationRelativeTo(null);
-	// 	JPanel contentPane = new JPanel();
-	// 	contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
-	// 	openAddMenuItemFrame.setContentPane(contentPane);
-	// 	contentPane.setLayout(null);
-		
-	// 	JLabel itemNameLabel = new JLabel("Menu Item Name:  ");
-	// 	itemNameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-	// 	itemNameLabel.setBounds(10, 46, 137, 14);
-	// 	contentPane.add(itemNameLabel);
-		
-	// 	JTextField itemNameTextField = new JTextField();
-	// 	itemNameTextField.setBounds(153, 43, 135, 20);
-	// 	contentPane.add(itemNameTextField);
-	// 	itemNameTextField.setColumns(10);
-
-	// 	Choice choice = new Choice();
-	// 	choice.setBounds(153, 79, 135, 20);
-    //     for(String drinkType:drinkTypes){
-    //         choice.add(drinkType);
-    //     }
-    //     contentPane.add(choice);
-    
-    
-		
-	// 	JLabel lblItemType = new JLabel("Menu Item Type:  ");
-	// 	lblItemType.setHorizontalAlignment(SwingConstants.RIGHT);
-	// 	lblItemType.setBounds(10, 79, 137, 14);
-	// 	contentPane.add(lblItemType);
-		
-	// 	JLabel lblPrice = new JLabel("Price:  ");
-	// 	lblPrice.setHorizontalAlignment(SwingConstants.RIGHT);
-	// 	lblPrice.setBounds(10, 116, 137, 14);
-	// 	contentPane.add(lblPrice);
-		
-	// 	JTextField priceTextField = new JTextField();
-	// 	priceTextField.setColumns(10);
-	// 	priceTextField.setBounds(153, 113, 135, 20);
-	// 	contentPane.add(priceTextField);
-		
-		
-		
-	// 	JLabel lblNewLabel_1 = new JLabel("Add Menu Item");
-	// 	lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-	// 	lblNewLabel_1.setHorizontalTextPosition(SwingConstants.LEFT);
-	// 	lblNewLabel_1.setBounds(10, 11, 343, 14);
-	// 	contentPane.add(lblNewLabel_1);
-		
-    //     JLabel inputValidationLabel = new JLabel("");
-	// 	inputValidationLabel.setHorizontalAlignment(SwingConstants.CENTER);
-	// 	inputValidationLabel.setBounds(10, 228, 343, 14);
-	// 	contentPane.add(inputValidationLabel);
-
-	// 	JButton createItemButton = new JButton("Create Menu Item");
-	// 	createItemButton.setBounds(68, 186, 220, 31);
-	// 	createItemButton.addActionListener(new ActionListener() {
-	// 		public void actionPerformed(ActionEvent e) {
-    //             String itemName = itemNameTextField.getText();
-    //             String itemType = choice.getSelectedItem();
-    //             String itemPrice = priceTextField.getText();
-                
-    //             if(itemName.isEmpty() || itemPrice.isEmpty() ){
-    //                 inputValidationLabel.setText("ERROR: One or more of the fields are empty.");
-    //                 inputValidationLabel.setForeground(Color.red);
-    //             }
-    //             else{
-    //                 try {
-    //                     boolean ranSuccessfully = run_SQL_Command("topping", 
-    //                     """
-    //                     INSERT INTO menu_item(name, type, price)
-    //                     VALUES ('%s','%s',%s);
-    //                     """.formatted(itemName,itemType, itemPrice));
-    //                     priceTextField.setText("");
-
-    //                     List<String> topping = new ArrayList<>();
-    //                     topping.add(itemName);
-    //                     topping.add(itemType);
-    //                     topping.add(itemPrice);
-    //                     JButton toppingButton = new JButton( "<html>%s<br>Price: $%s<br>Stock: %s</html>".formatted(topping.get(0),topping.get(1),topping.get(2)));
-    //                     // toppingButton.setPreferredSize(new Dimension(170, 70));
-    //                     // toppingButton.setBackground(Color.gray);
-    //                     //     toppingButton.addActionListener(new ActionListener() {
-    //                     //         @Override
-    //                     //         public void actionPerformed(ActionEvent e) {
-    //                     //             System.out.println(topping.get(0));
-    //                     //             frameOpened.dispose();
-    //                     //             toppingButton.setBackground(Color.gray);
-    //                     //             frameOpened = openToppingFrame(toppingButton, topping);
-    //                     //         }
-    //                     //     });
-    //                     inventoryPage.add(toppingButton);
-    //                     itemNameTextField.setText("");
-    //                     inputValidationLabel.setText("SUCCESS: successfully added item.");
-    //                     inputValidationLabel.setForeground(Color.green);
-    //                 } catch (NumberFormatException e_2) {
-    //                     inputValidationLabel.setForeground(Color.red);
-    //                     inputValidationLabel.setText("ERROR: invalid input");
-    //                 }   
-    //             }            
-
-    //         }
-    //     });
-        
-	// 	contentPane.add(createItemButton);
-
-        
-    //     choice.addItemListener(new ItemListener() {
-    //         public void itemStateChanged(ItemEvent e) {
-    //             if (choice.getSelectedItem().equals("ingredient")) {
-    //                 // Perform your action here
-    //                 priceTextField.setEditable(false);
-    //                 priceTextField.setText("");
-    //                 priceTextField.setBackground(new Color(192, 192, 192));
-    //             }
-    //             else if (choice.getSelectedItem().equals("topping")){
-    //                 priceTextField.setEditable(true);
-    //                 priceTextField.setBackground(new Color(255,255,255));
-    //             }
-    //         }
-    //     });
-
-    //     return openAddMenuItemFrame;        
-    // }
 
 
-//TODO
     static public JPanel orderHistoryPage(){
         orderHistoryPage = new JPanel(new GridLayout(0, 5, 5, 5));
         orderHistoryPage.add(new JLabel("TEST"));
@@ -179,8 +47,8 @@ public class ManagerView {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     frameOpened.dispose();
-                    AddItemInventoryFrame tempAddItemInventoryFrame = new AddItemInventoryFrame(addItemButton);
-                    frameOpened = tempAddItemInventoryFrame.frame;
+                    AddMenuItemFrame tempAddMenuItemFrame = new AddMenuItemFrame(addItemButton);
+                    frameOpened = tempAddMenuItemFrame.frame;
                 }
             });        
         menuItemPage.add(addItemButton);

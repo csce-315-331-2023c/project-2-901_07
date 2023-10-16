@@ -392,8 +392,8 @@ public class GUI{
         navBar.add(btnRestockReport);
         
         // popular pairs
-        JPanel popularPairsPanel = new JPanel();
-        popularPairsPanel.add(new JLabel("Popular Pairs Content"));
+         PopularPairsReportPanel popularPairsHandler = new PopularPairsReportPanel();
+        JPanel popularPairsPanel = popularPairsHandler.getPopularPairsReportPanel();
         contentPanel.add(popularPairsPanel, "Popular Pairs");
 
         JButton btnPopularPairs = new JButton("Popular Pairs");

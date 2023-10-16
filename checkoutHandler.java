@@ -46,6 +46,9 @@ public class checkoutHandler {
             public void actionPerformed(ActionEvent e) {
                 if (customerName == null){
                     customerName = JOptionPane.showInputDialog(checkoutFrame, "Enter Customer Name:");
+                    if(customerName == null){
+                        return;
+                    }
                 }
 
                 // INSERT Customer

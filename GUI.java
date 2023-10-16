@@ -151,6 +151,9 @@ public class GUI{
         }
         do{
             employee_id = JOptionPane.showInputDialog("Enter Employee ID:");
+            if (employee_id == null){
+                break;
+            }
             System.out.println(ids);
         }while(!ids.contains(employee_id));
         System.out.println("\n\n\n\n\n\n");
@@ -222,6 +225,9 @@ public class GUI{
 
                 do{
                         employee_id = JOptionPane.showInputDialog("Enter Employee ID:");
+                        if (employee_id == null){
+                            break;
+                        }
                         System.out.println(ids);
                 }while(!ids.contains(employee_id));
                 Integer employee_id_index = Integer.parseInt(employee_id);

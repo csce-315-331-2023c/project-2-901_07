@@ -18,7 +18,7 @@ public class GUI{
     
     CardLayout bottomPanelCardLayout, centerPanelCardLayout;
     
-    JButton checkoutButton, homeButton, orderHistoryButton, menuItemButton, inventoryButton;
+    JButton checkoutButton, homeButton, orderHistoryButton, menuItemButton, inventoryButton, trendsButton;
     JButton changeEmployeeButton, toGoButton, addCustomerButton, totalChargeButton, ticketsButton;
     
     JLabel currentViewLabel, currentEmployeeLabel;
@@ -58,6 +58,7 @@ public class GUI{
         managerView.add(orderHistory_button());
         managerView.add(inventory_button());
         managerView.add(menuItem_button());
+        managerView.add(trends_button());
         managerView.add(checkout_button());
         bottomPanel.add(cashierView, "Cashier View");
         bottomPanel.add(managerView, "Manager View");
@@ -135,6 +136,19 @@ public class GUI{
             }
         });
         return homeButton;
+    }
+
+    public JButton trends_button(){
+        trendsButton = new JButton("Trends");
+        trendsButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        trendsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("trendsButton clicked");
+                centerPanelCardLayout.show(centerPanel, "Trends Page");
+            }
+        });
+        return trendsButton;
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -301,6 +315,86 @@ public class GUI{
         }
         return homePagePanel;
     }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public JPanel trendsPage() {
+        int panelHeight = 300;
+        int panelWidth = screenSize.width - (screenSize.width / 6);
+
+        CardLayout cardLayout = new CardLayout();
+        JPanel contentPanel = new JPanel(cardLayout);
+
+        JPanel navBar = new JPanel(new GridLayout(1, 4));
+        navBar.setBorder(new EmptyBorder(40, 40, 40, 40));
+        // create different panels   
+
+        // sales report     
+        JPanel salesReportPanel = new JPanel();
+        salesReportPanel.add(new JLabel("Sales Report Content"));
+        contentPanel.add(salesReportPanel, "Sales Report");
+
+        JButton btnSalesReport = new JButton("Sales Report");
+        btnSalesReport.setBounds(200, 100, 100, 50);
+        btnSalesReport.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(contentPanel, "Sales Report");
+            }
+        });
+        navBar.add(btnSalesReport);
+
+        // excess report
+        JPanel excessReportPanel = new JPanel();
+        excessReportPanel.add(new JLabel("Excess Report Content"));
+        contentPanel.add(excessReportPanel, "Excess Report");
+
+        JButton btnExcessReport = new JButton("Excess Report");
+        btnExcessReport.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(contentPanel, "Excess Report");
+            }
+        });
+        navBar.add(btnExcessReport);
+
+        // restock report
+        JPanel restockReportPanel = new JPanel();
+        restockReportPanel.add(new JLabel("Restock Report Content"));
+        contentPanel.add(restockReportPanel, "Restock Report");
+
+        JButton btnRestockReport = new JButton("Restock Report");
+        btnRestockReport.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(contentPanel, "Restock Report");
+            }
+        });
+        navBar.add(btnRestockReport);
+        
+        // popular pairs
+        JPanel popularPairsPanel = new JPanel();
+        popularPairsPanel.add(new JLabel("Popular Pairs Content"));
+        contentPanel.add(popularPairsPanel, "Popular Pairs");
+
+        JButton btnPopularPairs = new JButton("Popular Pairs");
+        btnPopularPairs.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(contentPanel, "Popular Pairs");
+            }
+        });
+        navBar.add(btnPopularPairs);
+        
+
+        JPanel trendsPanel = new JPanel(new BorderLayout());
+        trendsPanel.setBorder(new EmptyBorder(40, 40, 40, 40));
+        trendsPanel.setBackground(Color.white);
+        trendsPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
+
+        trendsPanel.add(navBar, BorderLayout.NORTH);
+        trendsPanel.add(contentPanel, BorderLayout.CENTER);
+        
+        return trendsPanel;
+    }
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Center Horizontal Bar
@@ -318,6 +412,7 @@ public class GUI{
 
 
         centerPanel.add(homePage(), "Home Page");
+        centerPanel.add(trendsPage(), "Trends Page");
         centerPanel.add(scrollPaneInventoryPage, "Inventory Page");
         centerPanel.add(scrollPaneMenuItemPage, "Menu Item Page");
         centerPanel.add(ManagerView.orderHistoryPage() , "Order History Page");

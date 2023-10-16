@@ -21,12 +21,18 @@ public class DatabaseHandler {
     static List<List<String>> menuIngredientsMapperData;
     static List<List<String>> employeeData;
     static List<List<String>> customerData;
+    static List<List<String>> drinkTypes;
+
+    static List<String> ingredientNames;
 
     // Drink
     public static HashMap<String, Integer> drinkNameIdMap;
     public static HashMap<Integer, List<Integer>> drinkIngredientMap; 
     public static HashMap<String, Double> drinkPriceMap;
     public static HashMap<String, List<String>> drinkTypeMap;
+    //Ingredients
+    public static HashMap<String, Integer> ingredientNameIdMap;
+
     // drink Type
     public static Set<String> typeList;
     // Topping
@@ -75,10 +81,16 @@ public class DatabaseHandler {
 
         // Initialize Ingredient Used
         ingredientUsed = new HashMap<>();
+        // Setup ingredientNameIdMap
+        ingredientNameIdMap = new HashMap<>();
+        ingredientNames = new ArrayList<>();
         for (List<String> ingredient : ingredientData){
             ingredientUsed.put(Integer.parseInt(ingredient.get(0)), 0);
+            ingredientNameIdMap.put(ingredient.get(1),Integer.parseInt(ingredient.get(0)));
+            ingredientNames.add(ingredient.get(1));
         }
         System.out.println(drinkTypeMap);
+        
         
         // Set up drinkIngredientMap
         drinkIngredientMap = new HashMap<>();
@@ -213,6 +225,16 @@ public class DatabaseHandler {
         columnNames.add("price");
         DatabaseHandler.menuItemData = DatabaseHandler.query_SQL(queryCommand,columnNames);
 
+        //query menu_item types
+        queryCommand = 
+        """
+            SELECT DISTINCT type
+            FROM menu_item;   
+        """;
+        columnNames.clear();
+        columnNames.add("type");
+        DatabaseHandler.drinkTypes = DatabaseHandler.query_SQL(queryCommand,columnNames);       
+
         //query ingredients table
         queryCommand = 
         """
@@ -272,23 +294,14 @@ public class DatabaseHandler {
 
 
     public DatabaseHandler(){
-
         queryData();
         setUpHashMap();
     }
 
-    public static void main(String[] args) {
-        List<String> test = new ArrayList<>();
-        test.add("name");
-        DatabaseHandler.query_SQL( 
-        """
-                SELECT name FROM topping WHERE name = 'Aloe Vera'
-                UNION
-                SELECT name FROM ingredients WHERE name = 'Aloe Vera';
-                
-        """, test);
-    }
+
 }
+
+
 
 
 // Sales Report

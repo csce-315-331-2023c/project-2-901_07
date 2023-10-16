@@ -91,7 +91,7 @@ public class GUI{
         orderHistoryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("orderHistoryButton clicked");
+                //System.out.println("orderHistoryButton clicked");
                 centerPanelCardLayout.show(centerPanel, "Order History Page");
             }
         });
@@ -105,7 +105,7 @@ public class GUI{
         menuItemButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("menuItemButton clicked");
+                //System.out.println("menuItemButton clicked");
                 centerPanelCardLayout.show(centerPanel, "Menu Item Page");
             }
         });
@@ -119,7 +119,7 @@ public class GUI{
         inventoryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("inventoryButton clicked");
+                //System.out.println("inventoryButton clicked");
                 centerPanelCardLayout.show(centerPanel, "Inventory Page");
             }
         });
@@ -132,7 +132,7 @@ public class GUI{
         lowStockButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Low Stock Button Clicked");
+                //System.out.println("Low Stock Button Clicked");
                 GUI.centerPanel.add(new JScrollPane(ManagerView.lowStockPage()), "Low Stock Page");
                 centerPanelCardLayout.show(centerPanel, "Low Stock Page");
             }
@@ -146,7 +146,7 @@ public class GUI{
         homeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("homeButton clicked");
+                //System.out.println("homeButton clicked");
                 centerPanelCardLayout.show(centerPanel, "Home Page");
             }
         });
@@ -159,7 +159,7 @@ public class GUI{
         trendsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("trendsButton clicked");
+                //System.out.println("trendsButton clicked");
                 centerPanelCardLayout.show(centerPanel, "Trends Page");
             }
         });
@@ -183,10 +183,10 @@ public class GUI{
             if (employee_id == null){
                 break;
             }
-            System.out.println(ids);
+            //System.out.println(ids);
         }while(!ids.contains(employee_id));
-        System.out.println("\n\n\n\n\n\n");
-        System.out.println(employeeInformation.get(Integer.parseInt(employee_id)));
+        //System.out.println("\n\n\n\n\n\n");
+        //System.out.println(employeeInformation.get(Integer.parseInt(employee_id)));
         employeeName = (employeeInformation.get(Integer.parseInt(employee_id))).get(2);
         // Right panel
         int panelHeight = 0; // value does not matter
@@ -238,7 +238,7 @@ public class GUI{
         changeEmployeeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("changeEmployeeButton clicked");
+                //System.out.println("changeEmployeeButton clicked");
                 List<List<String>> employeeInformation = DatabaseHandler.employeeData;
                 List<String> ids = new ArrayList<>();
                 List<String> manager_ids = new ArrayList<>();
@@ -250,23 +250,23 @@ public class GUI{
                         }
                     }
                 }
-                System.out.println("REAL " + ids);
+                //System.out.println("REAL " + ids);
 
                 do{
                         employee_id = JOptionPane.showInputDialog("Enter Employee ID:");
                         if (employee_id == null){
                             break;
                         }
-                        System.out.println(ids);
+                        //System.out.println(ids);
                 }while(!ids.contains(employee_id));
                 Integer employee_id_index = Integer.parseInt(employee_id);
                 if(employeeInformation.get(employee_id_index).get(1).equals("t")){
-                    System.out.println("MANAGER");
+                    //System.out.println("MANAGER");
                     current_view = "Manager";
                     bottomPanelCardLayout.show(bottomPanel, "Manager View");
                 }
                 else{
-                    System.out.println("NOT MANAGER");
+                    //System.out.println("NOT MANAGER");
                     current_view = "Cashier";
                     bottomPanelCardLayout.show(bottomPanel, "Cashier View");
                 }
@@ -413,7 +413,7 @@ public class GUI{
 
         trendsPanel.add(navBar, BorderLayout.NORTH);
         trendsPanel.add(contentPanel, BorderLayout.CENTER);
-        
+
         return trendsPanel;
     }
     
@@ -469,6 +469,7 @@ public class GUI{
         if((employeeInformation.get(Integer.parseInt(employee_id))).get(1).equals("t")){
             current_view = "Manager";
             bottomPanelCardLayout.show(bottomPanel, "Manager View");
+            
         }
         else{
             current_view = "Cashier";

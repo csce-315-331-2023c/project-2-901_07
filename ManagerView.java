@@ -117,7 +117,7 @@ public class ManagerView {
             toppingButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println(topping.get(1));
+                    //System.out.println(topping.get(1));
                     frameOpened.dispose();
                     ToppingInventoryFrame tempToppingInventoryFrame = new ToppingInventoryFrame(toppingButton, topping);
                     frameOpened = tempToppingInventoryFrame.frame;
@@ -138,7 +138,7 @@ public class ManagerView {
             ingredientsButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println(ingredient.get(1));
+                    //System.out.println(ingredient.get(1));
                     frameOpened.dispose();
                     IngredientInventoryFrame tempIngredientInventoryFrame = new IngredientInventoryFrame(ingredientsButton, ingredient);
                     frameOpened = tempIngredientInventoryFrame.frame;
@@ -183,7 +183,7 @@ public class ManagerView {
                     toppingButton.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            System.out.println(topping.get(1));
+                            //System.out.println(topping.get(1));
                             frameOpened.dispose();
                             ToppingInventoryFrame tempToppingInventoryFrame = new ToppingInventoryFrame(toppingButton, topping);
                             frameOpened = tempToppingInventoryFrame.frame;
@@ -208,7 +208,7 @@ public class ManagerView {
                     ingredientsButton.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            System.out.println(ingredient.get(1));
+                            //System.out.println(ingredient.get(1));
                             frameOpened.dispose();
                             IngredientInventoryFrame tempIngredientInventoryFrame = new IngredientInventoryFrame(ingredientsButton, ingredient);
                             frameOpened = tempIngredientInventoryFrame.frame;

@@ -64,7 +64,7 @@ public class MenuItemFrame {
 		changePrice_Button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
                 String newPrice = newPriceTextField.getText();
-                System.out.println("input: \"%s\"".formatted(newPrice));
+                //System.out.println("input: \"%s\"".formatted(newPrice));
                 if (newPrice.trim().isEmpty()){
                     validationLabel.setForeground(Color.red);
                     validationLabel.setText("ERROR: No price inputted.");
@@ -78,7 +78,7 @@ public class MenuItemFrame {
                             validationLabel.setText("ERROR: $%s is an invalid price.".formatted(newPrice));                            
                         }
                         else{
-                            System.out.println("Converted float value: " + floatValue);
+                            //System.out.println("Converted float value: " + floatValue);
                             boolean ranSuccessfully = DatabaseHandler.run_SQL_Command("topping", 
                             """
                             UPDATE menu_item SET price = 

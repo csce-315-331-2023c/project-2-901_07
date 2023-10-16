@@ -83,9 +83,9 @@ public class AddItemInventoryFrame {
                 String itemName = itemNameTextField.getText();
                 String itemType = choice.getSelectedItem();
                 String itemStock = stockTextField.getText();
-                System.out.println("itenName: " + itemName);
-                System.out.println("itenType: " + itemType);
-                System.out.println("itenStock: " + itemStock);
+                //System.out.println("itenName: " + itemName);
+                //System.out.println("itenType: " + itemType);
+                //System.out.println("itenStock: " + itemStock);
                 List<String> columnNames = new ArrayList<>();
                 columnNames.add("name");
                 List<List<String>> result = DatabaseHandler.query_SQL( 
@@ -142,7 +142,7 @@ public class AddItemInventoryFrame {
                                                     toppingButton.addActionListener(new ActionListener() {
                                                         @Override
                                                         public void actionPerformed(ActionEvent e) {
-                                                            System.out.println(topping.get(0));
+                                                            //System.out.println(topping.get(0));
                                                             ManagerView.frameOpened.dispose();
                                                             toppingButton.setBackground(Color.pink);
                                                             ToppingInventoryFrame tempToppingInventoryFrame = new ToppingInventoryFrame(toppingButton, topping);
@@ -177,7 +177,7 @@ public class AddItemInventoryFrame {
                                         ingredientsButton.addActionListener(new ActionListener() {
                                             @Override
                                             public void actionPerformed(ActionEvent e) {
-                                                System.out.println(ingredient.get(0));
+                                                //System.out.println(ingredient.get(0));
                                                 ManagerView.frameOpened.dispose();
                                                 ingredientsButton.setBackground(Color.pink);
                                                 IngredientInventoryFrame tempIngredientInventoryFrame = new IngredientInventoryFrame(ingredientsButton, ingredient);

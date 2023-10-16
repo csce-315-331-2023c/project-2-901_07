@@ -129,9 +129,9 @@ public class checkoutHandler {
                 
 
                 // Debug and Reset
-                System.out.println("Customer ID: " + customerID + "     customer Name: " + customerName);
-                System.out.println(DatabaseHandler.ingredientUsed);
-                System.out.println(DatabaseHandler.toppingUsed);
+                //System.out.println("Customer ID: " + customerID + "     customer Name: " + customerName);
+                //System.out.println(DatabaseHandler.ingredientUsed);
+                //System.out.println(DatabaseHandler.toppingUsed);
                 for (Integer ingredientID : DatabaseHandler.ingredientUsed.keySet()){
                     DatabaseHandler.ingredientUsed.put(ingredientID, 0);
                 }
@@ -221,7 +221,7 @@ public class checkoutHandler {
         for (drinkDetailDatabase drinkDetails : DatabaseHandler.listOrderingDrink) {
             totalCost += drinkDetails.totalPrice_;
         }
-        System.out.println("Final: " + totalCost);
+        //System.out.println("Final: " + totalCost);
     }
 
     private void updateToppingsAndIngredients(drinkDetailDatabase drinkDetail) {

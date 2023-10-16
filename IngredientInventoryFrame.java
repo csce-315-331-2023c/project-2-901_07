@@ -63,7 +63,7 @@ public class IngredientInventoryFrame {
 		changePrice_Button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
                 String newStock = newPriceTextField.getText();
-                System.out.println("input: \"%s\"".formatted(newStock));
+                //System.out.println("input: \"%s\"".formatted(newStock));
                 if (newStock.trim().isEmpty()){
                     validationLabel.setForeground(Color.red);
                     validationLabel.setText("ERROR: No Stock inputted.");
@@ -78,7 +78,7 @@ public class IngredientInventoryFrame {
                         }
                         else{
                             int intValue = Integer.parseInt(newStock);
-                            System.out.println("Converted float value: " + intValue);
+                            //System.out.println("Converted float value: " + intValue);
                             boolean ranSuccessfully = DatabaseHandler.run_SQL_Command("topping", 
                             """
                             UPDATE ingredients SET availability = 

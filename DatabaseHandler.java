@@ -89,7 +89,7 @@ public class DatabaseHandler {
             ingredientNameIdMap.put(ingredient.get(1),Integer.parseInt(ingredient.get(0)));
             ingredientNames.add(ingredient.get(1));
         }
-        System.out.println(drinkTypeMap);
+        //System.out.println(drinkTypeMap);
         
         
         // Set up drinkIngredientMap
@@ -122,13 +122,13 @@ public class DatabaseHandler {
             DatabaseHandler.conn = DriverManager.getConnection(DatabaseHandler.dbConnectionString, dbSetup.user, dbSetup.pswd);
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println(e.getClass().getName()+": "+e.getMessage());
+            //System.err.println(e.getClass().getName()+": "+e.getMessage());
             System.exit(0);
         }
-        System.out.println("Opened database successfully");
+        //System.out.println("Opened database successfully");
         try{
             Statement createStmt = conn.createStatement();
-            System.out.println("Running command: " + command);
+            //System.out.println("Running command: " + command);
             ResultSet result = conn.createStatement().executeQuery(command);
             //System.out.println("--------------------Query Results--------------------");
             while (result.next()) {
@@ -143,17 +143,17 @@ public class DatabaseHandler {
             
         } catch (Exception e){
             e.printStackTrace();
-            System.err.println(e.getClass().getName()+": "+e.getMessage());
+            //System.err.println(e.getClass().getName()+": "+e.getMessage());
             System.exit(0);
         }
 
         //closing the connection
         try {
             conn.close();
-            System.out.println("Connection Closed.");
+            //System.out.println("Connection Closed.");
             return output;
         } catch(Exception e) {
-            System.out.println("Connection NOT Closed.");
+            //System.out.println("Connection NOT Closed.");
         }//end try catch
         return null;
     }
@@ -165,31 +165,31 @@ public class DatabaseHandler {
                conn = DriverManager.getConnection(dbConnectionString, dbSetup.user, dbSetup.pswd);
            } catch (Exception e) {
                e.printStackTrace();
-               System.err.println(e.getClass().getName()+": "+e.getMessage());
-               System.exit(0);
+               //System.err.println(e.getClass().getName()+": "+e.getMessage());
+               //System.exit(0);
            }
    
-           System.out.println("\nOpened database successfully");
-           System.out.println("Executing SQL Command: \"%s\"".formatted(command));
+           //System.out.println("\nOpened database successfully");
+           //System.out.println("Executing SQL Command: \"%s\"".formatted(command));
    
            try{
                Statement createStmt = conn.createStatement();
                boolean executed = conn.createStatement().execute(command);
                //System.out.println("COMMAND OUTPUT: " + executed);
-               System.out.println("Command executed successfully \n");
+               //System.out.println("Command executed successfully \n");
            } catch (Exception e){
                e.printStackTrace();
-               System.err.println(e.getClass().getName()+": "+e.getMessage());
-               System.exit(0);
+               //System.err.println(e.getClass().getName()+": "+e.getMessage());
+               //System.exit(0);
            }
    
            //closing the connection
            try {
                conn.close();
-               System.out.println("Connection Closed.\n\n");
+               //System.out.println("Connection Closed.\n\n");
                return true;
            } catch(Exception e) {
-               System.out.println("Connection NOT Closed.");
+               //System.out.println("Connection NOT Closed.");
            }//end try catch
            return false;
        }

@@ -96,7 +96,7 @@ public class AddMenuItemFrame {
         addIngredientButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if(ingredientList.getSelectedValue() != null){
-                    System.out.println(ingredientList.getSelectedValue());
+                    //System.out.println(ingredientList.getSelectedValue());
                     newDrinkIngredientListModel.addElement(ingredientList.getSelectedValue());
                 }
             }
@@ -108,7 +108,7 @@ public class AddMenuItemFrame {
         removeIngredientButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if(newDrinkIngredientList.getSelectedValue() != null){
-                    System.out.println(newDrinkIngredientList.getSelectedValue());
+                    //System.out.println(newDrinkIngredientList.getSelectedValue());
                     newDrinkIngredientListModel.removeElement(newDrinkIngredientList.getSelectedValue());
 
                 }

@@ -29,8 +29,8 @@ public class drinkDetailDatabase{
     }
 
     public void printDrinkDetail(){
-        System.out.println(drinkName_);
-        System.out.println(toppingList_);
-        System.out.println(totalPrice_);
+        // System.out.println(drinkName_);
+        // System.out.println(toppingList_);
+        // System.out.println(totalPrice_);
     }
 }

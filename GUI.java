@@ -1,0 +1,471 @@
+import java.awt.*;
+import java.sql.*;
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.awt.event.*;
+import javax.swing.border.*;
+
+
+public class GUI{
+    public static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+    public DatabaseHandler databaseHandler =  new DatabaseHandler();
+    
+    CardLayout bottomPanelCardLayout, centerPanelCardLayout;
+    
+    JButton checkoutButton, homeButton, orderHistoryButton, menuItemButton, inventoryButton, trendsButton;
+    JButton changeEmployeeButton, toGoButton, addCustomerButton, totalChargeButton, ticketsButton;
+    
+    JLabel currentViewLabel, currentEmployeeLabel;
+    List<List<String>> employeeInformation = new ArrayList<>();
+    JPanel centerPanel, rightPanel, bottomPanel;
+    JPanel homePage, inventoryPage, menuItemPage;
+
+    public static Double totalPrice = 0.0;
+
+    public static String employee_id, employeeName;
+    String current_view = "Cashier";
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Bottom Horizontal Bar
+    // Checkout + order History + Trends + Availability
+    public JPanel bottomPanel() {
+        // Bottom panel
+        int panelHeight = screenSize.height / 10;
+        int panelWidth = 0; // value does not matter
+        //bottomPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        //bottomPanel.setBackground(Color.gray);
+        bottomPanelCardLayout = new CardLayout();
+        bottomPanel = new JPanel(bottomPanelCardLayout);
+        bottomPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
+        //cashier view bottom panel
+        JPanel cashierView = new JPanel(new GridLayout(1, 5, 30, 10));
+        cashierView.setBorder(new EmptyBorder(20, 20, 20, 20));
+        cashierView.add(new JLabel());
+        cashierView.add(new JLabel());
+        cashierView.add(new JLabel());
+        cashierView.add(checkout_button());
+        //manager view bottom panel
+        JPanel managerView = new JPanel(new GridLayout(1, 5, 30, 10));
+        managerView.setBorder(new EmptyBorder(20, 20, 20, 20));
+        //managerView.add(home_button());
+        managerView.add(home_button());
+        managerView.add(orderHistory_button());
+        managerView.add(inventory_button());
+        managerView.add(menuItem_button());
+        managerView.add(trends_button());
+        managerView.add(checkout_button());
+        bottomPanel.add(cashierView, "Cashier View");
+        bottomPanel.add(managerView, "Manager View");
+        
+        return bottomPanel;
+    }
+    
+    // 1. Checkout Button
+    public JButton checkout_button() {
+        checkoutButton = new JButton("Checkout");
+        checkoutButton.setMargin(new Insets(50, 50, 50, 50));
+        checkoutButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        checkoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                totalPrice = 0.0;
+                // Call the category handler and pass the selected category.
+                checkoutHandler checkoutFrame = new checkoutHandler();
+                checkoutFrame.checkoutFrame_();
+            }
+        });
+        return checkoutButton;
+    }
+
+    // 2. order Button
+    public JButton orderHistory_button() {
+        orderHistoryButton = new JButton("Order History");
+        orderHistoryButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        orderHistoryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("orderHistoryButton clicked");
+                centerPanelCardLayout.show(centerPanel, "Order History Page");
+            }
+        });
+        return orderHistoryButton;
+    }
+
+    // 3. Trends Button
+    public JButton menuItem_button() {
+        menuItemButton = new JButton("Menu Items");
+        menuItemButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        menuItemButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("menuItemButton clicked");
+                centerPanelCardLayout.show(centerPanel, "Menu Item Page");
+            }
+        });
+        return menuItemButton;
+    }
+
+    // 4. Availability Button
+    public JButton inventory_button() {
+        inventoryButton = new JButton("Inventory");
+        inventoryButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        inventoryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("inventoryButton clicked");
+                centerPanelCardLayout.show(centerPanel, "Inventory Page");
+            }
+        });
+        return inventoryButton;
+    }
+
+    public JButton home_button() {
+        homeButton = new JButton("Home");
+        homeButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        homeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("homeButton clicked");
+                centerPanelCardLayout.show(centerPanel, "Home Page");
+            }
+        });
+        return homeButton;
+    }
+
+    public JButton trends_button(){
+        trendsButton = new JButton("Trends");
+        trendsButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        trendsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("trendsButton clicked");
+                centerPanelCardLayout.show(centerPanel, "Trends Page");
+            }
+        });
+        return trendsButton;
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Right Vertical Bar
+    // Switch View + To Go + Charge Total + Tickets
+    public JPanel rightPanel() {
+        employeeInformation = DatabaseHandler.employeeData;
+        List<String> ids = new ArrayList<>();
+        
+        for (List<String> row : employeeInformation) {
+            if (!row.isEmpty()) {
+                ids.add(row.get(0));
+            }
+        }
+        do{
+            employee_id = JOptionPane.showInputDialog("Enter Employee ID:");
+            if (employee_id == null){
+                break;
+            }
+            System.out.println(ids);
+        }while(!ids.contains(employee_id));
+        System.out.println("\n\n\n\n\n\n");
+        System.out.println(employeeInformation.get(Integer.parseInt(employee_id)));
+        employeeName = (employeeInformation.get(Integer.parseInt(employee_id))).get(2);
+        // Right panel
+        int panelHeight = 0; // value does not matter
+        int panelWidth = screenSize.width / 6;
+        JPanel rightPanel = new JPanel(new GridLayout(0, 1, 20, 20));
+        rightPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        rightPanel.setBackground(new Color(144, 44, 62));
+        rightPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
+
+        currentViewLabel = new JLabel("Current View: " + current_view);
+        
+        currentViewLabel.setFont(new Font("Calibri ", Font.BOLD, 15));
+        currentViewLabel.setForeground(Color.white);
+        currentViewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        currentEmployeeLabel = new JLabel("Welcome,  " + employeeName);
+        currentEmployeeLabel.setFont(new Font("Calibri ", Font.BOLD, 15));
+        currentEmployeeLabel.setForeground(Color.white);
+        currentEmployeeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        //Logo
+        ImageIcon imageIcon = new ImageIcon("assets/sharetealogo.png");
+        Image image = imageIcon.getImage(); // Get the original image
+        int width = screenSize.width / 6; // Set the desired width
+        int height = screenSize.height / 9; // Set the desired height
+        Image scaledImage = image.getScaledInstance(width, height, Image.SCALE_SMOOTH); // Scale the image
+        imageIcon = new ImageIcon(scaledImage); // Create a new ImageIcon with the scaled image
+        
+        JLabel label = new JLabel(imageIcon);
+        
+        rightPanel.add(label);
+        rightPanel.add(currentEmployeeLabel);
+        rightPanel.add(currentViewLabel);
+
+        rightPanel.add(changeEmployee_button());
+        // rightPanel.add(toGo_button());
+        // rightPanel.add(addCustomer_button());
+        // rightPanel.add(totalCharge_button());
+        // rightPanel.add(tickets_button());
+
+        return rightPanel;
+        
+    }
+
+    // 1. Switch View 
+    public JButton changeEmployee_button() {
+        changeEmployeeButton = new JButton("Change Employee");
+        changeEmployeeButton.setBounds(200, 100, 100, 50);
+        changeEmployeeButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        changeEmployeeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("changeEmployeeButton clicked");
+                List<List<String>> employeeInformation = DatabaseHandler.employeeData;
+                List<String> ids = new ArrayList<>();
+                List<String> manager_ids = new ArrayList<>();
+                for (List<String> row : employeeInformation) {
+                    if (!row.isEmpty()) {
+                        ids.add(row.get(0));
+                        if(row.size() >= 2 && row.get(1).equals("t")){
+                            manager_ids.add(row.get(0));
+                        }
+                    }
+                }
+                System.out.println("REAL " + ids);
+
+                do{
+                        employee_id = JOptionPane.showInputDialog("Enter Employee ID:");
+                        if (employee_id == null){
+                            break;
+                        }
+                        System.out.println(ids);
+                }while(!ids.contains(employee_id));
+                Integer employee_id_index = Integer.parseInt(employee_id);
+                if(employeeInformation.get(employee_id_index).get(1).equals("t")){
+                    System.out.println("MANAGER");
+                    current_view = "Manager";
+                    bottomPanelCardLayout.show(bottomPanel, "Manager View");
+                }
+                else{
+                    System.out.println("NOT MANAGER");
+                    current_view = "Cashier";
+                    bottomPanelCardLayout.show(bottomPanel, "Cashier View");
+                }
+                centerPanelCardLayout.show(centerPanel, "Home Page");
+                currentViewLabel.setText("Current View: " + current_view);
+                currentEmployeeLabel.setText("Welcome,  " + employeeInformation.get(employee_id_index).get(2));
+    
+            }
+        });
+        return changeEmployeeButton;
+    }
+
+    // 2. To Go 
+    public JButton toGo_button() {
+        toGoButton = new JButton("To Go");
+        toGoButton.setBounds(200, 100, 100, 50);
+        toGoButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        return toGoButton;
+    }
+
+    // 3. Add Customer 
+    public JButton addCustomer_button() {
+        addCustomerButton = new JButton("Add Customer");
+        addCustomerButton.setBounds(200, 100, 100, 50);
+        addCustomerButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        return addCustomerButton;
+    }
+
+    // 4. Total Charge 
+    public JButton totalCharge_button() {
+        totalChargeButton = new JButton("Total Charge");
+        totalChargeButton.setBounds(200, 100, 100, 50);
+        totalChargeButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        return totalChargeButton;
+    }
+
+    // 5. Tickets
+    public JButton tickets_button() {
+        ticketsButton = new JButton("Tickets");
+        ticketsButton.setBounds(200, 100, 100, 50);
+        ticketsButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        return ticketsButton;
+    }
+
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    public JPanel homePage() {
+        int panelHeight = 300;
+        int panelWidth = screenSize.width - (screenSize.width / 6);
+        JPanel homePagePanel = new JPanel(new GridLayout(3, 4, 30, 30));
+        homePagePanel.setBorder(new EmptyBorder(40, 40, 40, 40));
+        homePagePanel.setBackground(Color.white);
+        homePagePanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
+        String[] categories = {"Milk Tea", "Fresh Milk", "Ice Blend", "Fruit Tea", "Mojito", "Creama"};
+
+        for (String category : categories) {
+            JButton categoryButton = new JButton(category);
+            categoryButton.setBackground(Color.gray);
+            categoryButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // Call the category handler and pass the selected category.
+                    categoryHandler.categoryHandlerPanel(category);
+                }
+            });
+            homePagePanel.add(categoryButton);
+        }
+        return homePagePanel;
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public JPanel trendsPage() {
+        int panelHeight = 300;
+        int panelWidth = screenSize.width - (screenSize.width / 6);
+
+        CardLayout cardLayout = new CardLayout();
+        JPanel contentPanel = new JPanel(cardLayout);
+
+        JPanel navBar = new JPanel(new GridLayout(1, 4));
+        navBar.setBorder(new EmptyBorder(40, 40, 40, 40));
+        // create different panels   
+
+        // sales report     
+        JPanel salesReportPanel = new JPanel();
+        salesReportPanel.add(new JLabel("Sales Report Content"));
+        contentPanel.add(salesReportPanel, "Sales Report");
+
+        JButton btnSalesReport = new JButton("Sales Report");
+        btnSalesReport.setBounds(200, 100, 100, 50);
+        btnSalesReport.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(contentPanel, "Sales Report");
+            }
+        });
+        navBar.add(btnSalesReport);
+
+        // excess report
+        JPanel excessReportPanel = new JPanel();
+        excessReportPanel.add(new JLabel("Excess Report Content"));
+        contentPanel.add(excessReportPanel, "Excess Report");
+
+        JButton btnExcessReport = new JButton("Excess Report");
+        btnExcessReport.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(contentPanel, "Excess Report");
+            }
+        });
+        navBar.add(btnExcessReport);
+
+        // restock report
+        JPanel restockReportPanel = new JPanel();
+        restockReportPanel.add(new JLabel("Restock Report Content"));
+        contentPanel.add(restockReportPanel, "Restock Report");
+
+        JButton btnRestockReport = new JButton("Restock Report");
+        btnRestockReport.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(contentPanel, "Restock Report");
+            }
+        });
+        navBar.add(btnRestockReport);
+        
+        // popular pairs
+        JPanel popularPairsPanel = new JPanel();
+        popularPairsPanel.add(new JLabel("Popular Pairs Content"));
+        contentPanel.add(popularPairsPanel, "Popular Pairs");
+
+        JButton btnPopularPairs = new JButton("Popular Pairs");
+        btnPopularPairs.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(contentPanel, "Popular Pairs");
+            }
+        });
+        navBar.add(btnPopularPairs);
+        
+
+        JPanel trendsPanel = new JPanel(new BorderLayout());
+        trendsPanel.setBorder(new EmptyBorder(40, 40, 40, 40));
+        trendsPanel.setBackground(Color.white);
+        trendsPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
+
+        trendsPanel.add(navBar, BorderLayout.NORTH);
+        trendsPanel.add(contentPanel, BorderLayout.CENTER);
+        
+        return trendsPanel;
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Center Horizontal Bar
+    // Milk Tea
+    
+    public JPanel centerPanel() {
+        // Center panel
+        int panelHeight = 300;
+        int panelWidth = screenSize.width - (screenSize.width / 4);
+        centerPanelCardLayout = new CardLayout();
+        centerPanel = new JPanel(centerPanelCardLayout);
+        //inventory page panel
+        JScrollPane scrollPaneInventoryPage = new JScrollPane(ManagerView.inventoryPage());
+        JScrollPane scrollPaneMenuItemPage = new JScrollPane(ManagerView.menuItemPage());
+
+
+        centerPanel.add(homePage(), "Home Page");
+        centerPanel.add(trendsPage(), "Trends Page");
+        centerPanel.add(scrollPaneInventoryPage, "Inventory Page");
+        centerPanel.add(scrollPaneMenuItemPage, "Menu Item Page");
+        centerPanel.add(ManagerView.orderHistoryPage() , "Order History Page");
+        return centerPanel;
+    }
+
+    
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public GUI() {
+        // FRAMES TUTORIAL
+        JFrame frame = new JFrame();
+
+        frame.setTitle("Sharetea - Glory of Taiwan!"); // sets title of frame
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // exit out of application
+        // frame.setResizable(false); //prevent frame from being resized
+        frame.setSize(screenSize.width, screenSize.height); // sets the x-dimension, and y-dimension of frame
+        ImageIcon image = new ImageIcon("assets/sharetealogo.png");
+        frame.setIconImage(image.getImage());
+        frame.getContentPane().setBackground(new Color(255, 255, 255));
+
+        frame.setLayout(new BorderLayout());
+        frame.add(rightPanel(), BorderLayout.EAST);
+        frame.add(bottomPanel(), BorderLayout.SOUTH);
+        frame.add(centerPanel(), BorderLayout.CENTER);
+
+        currentEmployeeLabel.setText("Welcome,  " + employeeName);
+        currentEmployeeLabel.setFont(new Font("Calibri ", Font.BOLD, 15));
+        currentEmployeeLabel.setForeground(Color.white);
+        currentEmployeeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        if((employeeInformation.get(Integer.parseInt(employee_id))).get(1).equals("t")){
+            current_view = "Manager";
+            bottomPanelCardLayout.show(bottomPanel, "Manager View");
+        }
+        else{
+            current_view = "Cashier";
+            bottomPanelCardLayout.show(bottomPanel, "Cashier View");            
+        }
+        currentViewLabel.setText("Current View: " + current_view);
+        frame.setVisible(true); // make frame visible
+        // END OF FRAMES TUTORIAL
+
+    }
+
+
+    public static void main(String[] args) {
+        new GUI(); // Create an instance of the Main class to initialize the UI
+    }
+}

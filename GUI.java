@@ -18,13 +18,13 @@ public class GUI{
     
     CardLayout bottomPanelCardLayout, centerPanelCardLayout;
     
-    JButton checkoutButton, homeButton, orderHistoryButton, menuItemButton, inventoryButton, trendsButton;
+    JButton checkoutButton, homeButton, orderHistoryButton, menuItemButton, inventoryButton, trendsButton, lowStockButton;
     JButton changeEmployeeButton, toGoButton, addCustomerButton, totalChargeButton, ticketsButton;
     
     JLabel currentViewLabel, currentEmployeeLabel;
     List<List<String>> employeeInformation = new ArrayList<>();
     JPanel centerPanel, rightPanel, bottomPanel;
-    JPanel homePage, inventoryPage, menuItemPage;
+    JPanel homePage, inventoryPage, menuItemPage, lowStockPage;
 
     public static Double totalPrice = 0.0;
 
@@ -59,6 +59,7 @@ public class GUI{
         managerView.add(inventory_button());
         managerView.add(menuItem_button());
         managerView.add(trends_button());
+        managerView.add(lowStock_button());
         managerView.add(checkout_button());
         bottomPanel.add(cashierView, "Cashier View");
         bottomPanel.add(managerView, "Manager View");
@@ -123,6 +124,19 @@ public class GUI{
             }
         });
         return inventoryButton;
+    }
+
+    public JButton lowStock_button() {
+        lowStockButton = new JButton("Low Stock");
+        lowStockButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        lowStockButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Low Stock Button Clicked");
+                centerPanelCardLayout.show(centerPanel, "Low Stock Page");
+            }
+        });
+        return lowStockButton;
     }
 
     public JButton home_button() {
@@ -409,18 +423,20 @@ public class GUI{
     public JPanel centerPanel() {
         // Center panel
         int panelHeight = 300;
-        int panelWidth = screenSize.width - (screenSize.width / 4);
+        int panelWidth = screenSize.width - (screenSize.width / 5);
         centerPanelCardLayout = new CardLayout();
         centerPanel = new JPanel(centerPanelCardLayout);
         //inventory page panel
         JScrollPane scrollPaneInventoryPage = new JScrollPane(ManagerView.inventoryPage());
         JScrollPane scrollPaneMenuItemPage = new JScrollPane(ManagerView.menuItemPage());
+        JScrollPane scrollPaneLowStockPage = new JScrollPane(ManagerView.lowStockPage());
 
 
         centerPanel.add(homePage(), "Home Page");
         centerPanel.add(trendsPage(), "Trends Page");
         centerPanel.add(scrollPaneInventoryPage, "Inventory Page");
         centerPanel.add(scrollPaneMenuItemPage, "Menu Item Page");
+        centerPanel.add(scrollPaneLowStockPage, "Low Stock Page");
         centerPanel.add(ManagerView.orderHistoryPage() , "Order History Page");
         return centerPanel;
     }

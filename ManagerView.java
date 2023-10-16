@@ -11,10 +11,12 @@ import javax.tools.JavaFileManager;
 import java.awt.event.*;
 
 public class ManagerView {
+    public static int lowStockNumber = 33;
     // Class contains all methods associated with the pages for the Manager view
     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     static JFrame frameOpened = new JFrame(null, null);
     static JPanel inventoryPage = new JPanel(new FlowLayout(0));
+    static JPanel lowStockPage = new JPanel(new FlowLayout(0));
     static JPanel menuItemPage = new JPanel(new FlowLayout(0));
     static JPanel orderHistoryPage;
 
@@ -146,6 +148,77 @@ public class ManagerView {
         }
 
         return inventoryPage;
+        
+    }
+
+    static public JPanel lowStockPage(){
+        int count = 0;
+        //Method contains commands to format inventory page
+        lowStockPage = new JPanel(new GridLayout(0, 5, 5, 5));
+        lowStockPage.setBorder(new EmptyBorder(20, 40, 200, 40));
+        JLabel pageTitle = new JLabel("");
+        pageTitle.setFont(new Font("Calibri", Font.BOLD, 30));
+        lowStockPage.add(pageTitle);
+        lowStockPage.add(new JLabel());
+        lowStockPage.add(new JLabel());
+        lowStockPage.add(new JLabel());
+        lowStockPage.add(new JLabel());
+
+        lowStockPage.setBackground(Color.white);
+        lowStockPage.setAutoscrolls(true);
+
+        List<String> columnNames = new ArrayList<>();
+        columnNames.add("name");
+        columnNames.add("price");
+        columnNames.add("availability");
+
+        
+
+        for (List<String> topping : DatabaseHandler.toppingData) {
+            if(Integer.parseInt(topping.get(3)) <= lowStockNumber){
+                count++;
+                JButton toppingButton = new JButton( "<html>%s<br>Price: $%s<br>Stock: %s</html>".formatted(topping.get(1),topping.get(2),topping.get(3)));
+                toppingButton.setPreferredSize(new Dimension(100, 40));
+                toppingButton.setBackground(Color.orange);
+                    toppingButton.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            System.out.println(topping.get(1));
+                            frameOpened.dispose();
+                            ToppingInventoryFrame tempToppingInventoryFrame = new ToppingInventoryFrame(toppingButton, topping);
+                            frameOpened = tempToppingInventoryFrame.frame;
+
+                        }
+                    });
+                lowStockPage.add(toppingButton);
+            }
+          
+        }
+
+        columnNames.clear();
+        columnNames.add("name");
+        columnNames.add("availability");
+
+        for (List<String> ingredient : DatabaseHandler.ingredientData) {
+            if(Integer.parseInt(ingredient.get(2)) <= lowStockNumber){
+                count++;
+                JButton ingredientsButton = new JButton( "<html>%s<br>Stock:%s</html>".formatted(ingredient.get(1),ingredient.get(2)));
+                ingredientsButton.setPreferredSize(new Dimension(100, 40));
+                ingredientsButton.setBackground(Color.orange);
+                    ingredientsButton.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            System.out.println(ingredient.get(1));
+                            frameOpened.dispose();
+                            IngredientInventoryFrame tempIngredientInventoryFrame = new IngredientInventoryFrame(ingredientsButton, ingredient);
+                            frameOpened = tempIngredientInventoryFrame.frame;
+                        }
+                    });
+                lowStockPage.add(ingredientsButton);
+            }
+        }
+        pageTitle.setText(count + " items are low in stock");
+        return lowStockPage;
         
     }
 

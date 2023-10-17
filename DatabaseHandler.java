@@ -401,7 +401,7 @@ public class DatabaseHandler {
     SELECT d.menu_item_id
     FROM orders o
     JOIN drink d ON o.order_id = d.order_id
-    WHERE o.date BETWEEN 'START' AND 'END'  -- Replace START and END with the actual dates
+    WHERE o.date BETWEEN '2023-01-01' AND '2023-10-16 23:59:59'  -- Replace START and END with the actual dates
 )
 
     SELECT mi.name, COUNT(dri.menu_item_id) as order_count
@@ -462,34 +462,26 @@ public class DatabaseHandler {
 
 // Excess Report
 /*
-    WITH ItemSales AS (
-        SELECT
-            d.menu_item_id,
-            COUNT(d.drink_id) as number_sold
-        FROM drink d
-        JOIN orders o ON d.order_id = o.order_id
-        WHERE o.date >= '2022-12-31 09:00:00' AND o.date <= CURRENT_TIMESTAMP – Change date & timestamp to whatever
-        GROUP BY d.menu_item_id
-    ),
-
-    IngredientUse AS (
+    WITH IngredientUsage AS (
+        -- Calculate total ingredient usage in the time range
         SELECT
             mim.ingredients_id,
-            SUM(its.number_sold) as ingredients_used
-        FROM ItemSales its  -- Changed alias here
-        JOIN menu_ingredients_mapper mim ON its.menu_item_id = mim.menu_item_id  -- And here
+            COUNT(mim.menu_item_id) as ingredients_used_count
+        FROM drink d
+        JOIN menu_ingredients_mapper mim ON d.menu_item_id = mim.menu_item_id
+        JOIN orders o ON d.order_id = o.order_id
+        WHERE o.date >= '2022-12-31 09:00:00'  -- Change to your desired start date and time
         GROUP BY mim.ingredients_id
     )
 
-    SELECT
-        i.ingredients_id,
+    SELECT 
+        iu.ingredients_id,
         i.name,
-        i.availability,
-        COALESCE(iu.ingredients_used, 0) as ingredients_used
-    FROM ingredients i
-    LEFT JOIN IngredientUse iu ON i.ingredients_id = iu.ingredients_id
-    WHERE COALESCE(iu.ingredients_used, 0) < 0.10 * i.availability
-    ORDER BY i.availability DESC;
+        iu.ingredients_used_count
+    FROM IngredientUsage iu
+    JOIN ingredients i ON iu.ingredients_id = i.ingredients_id
+    WHERE iu.ingredients_used_count < 1000
+    ORDER BY iu.ingredients_used_count DESC;
 
 
 */

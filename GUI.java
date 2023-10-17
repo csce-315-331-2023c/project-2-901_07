@@ -259,6 +259,7 @@ public class GUI{
                         }
                         //System.out.println(ids);
                 }while(!ids.contains(employee_id));
+                System.out.println(employee_id);
                 Integer employee_id_index = Integer.parseInt(employee_id);
                 if(employeeInformation.get(employee_id_index).get(1).equals("t")){
                     //System.out.println("MANAGER");
@@ -349,12 +350,11 @@ public class GUI{
         // create different panels   
 
         // sales report     
-        JPanel salesReportPanel = new JPanel();
-        salesReportPanel.add(new JLabel("Sales Report Content"));
+        SalesReportPanel salesReportHandler = new SalesReportPanel();
+        JPanel salesReportPanel = salesReportHandler.getSalesReportPanel();
         contentPanel.add(salesReportPanel, "Sales Report");
 
         JButton btnSalesReport = new JButton("Sales Report");
-        btnSalesReport.setBounds(200, 100, 100, 50);
         btnSalesReport.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -362,6 +362,7 @@ public class GUI{
             }
         });
         navBar.add(btnSalesReport);
+
 
         // excess report
         JPanel excessReportPanel = new JPanel();

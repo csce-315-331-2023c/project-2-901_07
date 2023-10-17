@@ -75,7 +75,6 @@ public class DatabaseHandler {
             typeList.add(drink.get(2));
             drinkNameIdMap.put(drink.get(1), Integer.parseInt(drink.get(0)));
             drinkPriceMap.put(drink.get(1), Double.parseDouble(drink.get(3)));
-            
             drinkTypeMap.get(drink.get(2)).add(drink.get(1));
         }
 
@@ -218,6 +217,7 @@ public class DatabaseHandler {
         columnNames.add("menu_item_id");
         columnNames.add("ingredients_id");
         DatabaseHandler.menuIngredientsMapperData = DatabaseHandler.query_SQL(queryCommand,columnNames);
+        typeList = new HashSet<String>();
         drinkNameIdMap = new HashMap<>();
         drinkPriceMap = new HashMap<>();
         drinkTypeMap = new HashMap<>();
@@ -225,9 +225,9 @@ public class DatabaseHandler {
             if (!typeList.contains(drink.get(2))){
                 drinkTypeMap.put(drink.get(2), new ArrayList<>());
             }
+            typeList.add(drink.get(2));
             drinkNameIdMap.put(drink.get(1), Integer.parseInt(drink.get(0)));
             drinkPriceMap.put(drink.get(1), Double.parseDouble(drink.get(3)));
-            
             drinkTypeMap.get(drink.get(2)).add(drink.get(1));
         }
     }

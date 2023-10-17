@@ -59,8 +59,8 @@ public class PopularPairsReportPanel{
                 String startDateDay = startDateDayField.getText();
                 String startDateYear = startDateYearField.getText();
                 String endDateMonth = endDateMonthField.getText();
-                String endDateDay = startDateDayField.getText();
-                String endDateYear = startDateYearField.getText();
+                String endDateDay = endDateDayField.getText();
+                String endDateYear = endDateYearField.getText();
                 // valiate user input
                 // ?if (startDateMonthField.getText() == "MM")
                 try{

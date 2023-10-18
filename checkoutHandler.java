@@ -28,6 +28,7 @@ public class checkoutHandler {
     private JFrame checkoutFrame;
     private String customerName = null;
     private Integer customerID;
+    private Integer orderID;
     private double totalCost;
     private JPanel contentPanel;
 
@@ -64,20 +65,20 @@ public class checkoutHandler {
                 }
 
                 // INSERT Customer
-                if (!DatabaseHandler.customerNameIdMap.containsKey(customerName)){
-                    customerID = DatabaseHandler.customerNameIdMap.size();
-                    try {
-                        boolean ranSuccessfully = DatabaseHandler.run_SQL_Command("orders", 
-                        """
-                        INSERT INTO customer (customer_id, name)
-                        VALUES ('%d', '%s');
-                        """.formatted(customerID, customerName));
-                    } catch (NumberFormatException e_2) {
-                        System.err.println("ERROR");
+                try {
+                    String command = """
+                    INSERT INTO customer (name)
+                    VALUES ('%s')
+                    RETURNING customer_id;
+                    """.formatted(customerName);
+                    List<String> tempColumn = new ArrayList<>();
+                    tempColumn.add("customer_id");
+                    List<List<String>> tempID = DatabaseHandler.query_SQL(command, tempColumn);
+                    for (List<String> id : tempID){
+                        customerID = Integer.parseInt(id.get(0));
                     }
-                }
-                else {
-                    customerID = DatabaseHandler.customerNameIdMap.get(customerName);
+                } catch (NumberFormatException e_2) {
+                    System.err.println("ERROR");
                 }
 
 
@@ -118,8 +119,8 @@ public class checkoutHandler {
                         }
                     }
                 }
-                                                                                      
-                                                                                   
+
+
                 LocalDate localDate = LocalDate.now();
                 LocalTime localTime = LocalTime.now();
                 DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -129,15 +130,53 @@ public class checkoutHandler {
                 
                 // Insert Order
                 try {
-                    boolean ranSuccessfully = DatabaseHandler.run_SQL_Command("orders", 
+                    String command = (
                     """
-                    INSERT INTO orders (order_id, customer_id, employee_id, date, total_price, time)
-                    VALUES ('%d', '%s', '%s', '%s', '%f', '%s');
-                    """.formatted(DatabaseHandler.orderData.size(), customerID, GUI.employee_id, formattedDate, totalCost, formattedTime));
+                    INSERT INTO orders (customer_id, employee_id, date, total_price, time)
+                    VALUES ('%d', '%d', '%s', '%f', '%s')
+                    RETURNING order_id;
+                    """.formatted(customerID, Integer.parseInt(GUI.employee_id), formattedDate, totalCost, formattedTime));
+                    List<String> tempColumn = new ArrayList<>();
+                    tempColumn.add("order_id");
+                    List<List<String>> tempID = DatabaseHandler.query_SQL(command, tempColumn);
+                    for (List<String> id : tempID){
+                        orderID = Integer.parseInt(id.get(0));
+                    }
                 } catch (NumberFormatException e_2) {
                     System.err.println("ERROR");
                 }
                 
+
+                for (drinkDetailDatabase drinkDetail : DatabaseHandler.listOrderingDrink){
+                    for (HashMap<String,Integer> topping : drinkDetail.toppingList_){
+                        // Call the category handler and pass the selected category.
+                        try {
+                            String toppingName = topping.keySet().toArray()[0].toString();
+                            Integer toppingID = DatabaseHandler.toppingIdMap.get(toppingName);
+                            Integer drinkID = drinkDetail.drinkID_;
+                            boolean ranSuccessfully = DatabaseHandler.run_SQL_Command("drink_topping", 
+                            """
+                            INSERT INTO drink_topping (drink_id, topping_id)
+                            VALUES ('%d', '%d');
+                            """.formatted(drinkID, toppingID));
+                        } catch (NumberFormatException e_2) {
+                            System.err.println("ERROR");
+                        }
+                    }
+                    try {
+                        boolean ranSuccessfully = DatabaseHandler.run_SQL_Command("drink_topping", 
+                        """
+                        INSERT INTO drink (menu_item_id, order_id, sweetness, price, ice_level)
+                        VALUES ('%d', '%d', '%d', '%f', '%s');
+                        """.formatted(drinkDetail.drinkID_, orderID, Integer.parseInt(drinkDetail.sugarLevel_), drinkDetail.drinkPrice_, drinkDetail.iceLevel_));
+                    } catch (NumberFormatException e_2) {
+                        System.err.println("ERROR");
+                    }
+                }
+                
+                                                                                   
+                
+                // Reset database
                 for (Integer ingredientID : DatabaseHandler.ingredientUsed.keySet()){
                     DatabaseHandler.ingredientUsed.put(ingredientID, 0);
                 }

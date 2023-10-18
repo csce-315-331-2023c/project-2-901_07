@@ -98,7 +98,7 @@ public class drinkHandler {
         icePanel.setPreferredSize(new Dimension(GUI.screenSize.width/10, GUI.screenSize.height/10));
         icePanel.setBorder(new EmptyBorder(20, 20, 20, 20));
         icePanel.add(iceLabel);
-        String[] iceOptions = {"0%", "25%", "50%", "100%"};
+        String[] iceOptions = {"No Ice", "Less Ice", "Normal Ice"};
         iceLevelLabel = new JLabel("");
         for (String option : iceOptions) {
             JButton iceButton = new JButton(option);
@@ -107,7 +107,7 @@ public class drinkHandler {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     // Later
-                    iceLevelLabel.setText("Ice Level: " + option);
+                    iceLevelLabel.setText("Ice Level: " + option +"%");
                     thisDrink.iceLevel_ = option;
                 }
             });
@@ -126,7 +126,7 @@ public class drinkHandler {
         sugarPanel.setPreferredSize(new Dimension(GUI.screenSize.width / 10, GUI.screenSize.height / 10));
         sugarPanel.add(sugarLabel);
         sugarPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
-        String[] sugarOptions = {"0%", "25%", "50%", "100%"};
+        String[] sugarOptions = {"0", "30", "50", "80", "100"};
         sugarLevelLabel = new JLabel(""); // Initialize the sugarLevelLabel
         for (String option : sugarOptions) {
             JButton sugarButton = new JButton(option);

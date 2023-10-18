@@ -30,18 +30,18 @@ public class PopularPairsReportPanel{
         // create elements in the header row
         JPanel dateEntryRow = new JPanel();
         JLabel startDateLabel = new JLabel("Start Date:");
-        JTextField startDateMonthField = getTextFieldWithText("MM",3);
+        JTextField startDateMonthField = new JTextField("MM",3);
         startDateMonthField.setMargin(new Insets(5, 5, 5, 5));
-        JTextField startDateDayField = getTextFieldWithText("DD",3);
+        JTextField startDateDayField = new JTextField("DD",3);
         startDateDayField.setMargin(new Insets(5, 5, 5, 5));
-        JTextField startDateYearField = getTextFieldWithText("YYYY",4);
+        JTextField startDateYearField = new JTextField("YYYY",4);
         startDateYearField.setMargin(new Insets(5, 5, 5, 5));
         JLabel endDateLabel = new JLabel("End Date:");
-        JTextField endDateMonthField = getTextFieldWithText("MM",3);
+        JTextField endDateMonthField = new JTextField("MM",3);
         endDateMonthField.setMargin(new Insets(5, 5, 5, 5));
-        JTextField endDateDayField = getTextFieldWithText("DD",3);
+        JTextField endDateDayField = new JTextField("DD",3);
         endDateDayField.setMargin(new Insets(5, 5, 5, 5));
-        JTextField endDateYearField = getTextFieldWithText("YYYY",4);
+        JTextField endDateYearField = new JTextField("YYYY",4);
         endDateYearField.setMargin(new Insets(5, 5, 5, 5));
         JButton submitButton = new JButton("Submit");
 

@@ -394,16 +394,6 @@ public class DatabaseHandler {
         columnNames.add("availability");
         DatabaseHandler.ingredientData = DatabaseHandler.query_SQL(queryCommand,columnNames);
 
-        //query orders table
-        queryCommand = 
-        """
-            SELECT *
-            FROM orders;
-        """;
-        columnNames.clear();
-        columnNames.add("order_id");
-        DatabaseHandler.orderData = DatabaseHandler.query_SQL(queryCommand,columnNames);
-
         //query menu_ingredient_mapper table
         queryCommand = 
         """

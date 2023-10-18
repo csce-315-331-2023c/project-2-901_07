@@ -3,6 +3,7 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,18 +13,23 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
-/*
- * @author Quy Van
- */
+
+/** 
+* Create Frame to include Button of Each Drink of specified Drink Type.
+* @author Quy Van
+* @see categoryHandler
+*/
+
 public class categoryHandler {
     
     private static int screenWidth = (Toolkit.getDefaultToolkit().getScreenSize()).width;
     private static int screenHeight = (Toolkit.getDefaultToolkit().getScreenSize()).height;
     private static JFrame customFrame;
-    private static JPanel drinkDetail;
-    /* @param category the category of drink
-    *@return returns a panel with the list of drinks
-
+    
+    /**
+     * Set up Frame Configuration to contain Panels of drinks. 
+     * @param category the category of drink
+     * @see categoryHandlerPanel
     */
     public static void categoryHandlerPanel(String category) {
         customFrame = new JFrame();
@@ -38,9 +44,14 @@ public class categoryHandler {
 
         customFrame.setVisible(true);
     }
-    /*
-     * @param category the category of drink
-        *@return returns a panel with the list of drinks
+
+    /**
+     * Utilize Database Handler to pull list of drink in the specified category
+     * and create Button for each drink. When the Button is clicked, the Drink Handler
+     * is called to determine sugar level, ice level, and toppings.
+     * @param category the Drink Type that was specified when the function is called
+     * @return returns a panel with the list of drinks
+     * @see createDrinksPanel
      */
     public static JPanel createDrinksPanel(String category) {
         List<String> drinkList = DatabaseHandler.drinkTypeMap.get(category);

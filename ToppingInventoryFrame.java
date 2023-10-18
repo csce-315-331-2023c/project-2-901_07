@@ -1,11 +1,26 @@
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.event.*;
-import java.awt.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
+/**
+ * ToppingInventoryFrame is responsible for displaying a frame that
+ * allows the user to view and modify the price and stock of toppings.
+ * @author Quenten Hua
+ */
 public class ToppingInventoryFrame{
 
     public JFrame frame;
@@ -13,9 +28,12 @@ public class ToppingInventoryFrame{
     public JButton toppingButton;
     public List<String> topping;
     
+    /**
+     * Creates a JPanel for adjusting the price of a topping.
+     * @return JPanel with components for price adjustment.
+     */
     private JPanel changePricePanel(){
 		JPanel changePricePanel = new JPanel();
-		//changePricePanel.setBackground(new Color(50, 240, 240));
         changePricePanel.setBounds(0, 0, 354, 160);
 		changePricePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -64,12 +82,11 @@ public class ToppingInventoryFrame{
 		changePrice_Button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
                 String newPrice = newPriceTextField.getText();
-                System.out.println("input: \"%s\"".formatted(newPrice));
+                // //System.out.println("input: \"%s\"".formatted(newPrice));
                 if (newPrice.trim().isEmpty()){
                     validationLabel.setForeground(Color.red);
                     validationLabel.setText("ERROR: No price inputted.");
                 }
-                // TODO : add validation for numbers with 2 decimal places or less
                 else{
                     try {
                         float floatValue = Float.parseFloat(newPrice);
@@ -79,7 +96,7 @@ public class ToppingInventoryFrame{
                             validationLabel.setText("ERROR: $%s is an invalid price.".formatted(newPrice));                            
                         }
                         else{
-                            System.out.println("Converted float value: " + floatValue);
+                            //System.out.println("Converted float value: " + floatValue);
                             boolean ranSuccessfully = DatabaseHandler.run_SQL_Command("topping", 
                             """
                             UPDATE topping SET price = 
@@ -91,7 +108,7 @@ public class ToppingInventoryFrame{
                                 validationLabel.setText("SUCCESS: price changed to $%s.".formatted(newPrice));
                                 topping.set(2,newPrice);
                                 toppingButton.setText("<html>%s<br>Price: $%s<br>Stock: %s</html>".formatted(topping.get(1),topping.get(2),topping.get(3))); 
-                                
+                                DatabaseHandler.updateToppings();
                             }
                         }
                     } catch (NumberFormatException e_2) {
@@ -110,9 +127,12 @@ public class ToppingInventoryFrame{
         return changePricePanel;
     }
 
+    /**
+     * Creates a JPanel for adjusting the stock of a topping.
+     * @return JPanel with components for stock adjustment.
+     */
     private JPanel changeStockPanel(){
 		JPanel changePricePanel = new JPanel();
-		//changePricePanel.setBackground(new Color(144, 44, 62));
         changePricePanel.setBounds(0, 0, 354, 160);
 		changePricePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -161,12 +181,11 @@ public class ToppingInventoryFrame{
 		changePrice_Button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
                 String newStock = newPriceTextField.getText();
-                System.out.println("input: \"%s\"".formatted(newStock));
+                //System.out.println("input: \"%s\"".formatted(newStock));
                 if (newStock.trim().isEmpty()){
                     validationLabel.setForeground(Color.red);
                     validationLabel.setText("ERROR: No Stock inputted.");
                 }
-                // TODO : add validation for numbers with 2 decimal places or less
                 else{
                     try {
                         float floatValue = Float.parseFloat(newStock);
@@ -177,7 +196,7 @@ public class ToppingInventoryFrame{
                         }
                         else{
                             int intValue = Integer.parseInt(newStock);
-                            System.out.println("Converted float value: " + intValue);
+                            //System.out.println("Converted float value: " + intValue);
                             boolean ranSuccessfully = DatabaseHandler.run_SQL_Command("topping", 
                             """
                             UPDATE topping SET availability = 
@@ -207,8 +226,13 @@ public class ToppingInventoryFrame{
 		changePricePanel.add(changePrice_Button);
         return changePricePanel;
     }
+
 	/**
-	 * Create the frame.
+	 * Constructor for the ToppingInventoryFrame.
+	 * Initializes the frame and its components.
+	 * 
+	 * @param toppingButton the button representing the topping.
+	 * @param topping the list containing topping details.
 	 */
 	public ToppingInventoryFrame(JButton toppingButton, List<String> topping) {
         this.frame = new JFrame();
@@ -234,7 +258,6 @@ public class ToppingInventoryFrame{
         // //Add different pages
         contentPanel.add(changePricePanel, "Price Page");
         contentPanel.add(changeStockPanel, "Stock Page");
-        // centerPanel.add(inventoryPage, "Inventory Page");
 
         topPanel.add(contentPanel);
         //setContentPane(changePricePanel(topping));
@@ -257,20 +280,6 @@ public class ToppingInventoryFrame{
             }
         });
 
-        //deleteItem_Button
-        // JButton deleteItem_Button = new JButton("Delete Item");
-        // deleteItem_Button.setForeground(Color.white);
-        // deleteItem_Button.setBackground(Color.red);
-		// deleteItem_Button.addActionListener(new ActionListener() {
-		// 	public void actionPerformed(ActionEvent e) {
-        //         boolean ranSuccessfully = run_SQL_Command("topping", 
-        //         """
-        //         DELETE FROM topping
-        //         WHERE name = '%s';
-        //         """.formatted(topping.get(1)));
-        //     }
-        // });
-     
 
 
         JPanel bottomPanel = new JPanel();
@@ -280,7 +289,6 @@ public class ToppingInventoryFrame{
 		bottomPanel.setLayout(new GridLayout(1, 3, 0, 0));
         bottomPanel.add(adjustPrice_Button);
         bottomPanel.add(adjustStock_Button);
-        //bottomPanel.add(deleteItem_Button);
         frame.add(bottomPanel);
         /////////////////////////////////////////////////////////////////////
 		

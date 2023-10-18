@@ -5,15 +5,22 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+/**
+ * The IngredientInventoryFrame class provides a GUI for managing ingredient inventory.
+ * @author Quenten Hua
+ */
 public class IngredientInventoryFrame {
     public JFrame frame;
 	public JPanel contentPanel;
     public JButton ingredientButton;
     public List<String> ingredient;
 
+    /**
+     * Generates and returns a panel for modifying the stock of an ingredient.
+     * @return A JPanel for changing ingredient stock.
+     */
     private JPanel changeStockPanel(){
 		JPanel changePricePanel = new JPanel();
-		//changePricePanel.setBackground(new Color(50, 240, 240));
         changePricePanel.setBounds(0, 0, 354, 160);
 		changePricePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -63,7 +70,6 @@ public class IngredientInventoryFrame {
 		changePrice_Button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
                 String newStock = newPriceTextField.getText();
-                System.out.println("input: \"%s\"".formatted(newStock));
                 if (newStock.trim().isEmpty()){
                     validationLabel.setForeground(Color.red);
                     validationLabel.setText("ERROR: No Stock inputted.");
@@ -78,7 +84,6 @@ public class IngredientInventoryFrame {
                         }
                         else{
                             int intValue = Integer.parseInt(newStock);
-                            System.out.println("Converted float value: " + intValue);
                             boolean ranSuccessfully = DatabaseHandler.run_SQL_Command("topping", 
                             """
                             UPDATE ingredients SET availability = 
@@ -90,7 +95,7 @@ public class IngredientInventoryFrame {
                                 validationLabel.setText("SUCCESS: stock changed to %s.".formatted(newStock));
                                 ingredient.set(2,newStock);
                                 ingredientButton.setText("<html>%s<br>Stock:%s</html>".formatted(ingredient.get(1),ingredient.get(2))); 
-                                
+                                DatabaseHandler.updateIngredients();
                             }
                         }
                     } catch (NumberFormatException e_2) {
@@ -109,7 +114,13 @@ public class IngredientInventoryFrame {
         return changePricePanel;
     }
 
-
+    /**
+     * Constructor for the IngredientInventoryFrame.
+     * Initializes the frame and its components based on the given ingredient details.
+     *
+     * @param ingredientButton Button representing the ingredient.
+     * @param ingredient A list containing ingredient details.
+     */
     public IngredientInventoryFrame(JButton ingredientButton, List<String> ingredient) {
         this.frame = new JFrame();
         this.ingredientButton = ingredientButton;
@@ -132,10 +143,7 @@ public class IngredientInventoryFrame {
         JPanel changeStockPanelIngredient = changeStockPanel();
         // //Add different pages
         contentPanel.add(changeStockPanelIngredient, "Stock Page");
-        // centerPanel.add(inventoryPage, "Inventory Page");
-
         topPanel.add(contentPanel);
-        //changePriceFrame.setContentPane(changePricePanel(topping));
 
         ///////BOTTOM PANEL COMPONENTS//////////////
 
@@ -147,29 +155,12 @@ public class IngredientInventoryFrame {
             }
         });
 
-        //deleteItem_Button
-        // JButton deleteItem_Button = new JButton("Delete Item");
-        // deleteItem_Button.setForeground(Color.white);
-        // deleteItem_Button.setBackground(Color.red);
-		// deleteItem_Button.addActionListener(new ActionListener() {
-		// 	public void actionPerformed(ActionEvent e) {
-        //         boolean ranSuccessfully = run_SQL_Command("topping", 
-        //         """
-        //         DELETE FROM ingredient
-        //         WHERE name = '%s';
-        //         """.formatted(ingredient.get(1)));
-        //     }
-        // });
-     
-
-
         JPanel bottomPanel = new JPanel();
 		bottomPanel.setBackground(new Color(240, 40, 240));
         bottomPanel.setBounds(0, 160, 338, 55);
 
 		bottomPanel.setLayout(new GridLayout(1, 3, 0, 0));
         bottomPanel.add(adjustStock_Button);
-        //bottomPanel.add(deleteItem_Button);
         frame.add(bottomPanel);
     
         /////////////////////////////////////////////////////////////////////

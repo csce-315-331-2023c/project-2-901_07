@@ -273,8 +273,16 @@ if __name__ == "__main__":
         current_date = startTime + datetime.timedelta(days=day - 1)
         while True:
             holder = 400
+<<<<<<< HEAD
+<<<<<<< HEAD
             if current_date.hour == 12 or current_date.hour == 18:
                 holder = 300
+=======
+>>>>>>> 6799aac7b33ef9440a8b49015512a09d2d38b46b
+=======
+            if current_date.hour == 12 or current_date.hour == 18:
+                holder = 300
+>>>>>>> main
             if current_date.month == 8 and current_date.day == 21 or current_date.month == 1 and current_date.day == 16:
                 holder = 200
             current_date += datetime.timedelta(seconds=random.randint(1, holder))

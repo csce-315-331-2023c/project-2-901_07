@@ -5,10 +5,20 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+/**
+ * AddItemInventoryFrame allows a user to create a new inventory item and insert it into the database.
+ * @author Quenten Hua
+ */
 public class AddItemInventoryFrame {
     public JFrame frame;
 	public JPanel contentPanel;
     public JButton addItemButton;
+
+    /**
+     * Constructor to initialize and set up the frame.
+     *
+     * @param addItemButton the button that triggers the creation of this frame.
+     */
     public AddItemInventoryFrame(JButton addItemButton) {
         this.frame = new JFrame();
         this.addItemButton = addItemButton;
@@ -83,83 +93,125 @@ public class AddItemInventoryFrame {
                 String itemName = itemNameTextField.getText();
                 String itemType = choice.getSelectedItem();
                 String itemStock = stockTextField.getText();
-                
-                if(itemName.isEmpty() || itemStock.isEmpty()){
+                List<String> columnNames = new ArrayList<>();
+                columnNames.add("name");
+                List<List<String>> result = DatabaseHandler.query_SQL( 
+                """
+                    SELECT name FROM topping WHERE LOWER(name) = LOWER('%s')
+                    UNION
+                    SELECT name FROM ingredients WHERE LOWER(name) = LOWER('%s');
+                """.formatted(itemName,itemName), columnNames);
+                if(itemName.equals("") || itemStock.equals("")){
                     inputValidationLabel.setText("ERROR: One or more of the fields are empty.");
                     inputValidationLabel.setForeground(Color.red);
                 }
                 else{
-                    try {
-                        int stockIntValue = Integer.parseInt(itemStock);
-                        if(itemType == "topping"){
-                            String itemPrice = priceTextField.getText();
-                            Float itemPriceFloatValue = Float.parseFloat(itemPrice);
-                            boolean ranSuccessfully = DatabaseHandler.run_SQL_Command("topping", 
-                            """
-                            INSERT INTO topping (name, price, availability)
-                            VALUES ('%s',%.2f,%d);
-                            """.formatted(itemName,itemPriceFloatValue, stockIntValue));
-                            priceTextField.setText("");
+                    try{
+                        float floatValueItemStock = Float.parseFloat(itemStock);
+                        if (!result.isEmpty()){
+                            inputValidationLabel.setText("ERROR: Item already exist in inventory");
+                            inputValidationLabel.setForeground(Color.red);                        
+                        }
+                        else if (floatValueItemStock < 0){
+                            System.err.println("Invalid float format: " + itemStock);
+                            inputValidationLabel.setForeground(Color.red);
+                            inputValidationLabel.setText("ERROR: %s is an invalid stock.".formatted(itemStock));                       
+                        }
+                        else{
+                            try {
+                                
+                                int stockIntValue = Integer.parseInt(itemStock);
+                                if(itemType == "topping"){
+                                    String itemPrice = priceTextField.getText();
+                                    try{
+                                        Float itemPriceFloatValue = Float.parseFloat(itemPrice);
+                                        if (itemPriceFloatValue < 0){
+                                            System.err.println("Invalid float format: " + itemPriceFloatValue);
+                                            inputValidationLabel.setForeground(Color.red);
+                                            inputValidationLabel.setText("ERROR: $%s is an invalid price.".formatted(itemPriceFloatValue));                            
+                                        }
+                                        else{
+                                            boolean ranSuccessfully = DatabaseHandler.run_SQL_Command("topping", 
+                                                """
+                                                INSERT INTO topping (name, price, availability)
+                                                VALUES ('%s',%.2f,%d);
+                                                """.formatted(itemName,itemPriceFloatValue, stockIntValue));
+                                                priceTextField.setText("");
 
-                            List<String> topping = new ArrayList<>();
-                            topping.add("");
-                            topping.add(itemName);
-                            topping.add(itemPrice);
-                            topping.add(itemStock);
-                            JButton toppingButton = new JButton( "<html>%s<br>Price: $%s<br>Stock: %s</html>".formatted(topping.get(1),topping.get(2),topping.get(3)));
-                            toppingButton.setPreferredSize(new Dimension(170, 70));
-                            toppingButton.setBackground(Color.pink);
-                                toppingButton.addActionListener(new ActionListener() {
-                                    @Override
-                                    public void actionPerformed(ActionEvent e) {
-                                        System.out.println(topping.get(0));
-                                        ManagerView.frameOpened.dispose();
-                                        toppingButton.setBackground(Color.pink);
-                                        ToppingInventoryFrame tempToppingInventoryFrame = new ToppingInventoryFrame(toppingButton, topping);
-                                        ManagerView.frameOpened = tempToppingInventoryFrame.frame;
-                                    }
-                                });
-                            ManagerView.inventoryPage.add(toppingButton);
-                            
-                            //TODO: ADD NEW WINDOW
+                                                List<String> topping = new ArrayList<>();
+                                                topping.add("");
+                                                topping.add(itemName);
+                                                topping.add(itemPrice);
+                                                topping.add(itemStock);
+                                                JButton toppingButton = new JButton( "<html>%s<br>Price: $%s<br>Stock: %s</html>".formatted(topping.get(1),topping.get(2),topping.get(3)));
+                                                toppingButton.setPreferredSize(new Dimension(170, 70));
+                                                toppingButton.setBackground(Color.pink);
+                                                    toppingButton.addActionListener(new ActionListener() {
+                                                        @Override
+                                                        public void actionPerformed(ActionEvent e) {
+                                                            //System.out.println(topping.get(0));
+                                                            ManagerView.frameOpened.dispose();
+                                                            toppingButton.setBackground(Color.pink);
+                                                            ToppingInventoryFrame tempToppingInventoryFrame = new ToppingInventoryFrame(toppingButton, topping);
+                                                            ManagerView.frameOpened = tempToppingInventoryFrame.frame;
+                                                        }
+                                                    });
+                                                ManagerView.inventoryPage.add(toppingButton);
+                                                DatabaseHandler.updateToppings();
+                                        }
+                                    }catch (NumberFormatException e_2) {
+                                        System.err.println("Invalid float format: " + itemPrice);
+                                        inputValidationLabel.setForeground(Color.red);
+                                        inputValidationLabel.setText("ERROR: $%s is an invalid price.".formatted(itemPrice));
+                                    }     
+        
+                                    
+                                }
+                                else{//if itemType is ingredient
+                                    boolean ranSuccessfully = DatabaseHandler.run_SQL_Command("ingredient", 
+                                    """
+                                    INSERT INTO ingredients (name, availability)
+                                    VALUES ('%s',%d);
+                                    """.formatted(itemName, stockIntValue));
+                                    List<String> ingredient = new ArrayList<>();
+                                    ingredient.add("");
+                                    ingredient.add(itemName);
+                                    ingredient.add(itemStock);
+                                    JButton ingredientsButton = new JButton( "<html>%s<br>Stock:%s</html>".formatted(ingredient.get(1),ingredient.get(2)));
+                                    ingredientsButton.setPreferredSize(new Dimension(170, 70));
+                                    ingredientsButton.setBackground(Color.pink);
+                                        ingredientsButton.addActionListener(new ActionListener() {
+                                            @Override
+                                            public void actionPerformed(ActionEvent e) {
+                                                ManagerView.frameOpened.dispose();
+                                                ingredientsButton.setBackground(Color.pink);
+                                                IngredientInventoryFrame tempIngredientInventoryFrame = new IngredientInventoryFrame(ingredientsButton, ingredient);
+                                                ManagerView.frameOpened = tempIngredientInventoryFrame.frame;
+                                            }
+                                        });
+                                    ManagerView.inventoryPage.add(ingredientsButton);
+                                    DatabaseHandler.updateIngredients();
+                                }
+                                itemNameTextField.setText("");
+                                stockTextField.setText("");
+                                ManagerView.inventoryPage.revalidate();
+                                ManagerView.inventoryPage.repaint();
+                                inputValidationLabel.setText("SUCCESS: successfully added item.");
+                                inputValidationLabel.setForeground(Color.green);
+                    
+                            } catch (NumberFormatException e_2) {
+                                inputValidationLabel.setForeground(Color.red);
+                                inputValidationLabel.setText("ERROR: invalid input");
+                            }   
                         }
-                        else{//if itemType is ingredient
-                            boolean ranSuccessfully = DatabaseHandler.run_SQL_Command("ingredient", 
-                            """
-                            INSERT INTO ingredients (name, availability)
-                            VALUES ('%s',%d);
-                            """.formatted(itemName, stockIntValue));
-                            List<String> ingredient = new ArrayList<>();
-                            ingredient.add("");
-                            ingredient.add(itemName);
-                            ingredient.add(itemStock);
-                            JButton ingredientsButton = new JButton( "<html>%s<br>Stock:%s</html>".formatted(ingredient.get(1),ingredient.get(2)));
-                            ingredientsButton.setPreferredSize(new Dimension(170, 70));
-                            ingredientsButton.setBackground(Color.pink);
-                                ingredientsButton.addActionListener(new ActionListener() {
-                                    @Override
-                                    public void actionPerformed(ActionEvent e) {
-                                        System.out.println(ingredient.get(0));
-                                        ManagerView.frameOpened.dispose();
-                                        ingredientsButton.setBackground(Color.pink);
-                                        IngredientInventoryFrame tempIngredientInventoryFrame = new IngredientInventoryFrame(ingredientsButton, ingredient);
-                                        ManagerView.frameOpened = tempIngredientInventoryFrame.frame;
-                                    }
-                                });
-                            ManagerView.inventoryPage.add(ingredientsButton);
-                            //TODO: ADD NEW WINDOW
-                        }
-                        itemNameTextField.setText("");
-                        stockTextField.setText("");
-                        ManagerView.inventoryPage.revalidate();
-                        ManagerView.inventoryPage.repaint();
-                        inputValidationLabel.setText("SUCCESS: successfully added item.");
-                        inputValidationLabel.setForeground(Color.green);
-                    } catch (NumberFormatException e_2) {
+                    }catch (NumberFormatException e_2) {
+                        System.err.println("Invalid float format: " + itemStock);
                         inputValidationLabel.setForeground(Color.red);
-                        inputValidationLabel.setText("ERROR: invalid input");
-                    }   
-                }            
+                        inputValidationLabel.setText("ERROR: %s is an invalid stock.".formatted(itemStock));
+                    }
+                }
+
+                               
 
             }
         });

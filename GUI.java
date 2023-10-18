@@ -1,54 +1,64 @@
-import java.awt.*;
-import java.sql.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.awt.event.*;
-import javax.swing.border.*;
 
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
+/**
+ * GUI class provides the graphical representation of the application
+ * and handles various functionalities related to the application's interface.
+ */
 public class GUI{
     public static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-    DatabaseHandler databaseHandler =  new DatabaseHandler();
+    public DatabaseHandler databaseHandler =  new DatabaseHandler();
+    
     CardLayout bottomPanelCardLayout, centerPanelCardLayout;
     
-    JButton checkoutButton, homeButton, orderHistoryButton, menuItemButton, inventoryButton;
+    JButton checkoutButton, homeButton, orderHistoryButton, menuItemButton, inventoryButton, trendsButton, lowStockButton;
     JButton changeEmployeeButton, toGoButton, addCustomerButton, totalChargeButton, ticketsButton;
     
     JLabel currentViewLabel, currentEmployeeLabel;
     List<List<String>> employeeInformation = new ArrayList<>();
-    JPanel centerPanel, rightPanel, bottomPanel;
-    JPanel homePage, inventoryPage, menuItemPage;
+    public static JPanel centerPanel, rightPanel, bottomPanel;
+    JPanel homePage, inventoryPage, menuItemPage, lowStockPage;
 
-    public static JPanel checkoutPanel;
     public static Double totalPrice = 0.0;
-    public static HashMap<String, Integer> drinkNameIdMap = new HashMap<>();
-    public static HashMap<Integer, List<Integer>> drinkIngredientMap = new HashMap<>(); 
-    public static HashMap<String, Integer> toppingIdMap = new HashMap<>();
-    public static HashMap<Integer, Integer> toppingUsed = new HashMap<>();
-    public static HashMap<Integer, Integer> ingredientUsed = new HashMap<>();
-    public static HashMap<String, HashMap<String, Double>> drinkPrices = new HashMap<>();
-    public static List<List<String>> toppings = new ArrayList<>();
-    public static Integer nextOrderID;
-    public static String employee_id, employeeName;
 
+    public static String employee_id, employeeName;
     String current_view = "Cashier";
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Bottom Horizontal Bar
     // Checkout + order History + Trends + Availability
+
+    /**
+     * Generates the bottom panel view of the application with functionalities 
+     * like Checkout, order History, Trends, and Availability.
+     * @return JPanel that contains the bottom panel view.
+     */
     public JPanel bottomPanel() {
-        checkoutPanel = new JPanel(new GridLayout(10, 1, 30, 10));
-        checkoutPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
-        checkoutPanel.add(new JLabel("List of drinks"), BorderLayout.LINE_START);
         // Bottom panel
         int panelHeight = screenSize.height / 10;
-        int panelWidth = 0; // value does not matter
-        //bottomPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
-        //bottomPanel.setBackground(Color.gray);
+        int panelWidth = 0;
         bottomPanelCardLayout = new CardLayout();
         bottomPanel = new JPanel(bottomPanelCardLayout);
         bottomPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
@@ -62,12 +72,12 @@ public class GUI{
         //manager view bottom panel
         JPanel managerView = new JPanel(new GridLayout(1, 5, 30, 10));
         managerView.setBorder(new EmptyBorder(20, 20, 20, 20));
-        //managerView.add(home_button());
         managerView.add(home_button());
-        //managerView.add(orderHistory_button());
         managerView.add(inventory_button());
+        managerView.add(menuItem_button());
+        managerView.add(trends_button());
+        managerView.add(lowStock_button());
         managerView.add(checkout_button());
-
         bottomPanel.add(cashierView, "Cashier View");
         bottomPanel.add(managerView, "Manager View");
         
@@ -75,6 +85,10 @@ public class GUI{
     }
     
     // 1. Checkout Button
+    /**
+     * Creates and returns a checkout button with its associated functionalities.
+     * @return JButton for the checkout operation.
+     */
     public JButton checkout_button() {
         checkoutButton = new JButton("Checkout");
         checkoutButton.setMargin(new Insets(50, 50, 50, 50));
@@ -82,28 +96,43 @@ public class GUI{
         checkoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                totalPrice = 0.0;
                 // Call the category handler and pass the selected category.
-                checkoutHandler.checkoutFrame_();
+                checkoutHandler checkoutFrame = new checkoutHandler();
+                checkoutFrame.checkoutFrame_();
             }
         });
         return checkoutButton;
     }
 
     // 2. order Button
+    /**
+     * Creates and returns an order history button with its associated functionalities.
+     * @return JButton for viewing the order history.
+     */
     public JButton orderHistory_button() {
         orderHistoryButton = new JButton("Order History");
         orderHistoryButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        orderHistoryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                centerPanelCardLayout.show(centerPanel, "Order History Page");
+            }
+        });
         return orderHistoryButton;
     }
 
     // 3. Trends Button
+    /**
+     * Creates and returns a menu item button with its associated functionalities.
+     * @return JButton for viewing the menu items.
+     */
     public JButton menuItem_button() {
         menuItemButton = new JButton("Menu Items");
         menuItemButton.setFont(new Font("Calibri", Font.BOLD, 16));
         menuItemButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("menuItemButton clicked");
                 centerPanelCardLayout.show(centerPanel, "Menu Item Page");
             }
         });
@@ -111,40 +140,81 @@ public class GUI{
     }
 
     // 4. Availability Button
+    /**
+     * Creates and returns an inventory button with its associated functionalities.
+     * @return JButton for viewing the inventory.
+     */
     public JButton inventory_button() {
         inventoryButton = new JButton("Inventory");
         inventoryButton.setFont(new Font("Calibri", Font.BOLD, 16));
         inventoryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("inventoryButton clicked");
                 centerPanelCardLayout.show(centerPanel, "Inventory Page");
             }
         });
         return inventoryButton;
     }
 
+    /**
+     * Creates and returns a low stock button with its associated functionalities.
+     * @return JButton for viewing the items in low stock.
+     */
+    public JButton lowStock_button() {
+        lowStockButton = new JButton("Low Stock");
+        lowStockButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        lowStockButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GUI.centerPanel.add(new JScrollPane(ManagerView.lowStockPage()), "Low Stock Page");
+                centerPanelCardLayout.show(centerPanel, "Low Stock Page");
+            }
+        });
+        return lowStockButton;
+    }
+
+    /**
+     * Creates and returns a home button with its associated functionalities.
+     * @return JButton for navigating to the home page.
+     */
     public JButton home_button() {
         homeButton = new JButton("Home");
         homeButton.setFont(new Font("Calibri", Font.BOLD, 16));
         homeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("homeButton clicked");
                 centerPanelCardLayout.show(centerPanel, "Home Page");
             }
         });
         return homeButton;
     }
+
+    /**
+     * Creates and returns a trends button with its associated functionalities.
+     * @return JButton for viewing the trends.
+     */
+    public JButton trends_button(){
+        trendsButton = new JButton("Trends");
+        trendsButton.setFont(new Font("Calibri", Font.BOLD, 16));
+        trendsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                centerPanelCardLayout.show(centerPanel, "Trends Page");
+            }
+        });
+        return trendsButton;
+    }
     ////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Right Vertical Bar
     // Switch View + To Go + Charge Total + Tickets
+    /**
+     * Generates the right panel view of the application with functionalities 
+     * like Switching Views, Charging Totals, and Tickets.
+     * @return JPanel that contains the right panel view.
+     */
     public JPanel rightPanel() {
-        List<String> columnNames = new ArrayList<>(Arrays.asList("employee_id", "manager", "name"));
-
-
-        employeeInformation = GUI.query("employee", columnNames);
+        employeeInformation = DatabaseHandler.employeeData;
         List<String> ids = new ArrayList<>();
         
         for (List<String> row : employeeInformation) {
@@ -154,10 +224,10 @@ public class GUI{
         }
         do{
             employee_id = JOptionPane.showInputDialog("Enter Employee ID:");
-            System.out.println(ids);
+            if (employee_id == null){
+                break;
+            }
         }while(!ids.contains(employee_id));
-        System.out.println("\n\n\n\n\n\n");
-        System.out.println(employeeInformation.get(Integer.parseInt(employee_id)));
         employeeName = (employeeInformation.get(Integer.parseInt(employee_id))).get(2);
         // Right panel
         int panelHeight = 0; // value does not matter
@@ -192,16 +262,15 @@ public class GUI{
         rightPanel.add(currentViewLabel);
 
         rightPanel.add(changeEmployee_button());
-        // rightPanel.add(toGo_button());
-        // rightPanel.add(addCustomer_button());
-        // rightPanel.add(totalCharge_button());
-        // rightPanel.add(tickets_button());
-
         return rightPanel;
         
     }
 
-    // 1. Switch View 
+    // 1. Switch View
+    /**
+     * Creates and returns a button that allows users to switch the active employee.
+     * @return JButton for changing the employee.
+     */ 
     public JButton changeEmployee_button() {
         changeEmployeeButton = new JButton("Change Employee");
         changeEmployeeButton.setBounds(200, 100, 100, 50);
@@ -209,9 +278,7 @@ public class GUI{
         changeEmployeeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("changeEmployeeButton clicked");
-                List<String> columnNames = new ArrayList<>(Arrays.asList("employee_id", "manager", "name"));
-                List<List<String>> employeeInformation = GUI.query("employee", columnNames);
+                List<List<String>> employeeInformation = DatabaseHandler.employeeData;
                 List<String> ids = new ArrayList<>();
                 List<String> manager_ids = new ArrayList<>();
                 for (List<String> row : employeeInformation) {
@@ -222,20 +289,20 @@ public class GUI{
                         }
                     }
                 }
-                System.out.println("REAL " + ids);
 
                 do{
                         employee_id = JOptionPane.showInputDialog("Enter Employee ID:");
-                        System.out.println(ids);
+                        if (employee_id == null){
+                            break;
+                        }
                 }while(!ids.contains(employee_id));
+                System.out.println(employee_id);
                 Integer employee_id_index = Integer.parseInt(employee_id);
                 if(employeeInformation.get(employee_id_index).get(1).equals("t")){
-                    System.out.println("MANAGER");
                     current_view = "Manager";
                     bottomPanelCardLayout.show(bottomPanel, "Manager View");
                 }
                 else{
-                    System.out.println("NOT MANAGER");
                     current_view = "Cashier";
                     bottomPanelCardLayout.show(bottomPanel, "Cashier View");
                 }
@@ -248,40 +315,16 @@ public class GUI{
         return changeEmployeeButton;
     }
 
-    // 2. To Go 
-    public JButton toGo_button() {
-        toGoButton = new JButton("To Go");
-        toGoButton.setBounds(200, 100, 100, 50);
-        toGoButton.setFont(new Font("Calibri", Font.BOLD, 16));
-        return toGoButton;
-    }
-
-    // 3. Add Customer 
-    public JButton addCustomer_button() {
-        addCustomerButton = new JButton("Add Customer");
-        addCustomerButton.setBounds(200, 100, 100, 50);
-        addCustomerButton.setFont(new Font("Calibri", Font.BOLD, 16));
-        return addCustomerButton;
-    }
-
-    // 4. Total Charge 
-    public JButton totalCharge_button() {
-        totalChargeButton = new JButton("Total Charge");
-        totalChargeButton.setBounds(200, 100, 100, 50);
-        totalChargeButton.setFont(new Font("Calibri", Font.BOLD, 16));
-        return totalChargeButton;
-    }
-
-    // 5. Tickets
-    public JButton tickets_button() {
-        ticketsButton = new JButton("Tickets");
-        ticketsButton.setBounds(200, 100, 100, 50);
-        ticketsButton.setFont(new Font("Calibri", Font.BOLD, 16));
-        return ticketsButton;
-    }
+    
 
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Creates and returns a JPanel for the home page which contains buttons
+     * for different beverage categories.
+     * 
+     * @return JPanel containing the home page elements.
+     */
     public JPanel homePage() {
         int panelHeight = 300;
         int panelWidth = screenSize.width - (screenSize.width / 6);
@@ -298,48 +341,130 @@ public class GUI{
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     // Call the category handler and pass the selected category.
-                    JPanel tempPanel = categoryHandler.categoryHandlerPanel(category);
-                    checkoutPanel.add(tempPanel);
+                    categoryHandler.categoryHandlerPanel(category);
                 }
             });
             homePagePanel.add(categoryButton);
         }
         return homePagePanel;
     }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Creates and returns a JPanel for the trends page which contains different 
+     * panels navigated through buttons on a navigation bar.
+     * 
+     * @return JPanel containing the trends page elements.
+     */
+    public JPanel trendsPage() {
+        int panelHeight = 300;
+        int panelWidth = screenSize.width - (screenSize.width / 6);
+
+        CardLayout cardLayout = new CardLayout();
+        JPanel contentPanel = new JPanel(cardLayout);
+
+        JPanel navBar = new JPanel(new GridLayout(1, 4));
+        navBar.setBorder(new EmptyBorder(40, 40, 40, 40));
+        // create different panels   
+
+        // sales report     
+        SalesReportPanel salesReportHandler = new SalesReportPanel();
+        JPanel salesReportPanel = salesReportHandler.getSalesReportPanel();
+        contentPanel.add(salesReportPanel, "Sales Report");
+
+        JButton btnSalesReport = new JButton("Sales Report");
+        btnSalesReport.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(contentPanel, "Sales Report");
+            }
+        });
+        navBar.add(btnSalesReport);
+
+
+        // excess report
+        ExcessReportPanel excessReportHandler = new ExcessReportPanel();
+        JPanel excessReportPanel = excessReportHandler.getExcessReportPanel();
+        contentPanel.add(excessReportPanel, "Excess Report");
+
+        JButton btnExcessReport = new JButton("Excess Report");
+        btnExcessReport.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(contentPanel, "Excess Report");
+            }
+        });
+        navBar.add(btnExcessReport);
+
+        
+        // popular pairs
+         PopularPairsReportPanel popularPairsHandler = new PopularPairsReportPanel();
+        JPanel popularPairsPanel = popularPairsHandler.getPopularPairsReportPanel();
+        contentPanel.add(popularPairsPanel, "Popular Pairs");
+
+        JButton btnPopularPairs = new JButton("Popular Pairs");
+        btnPopularPairs.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(contentPanel, "Popular Pairs");
+            }
+        });
+        navBar.add(btnPopularPairs);
+        
+
+        JPanel trendsPanel = new JPanel(new BorderLayout());
+        trendsPanel.setBorder(new EmptyBorder(40, 40, 40, 40));
+        trendsPanel.setBackground(Color.white);
+        trendsPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
+
+        trendsPanel.add(navBar, BorderLayout.NORTH);
+        trendsPanel.add(contentPanel, BorderLayout.CENTER);
+
+        return trendsPanel;
+    }
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     // Center Horizontal Bar
     // Milk Tea
-    
+    /**
+     * Creates and returns the central JPanel which manages and displays 
+     * different panels based on a card layout.
+     * 
+     * @return JPanel containing the central display.
+     */
     public JPanel centerPanel() {
         // Center panel
         int panelHeight = 300;
-        int panelWidth = screenSize.width - (screenSize.width / 4);
+        int panelWidth = screenSize.width - (screenSize.width / 5);
         centerPanelCardLayout = new CardLayout();
         centerPanel = new JPanel(centerPanelCardLayout);
         //inventory page panel
-        JScrollPane scrollPane = new JScrollPane(ManagerView.inventoryPage());
-        scrollPane.setPreferredSize(new Dimension(300, 200)); 
-        menuItemPage = new JPanel();
-        menuItemPage = ManagerView.menuItemPage();
-
+        JScrollPane scrollPaneInventoryPage = new JScrollPane(ManagerView.inventoryPage());
+        JScrollPane scrollPaneMenuItemPage = new JScrollPane(ManagerView.menuItemPage());
+        
+        JScrollPane scrollPaneLowStockPage = new JScrollPane(ManagerView.lowStockPage());
+        scrollPaneLowStockPage.getViewport().setPreferredSize(new Dimension(panelWidth, panelHeight));
         centerPanel.add(homePage(), "Home Page");
-        centerPanel.add(scrollPane, "Inventory Page");
-        centerPanel.add(menuItemPage, "Menu Item Page");
+        centerPanel.add(trendsPage(), "Trends Page");
+        centerPanel.add(scrollPaneInventoryPage, "Inventory Page");
+        centerPanel.add(scrollPaneMenuItemPage, "Menu Item Page");
+        centerPanel.add(scrollPaneLowStockPage, "Low Stock Page");
+        centerPanel.add(ManagerView.orderHistoryPage() , "Order History Page");
         return centerPanel;
     }
 
     
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-
+    /**
+     * Main constructor for the GUI class. It initializes and sets up the main JFrame
+     * for the application, setting up the layout, dimensions, and populating it with 
+     * various panels.
+     */
     public GUI() {
-        // FRAMES TUTORIAL
         JFrame frame = new JFrame();
 
         frame.setTitle("Sharetea - Glory of Taiwan!"); // sets title of frame
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // exit out of application
-        // frame.setResizable(false); //prevent frame from being resized
         frame.setSize(screenSize.width, screenSize.height); // sets the x-dimension, and y-dimension of frame
         ImageIcon image = new ImageIcon("assets/sharetealogo.png");
         frame.setIconImage(image.getImage());
@@ -357,6 +482,7 @@ public class GUI{
         if((employeeInformation.get(Integer.parseInt(employee_id))).get(1).equals("t")){
             current_view = "Manager";
             bottomPanelCardLayout.show(bottomPanel, "Manager View");
+            
         }
         else{
             current_view = "Cashier";
@@ -364,207 +490,16 @@ public class GUI{
         }
         currentViewLabel.setText("Current View: " + current_view);
         frame.setVisible(true); // make frame visible
-        // END OF FRAMES TUTORIAL
+
 
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static List<List<String>> query(String tableName, List<String> columnNames){
-        //Building the connection with your credentials
-        Connection conn = null;
-        String teamName = "01g";
-        String dbName = "csce315331_"+teamName+"_db";
-        // "csce315331_01g_db"
-        String dbConnectionString = "jdbc:postgresql://csce-315-db.engr.tamu.edu/" + dbName;
-        dbSetup myCredentials = new dbSetup();
-
-        try {
-            conn = DriverManager.getConnection(dbConnectionString, dbSetup.user, dbSetup.pswd);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println(e.getClass().getName()+": "+e.getMessage());
-            System.exit(0);
-        }
-
-        System.out.println("Opened database successfully");
-
-        try{
-            Statement createStmt = conn.createStatement();
-            String selectTable = "SELECT * FROM "+tableName+";";
-            ResultSet result = conn.createStatement().executeQuery(selectTable);
-            List<List<String>> output = new ArrayList<>();
-            System.out.println("--------------------Query Results--------------------");
-            while (result.next()) {
-               List<String> rowInfo = new ArrayList<>();
-               for (String columnName: columnNames) {
-                    rowInfo.add(result.getString(columnName));
-               }
-               output.add(rowInfo);
-            }
-            System.out.println(output);
-            System.out.println(result);
-            return output;
-        } catch (Exception e){
-            e.printStackTrace();
-            System.err.println(e.getClass().getName()+": "+e.getMessage());
-            System.exit(0);
-        }
-
-        //closing the connection
-        try {
-            conn.close();
-            System.out.println("Connection Closed.");
-        } catch(Exception e) {
-            System.out.println("Connection NOT Closed.");
-        }//end try catch
-        return null;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static void setupDatabase(){
-        HashMap<String, Double> milkTea = new HashMap<>();
-        HashMap<String, Double> freshMilk = new HashMap<>();
-        HashMap<String, Double> iceBlend = new HashMap<>();
-        HashMap<String, Double> fruitTea = new HashMap<>();
-        HashMap<String, Double> mojito = new HashMap<>();
-        HashMap<String, Double> creama = new HashMap<>();
-
-        List<String> columnNames = new ArrayList<>();
-        columnNames.add("name");
-        columnNames.add("type");
-        columnNames.add("price");
-        columnNames.add("menu_item_id");
-        List<List<String>> drinks = GUI.query("menu_item", columnNames);
-
-        for (List<String> drink : drinks) {
-            String drinkName = drink.get(0);
-            String drinkType = drink.get(1);
-            Double drinkPrice = Double.parseDouble(drink.get(2));
-            Integer drinkID = Integer.parseInt(drink.get(3));
-            GUI.drinkNameIdMap.put(drinkName, drinkID);
-            switch(drinkType) {
-                case "Milk Tea":
-                    milkTea.put(drinkName, drinkPrice);
-                    break;
-                case "Fresh Milk":
-                    freshMilk.put(drinkName, drinkPrice);
-                    break;
-                case "Ice Blend":
-                    iceBlend.put(drinkName, drinkPrice);
-                    break;
-                case "Fruit Tea":
-                    fruitTea.put(drinkName, drinkPrice);
-                    break;
-                case "Mojito":
-                    mojito.put(drinkName, drinkPrice);
-                    break;
-                case "Creama":
-                    creama.put(drinkName, drinkPrice);
-                    break;
-            }
-        }
-        drinkPrices.put("Milk Tea", milkTea);
-        drinkPrices.put("Fresh Milk", freshMilk);
-        drinkPrices.put("Ice Blend", iceBlend);
-        drinkPrices.put("Fruit Tea", fruitTea);
-        drinkPrices.put("Mojito", mojito);
-        drinkPrices.put("Creama", creama);
-        
-        /////////////////////////////////////////////////////////////
-        columnNames.clear();
-        columnNames.add("menu_item_id");
-        columnNames.add("ingredients_id");
-        List<List<String>> drinkIngredientMappers = GUI.query("menu_ingredients_mapper", columnNames);
-
-        for (List<String> DIMap : drinkIngredientMappers){
-            Integer menuItemID = Integer.parseInt(DIMap.get(0));
-            Integer ingrID = Integer.parseInt(DIMap.get(1));
-
-            if (GUI.drinkIngredientMap.containsKey(menuItemID)) {
-                // If it's in the map, add the ingrID to the existing list
-                GUI.drinkIngredientMap.get(menuItemID).add(ingrID);
-            } else {
-                // If it's not in the map, create a new list and add the ingrID
-                List<Integer> ingrList = new ArrayList<>();
-                ingrList.add(ingrID);
-                GUI.drinkIngredientMap.put(menuItemID, ingrList);
-            }
-        }
-
-        ////////////////////////////////////////////////////////////
-        columnNames.clear();
-        columnNames.add("name");
-        columnNames.add("price");
-        columnNames.add("topping_id");
-        toppings = GUI.query("topping", columnNames);
-        for (List<String> topping : GUI.toppings){
-            String toppingName = topping.get(0);
-            Integer toppingID = Integer.parseInt(topping.get(2));
-            GUI.toppingIdMap.put(toppingName, toppingID);
-            toppingUsed.put(toppingID, 0);
-        }
-
-        ////////////////////////////////////////////////////////////
-        columnNames.clear();
-        columnNames.add("ingredients_id");
-        List<List<String>> ingredients = GUI.query("ingredients", columnNames);
-        for (List<String> ingredient : ingredients){
-            GUI.ingredientUsed.put(Integer.parseInt(ingredient.get(0)), 0);
-        }
-
-        columnNames.clear();
-        columnNames.add("order_id");
-        List<List<String>> orderList = GUI.query("orders", columnNames);
-        nextOrderID = orderList.size();
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public static boolean run_SQL_Command(String tableName, String command){
-        //Building the connection with your credentials
-        Connection conn = null;
-        String teamName = "01g";
-        String dbName = "csce315331_"+teamName+"_db";
-        // "csce315331_01g_db"
-        String dbConnectionString = "jdbc:postgresql://csce-315-db.engr.tamu.edu/" + dbName;
-        dbSetup myCredentials = new dbSetup();
-
-        try {
-            conn = DriverManager.getConnection(dbConnectionString, dbSetup.user, dbSetup.pswd);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println(e.getClass().getName()+": "+e.getMessage());
-            System.exit(0);
-        }
-
-        System.out.println("\nOpened database successfully");
-        System.out.println("Executing SQL Command: \"%s\"".formatted(command));
-
-        try{
-            Statement createStmt = conn.createStatement();
-            boolean executed = conn.createStatement().execute(command);
-            System.out.println("Command executed successfully \n");
-        } catch (Exception e){
-            e.printStackTrace();
-            System.err.println(e.getClass().getName()+": "+e.getMessage());
-            System.exit(0);
-        }
-
-        //closing the connection
-        try {
-            conn.close();
-            System.out.println("Connection Closed.\n\n");
-            return true;
-        } catch(Exception e) {
-            System.out.println("Connection NOT Closed.");
-        }//end try catch
-        return false;
-    }
-
-
+    /**
+     * The main entry point for the application. This method initializes the GUI.
+     * 
+     * @param args Not used.
+     */
     public static void main(String[] args) {
-        setupDatabase();
         new GUI(); // Create an instance of the Main class to initialize the UI
     }
 }

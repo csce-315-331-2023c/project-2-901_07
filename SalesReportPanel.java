@@ -36,9 +36,9 @@ public class SalesReportPanel{
         startDateYearField.setMargin(new Insets(5, 5, 5, 5));
 
         JLabel endDateLabel = new JLabel("End Date:");
-        JTextField endDateMonthField = getTextFieldWithText("MM",2);
+        JTextField endDateMonthField = getTextFieldWithText("MM",3);
         endDateMonthField.setMargin(new Insets(5, 5, 5, 5));
-        JTextField endDateDayField = getTextFieldWithText("DD",2);
+        JTextField endDateDayField = getTextFieldWithText("DD",3);
         endDateDayField.setMargin(new Insets(5, 5, 5, 5));
         JTextField endDateYearField = getTextFieldWithText("YYYY",4);
         endDateYearField.setMargin(new Insets(5, 5, 5, 5));
@@ -70,18 +70,43 @@ public class SalesReportPanel{
                 String endDateDay = endDateDayField.getText();
                 String endDateYear = endDateYearField.getText();
                 // valiate user input
-                // ?if (startDateMonthField.getText() == "MM")
                 try{
-                    Integer.parseInt(startDateMonth);
-                    Integer.parseInt(startDateDay);
-                    Integer.parseInt(startDateYear);
-                    Integer.parseInt(endDateMonth);
-                    Integer.parseInt(endDateDay);
-                    Integer.parseInt(endDateYear);
+                    int startMonth = Integer.parseInt(startDateMonth);
+                    int startDay = Integer.parseInt(startDateDay);
+                    int startYear = Integer.parseInt(startDateYear);
+                    int endMonth = Integer.parseInt(endDateMonth);
+                    int endDay = Integer.parseInt(endDateDay);
+                    int endYear = Integer.parseInt(endDateYear);
+
+                    // check bounds
+                    if(startMonth < 1 || startMonth > 12 ||
+                       startDay < 1 || startDay > 31 || // we live in a society where all months are 31 days
+                       startYear < 2000 || endYear > 3000 ||
+                       endMonth < 1 || endMonth > 12 ||
+                       endDay < 1 || endDay > 31 ||
+                       endYear < 2000 || endYear > 3000){
+                        updateReportPanel("Invalid input. Please enter a valid date.");
+                        return;
+                       }
+                    
+                    // check if date 2 is greater than date 1
+                    if (startYear > endYear){
+                        updateReportPanel("Invalid input. Make sure the start date preceeds the end date.");
+                        return;
+                    }
+                    if (startYear == endYear && startMonth > endMonth){
+                        updateReportPanel("Invalid input. Make sure the start date preceeds the end date.");
+                        return;
+                    }
+                    if(startYear == endYear && startMonth == endMonth && startDay > endDay){
+                        updateReportPanel("Invalid input. Make sure the start date preceeds the end date.");
+                        return;
+                    }
+
                 }
                 catch(NumberFormatException except){
-                    // do something
-                    System.out.println("user input error for date");
+                    updateReportPanel("Invalid input. Please enter numerical values for the date.");
+                    return;
                 }
                 getSalesReport(startDateMonth, startDateDay, startDateYear,
                                     endDateMonth, endDateDay, endDateYear);
@@ -102,11 +127,7 @@ public class SalesReportPanel{
 
         resultRow = new JPanel();
         resultRow.setLayout(new BorderLayout());
-        JTextArea textArea = new JTextArea(10, 30);
-        textArea.setWrapStyleWord(true);
-        textArea.setLineWrap(true);
-        textArea.setEditable(false);
-        resultRow.add(new JScrollPane(textArea));
+        updateReportPanel("Please enter a date range to view the sales report.");
 
         // Create GridBagConstraints for dateEntryRow and resultRow
         GridBagConstraints dateEntryRowConstraints = new GridBagConstraints();
@@ -179,6 +200,7 @@ public class SalesReportPanel{
     public void updateReportPanel(List<List<String>> salesReport) {
         // Remove all previous components from the resultRow
         resultRow.removeAll();
+        resultRow.setLayout(new BorderLayout());
 
         // Create column names for the table
         String[] columnNames = {"Name", "Order Count"};
@@ -200,6 +222,16 @@ public class SalesReportPanel{
         tableScrollPane.setPreferredSize(new Dimension(500, 300)); 
 
         resultRow.add(tableScrollPane, BorderLayout.CENTER);
+        resultRow.repaint();
+        resultRow.revalidate();
+    }
+
+    public void updateReportPanel(String message){
+        resultRow.removeAll();
+        resultRow.setLayout(new FlowLayout(FlowLayout.CENTER));
+        JLabel messageLabel = new JLabel(message);
+        messageLabel.setFont(new Font("Calibri", Font.BOLD, 32));
+        resultRow.add(messageLabel);
         resultRow.repaint();
         resultRow.revalidate();
     }

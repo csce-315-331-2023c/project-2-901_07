@@ -20,24 +20,25 @@ import java.util.List;
 
 /** 
 * The checkoutHandler class manages the checkout process, allows users to add and remove drinks,
-* update toppings and ingredients, and finalize their order.* @author Quy Van
-* @see checkoutHandler
+* update toppings and ingredients, and finalize their order.* 
+* @author Quy Van
 */
 
 public class checkoutHandler {
     private JFrame checkoutFrame;
+    private JPanel contentPanel;
+
     private String customerName = null;
     private Integer customerID;
     private Integer orderID;
     private double totalCost;
-    private JPanel contentPanel;
+
 
     /**
      * Create a Frame to contain all the Panel created by populateDrinkOrder
      * and a button to submit the final order. If the button is clicked, the order
      * will be placed. Moreover, the database of topping, ingredient availability,
      * and order will be updated.
-     * @see checkoutFrame_
     */
 
     public void checkoutFrame_() {
@@ -199,7 +200,6 @@ public class checkoutHandler {
      * This function create multiple Panel. Each Panel contains Detail of each Drink Customization
      * (Sugar Level, Ice Level, Toppings, and Total Cost of this Drink) and a button to remove 
      * this order as the customer wishs. 
-     * @see populateDrinkOrder
     */
     private void populateDrinkOrder() {
         // Create a StringBuilder to collect all order details
@@ -274,7 +274,6 @@ public class checkoutHandler {
      * Calculate total cost of all customer's drinks. They list of
      * customer drink is stored in the member variable listOrderingDrink
      * from DataBaseHandler class
-     * @see updateTotalCost
     */
     public void updateTotalCost() {
         // Calculate the updated total cost
@@ -290,7 +289,6 @@ public class checkoutHandler {
      * sure that the ingredient and topping availability is updated 
      * correctly following the drinks that were ordered.
      * @param drinkDetail drinkDetailDatabase object
-     * @see updateToppingsAndIngredients
     */
     public void updateToppingsAndIngredients(drinkDetailDatabase drinkDetail) {
         for (HashMap<String, Integer> toppingList : drinkDetail.toppingList_) {

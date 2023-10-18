@@ -5,6 +5,18 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+/**
+ * Represents a frame for displaying and modifying the attributes of a menu item.
+ * The frame allows the user to view the current price of the item and update the price.
+ * Any updates to the price are saved to the database and reflected immediately in the UI.
+ * <p>
+ * The frame is divided into a top and bottom panel. The top panel displays the current price
+ * and provides an interface for changing the price. The bottom panel contains buttons for
+ * various operations, currently only a "Price" button to show the price change interface.
+ * </p>
+ * 
+ * @author Quenten Hua
+ */
 public class MenuItemFrame {
 
     public JFrame frame;
@@ -12,7 +24,11 @@ public class MenuItemFrame {
     public JButton menuItemButton;
     public List<String> menuItem;
 
-
+    /**
+     * Constructs a panel for changing the price of the menu item.
+     *
+     * @return JPanel containing the price change interface.
+     */
     private JPanel changePricePanel(){
 		JPanel changePricePanel = new JPanel();
         changePricePanel.setBounds(0, 0, 354, 160);
@@ -106,7 +122,18 @@ public class MenuItemFrame {
         return changePricePanel;
     }
 
-
+    /**
+     * Initializes a new MenuItemFrame.
+     * <p>
+     * Creates a frame with a top panel that displays and allows editing of
+     * the current price of the menu item. The bottom panel contains buttons for
+     * different operations. The "Price" button displays the price change interface.
+     * </p>
+     * 
+     * @param menuItemButton The button representing the menu item in the main UI.
+     * @param menuItem       A list representing the attributes of the menu item. Expected format:
+     *                       [id, name, type, price].
+     */
     public MenuItemFrame(JButton menuItemButton, List<String> menuItem) {
         this.frame = new JFrame();
         this.menuItemButton = menuItemButton;

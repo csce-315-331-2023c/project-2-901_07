@@ -5,10 +5,20 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+/**
+ * AddItemInventoryFrame allows a user to create a new inventory item and insert it into the database.
+ * @author Quenten Hua
+ */
 public class AddItemInventoryFrame {
     public JFrame frame;
 	public JPanel contentPanel;
     public JButton addItemButton;
+
+    /**
+     * Constructor to initialize and set up the frame.
+     *
+     * @param addItemButton the button that triggers the creation of this frame.
+     */
     public AddItemInventoryFrame(JButton addItemButton) {
         this.frame = new JFrame();
         this.addItemButton = addItemButton;

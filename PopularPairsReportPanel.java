@@ -11,7 +11,7 @@ import java.awt.event.*;
 import javax.swing.border.*;
 
 /**
- * Panel to generate and display reports about popular pairings of items 
+ * Provides a panel to generate and display reports about popular pairings of items 
  * within a specified date range.
  * 
  * @author Alexandra Saxton
@@ -259,7 +259,34 @@ public class PopularPairsReportPanel{
         resultRow.repaint();
         resultRow.revalidate();
     }
-    
+
+    /**
+     * Generates a JTextField with specified default text and maximum length.
+     *
+     * @param defaultText The default text to display in the text field.
+     * @param maxLength   The maximum length of text allowed in the text field.
+     * @return JTextField with specified default text and length.
+     */
+    public JTextField getTextFieldWithText(String defaultText, int maxLength){
+        JTextField textField = new JTextField(maxLength);
+        textField.setText(defaultText);
+        textField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (textField.getText().equals(defaultText)) {
+                    textField.setText("");
+                }
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (textField.getText().isEmpty()) {
+                    textField.setText(defaultText);
+                }
+            }
+        });
+        return textField;
+    }
+
     /**
      * Returns the main JPanel for this report panel.
      * 

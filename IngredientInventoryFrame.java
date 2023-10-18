@@ -5,12 +5,20 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
+/**
+ * The IngredientInventoryFrame class provides a GUI for managing ingredient inventory.
+ * @author Quenten Hua
+ */
 public class IngredientInventoryFrame {
     public JFrame frame;
 	public JPanel contentPanel;
     public JButton ingredientButton;
     public List<String> ingredient;
 
+    /**
+     * Generates and returns a panel for modifying the stock of an ingredient.
+     * @return A JPanel for changing ingredient stock.
+     */
     private JPanel changeStockPanel(){
 		JPanel changePricePanel = new JPanel();
         changePricePanel.setBounds(0, 0, 354, 160);
@@ -106,7 +114,13 @@ public class IngredientInventoryFrame {
         return changePricePanel;
     }
 
-
+    /**
+     * Constructor for the IngredientInventoryFrame.
+     * Initializes the frame and its components based on the given ingredient details.
+     *
+     * @param ingredientButton Button representing the ingredient.
+     * @param ingredient A list containing ingredient details.
+     */
     public IngredientInventoryFrame(JButton ingredientButton, List<String> ingredient) {
         this.frame = new JFrame();
         this.ingredientButton = ingredientButton;

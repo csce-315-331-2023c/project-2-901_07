@@ -239,7 +239,6 @@ public class SalesReportPanel{
             List<String> row = salesReport.get(i);
             data[i][0] = row.get(0); // Name
             data[i][1] = row.get(1); // Order Count
-            System.out.println(row);
         }
         
         JTable table = new JTable(data, columnNames);

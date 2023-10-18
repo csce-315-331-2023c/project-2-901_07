@@ -5,7 +5,11 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-
+/**
+ * ToppingInventoryFrame is responsible for displaying a frame that
+ * allows the user to view and modify the price and stock of toppings.
+ * @author Quenten Hua
+ */
 public class ToppingInventoryFrame{
 
     public JFrame frame;
@@ -13,6 +17,10 @@ public class ToppingInventoryFrame{
     public JButton toppingButton;
     public List<String> topping;
     
+    /**
+     * Creates a JPanel for adjusting the price of a topping.
+     * @return JPanel with components for price adjustment.
+     */
     private JPanel changePricePanel(){
 		JPanel changePricePanel = new JPanel();
         changePricePanel.setBounds(0, 0, 354, 160);
@@ -108,6 +116,10 @@ public class ToppingInventoryFrame{
         return changePricePanel;
     }
 
+    /**
+     * Creates a JPanel for adjusting the stock of a topping.
+     * @return JPanel with components for stock adjustment.
+     */
     private JPanel changeStockPanel(){
 		JPanel changePricePanel = new JPanel();
         changePricePanel.setBounds(0, 0, 354, 160);
@@ -203,8 +215,13 @@ public class ToppingInventoryFrame{
 		changePricePanel.add(changePrice_Button);
         return changePricePanel;
     }
+
 	/**
-	 * Create the frame.
+	 * Constructor for the ToppingInventoryFrame.
+	 * Initializes the frame and its components.
+	 * 
+	 * @param toppingButton the button representing the topping.
+	 * @param topping the list containing topping details.
 	 */
 	public ToppingInventoryFrame(JButton toppingButton, List<String> topping) {
         this.frame = new JFrame();

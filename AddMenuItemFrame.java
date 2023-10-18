@@ -7,12 +7,20 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-
+/**
+ * This class represents a GUI frame that allows a user to add a menu item.
+ * @author Quenten Hua
+ */
 public class AddMenuItemFrame {
     public JFrame frame;
-	public JPanel contentPanel;
+    public JPanel contentPanel;
     public JButton addMenuItemButton;
 
+    /**
+     * Constructs the frame for adding a new menu item.
+     * 
+     * @param addMenuItemButton The button for adding a new menu item.
+     */
    public AddMenuItemFrame(JButton addMenuItemButton){
         this.frame = new JFrame("Scrollable List Example");
         frame.setLayout(null);

@@ -10,9 +10,9 @@ import java.sql.*;
 /**
  * This class is used to initialize, update, refresh database
  * between temporary database from application and SQL database from server
- * @see DatabaseHandler
 */
 public class DatabaseHandler {
+  
     static private Connection conn = null;
     static private String teamName = "01g";
     static private String dbName = "csce315331_"+teamName+"_db";
@@ -29,72 +29,19 @@ public class DatabaseHandler {
     static List<List<String>> drinkTypes;
 
     static List<String> ingredientNames;
-
-    /**
-     * HashMap for Name and ID of drink 
-    */
     public static HashMap<String, Integer> drinkNameIdMap;
-    
-    /**
-     * HashMap for Name and ID of drink 
-    */
     public static HashMap<Integer, List<Integer>> drinkIngredientMap; 
-    
-    /**
-     * HashMap for drink and its price
-     */
     public static HashMap<String, Double> drinkPriceMap;
-    
-    /**
-     * HashMap for drink and its type
-     */
     public static HashMap<String, List<String>> drinkTypeMap;
-    
-    /**
-     * HashMap for Name and ID of ingredient
-     */
-    public static HashMap<String, Integer> ingredientNameIdMap;
-    
-    /**
-     * Set of all Drink's Type available
-     */    
+    public static HashMap<String, Integer> ingredientNameIdMap;   
     public static Set<String> typeList;
-    
-    /**
-     * HashMap for Topping Name and Topping ID
-     */
     public static HashMap<String, Integer> toppingIdMap;
-    
-    /**
-     * HashMap for Topping Name and Topping Price
-     */
     public static HashMap<String, Double> toppingPriceMap;
-    
-    /**
-     * HashMap for Name of Topping Used and amount of Topping Used
-     */
     public static HashMap<Integer, Integer> toppingUsed;
-    
-    /**
-     * HashMap for Name of Ingredient Used and amount of Ingredient Used
-     */
     public static HashMap<Integer, Integer> ingredientUsed;
-    
-    /**
-     * List of all Drinks are currently added to the processing order
-     */
     public static List<drinkDetailDatabase> listOrderingDrink = new ArrayList<>();
-    
-    /**
-     * HashMap for Name of Customer and ID of Customer
-     */
     public static HashMap<String, Integer> customerNameIdMap;
 
-    /**
-     * This function set up all HashMap from member variable by pulling data from 
-     * Database containing data imported from SQL.
-     * @see setUpHashMap
-    */
     public static void setUpHashMap(){
         // Setup Topping
         toppingIdMap = new HashMap<>();
@@ -166,7 +113,6 @@ public class DatabaseHandler {
      * @param command command used to pull data from database
      * @param columnNames List of columns' name 
      * @return Return List of columns pulled from SQL. Each columns is a list of data elements
-     * @see query_SQL
     */
     static List<List<String>> query_SQL(String command, List<String> columnNames){
         List<List<String>> output = new ArrayList<>();
@@ -208,7 +154,6 @@ public class DatabaseHandler {
      * @param tableName Name of table which will be updated
      * @param command Command line used to update table
      * @return return the boolean: Fail means not success, True means success
-     * @see run_SQL_Command
     */
     public static boolean run_SQL_Command(String tableName, String command){
         //Building the connection with your credentials
@@ -236,7 +181,6 @@ public class DatabaseHandler {
     
     /**
      * This function refreshs new database of Menu Items data to the application
-     * @see updateMenuItems
     */
     public static void updateMenuItems(){
         //query menu_item table
@@ -279,7 +223,6 @@ public class DatabaseHandler {
 
     /**
      * This function refreshs new database of ingredient data to the application
-     * @see updateIngredients
     */
     public static void updateIngredients(){
         //query ingredients table
@@ -308,7 +251,6 @@ public class DatabaseHandler {
 
     /**
      * This function refreshs new database of topping data to the application
-     * @see updateToppings
     */
     public static void updateToppings(){
         //query topping table
@@ -341,7 +283,6 @@ public class DatabaseHandler {
 
     /**
      * This function query all data from SQL database
-     * @see queryData
     */
     public static void queryData(){
         //query topping table
@@ -441,7 +382,6 @@ public class DatabaseHandler {
 
     /**
      * Constructor to call queryData and setupHashMap to initilize application database when app is started
-     * @see DatabaseHandler
      */
     public DatabaseHandler(){
         queryData();

@@ -10,10 +10,20 @@ import java.util.Set;
 import java.awt.event.*;
 import javax.swing.border.*;
 
+/**
+ * Provides a panel to visualize excess ingredients based on a specified date and time.
+ * Users input a date and time, and the panel displays ingredients with more than 90%
+ * original inventory remaining since the given date and time.
+ * 
+ * @author Alexandra Saxton
+ */
 public class ExcessReportPanel{
     public JPanel excessReportPanel;
     private JPanel resultRow;
 
+    /**
+     * Constructs an ExcessReportPanel.
+     */
     public ExcessReportPanel(){
         this.excessReportPanel = new JPanel();
         excessReportPanel.setLayout(new GridBagLayout());
@@ -136,6 +146,13 @@ public class ExcessReportPanel{
         excessReportPanel.add(resultRow, resultRowConstraints);
     }
 
+    /**
+     * Generates a JTextField with specified default text and maximum length.
+     *
+     * @param defaultText The default text to display in the text field.
+     * @param maxLength   The maximum length of text allowed in the text field.
+     * @return JTextField with specified default text and length.
+     */
     public JTextField getTextFieldWithText(String defaultText, int maxLength){
         JTextField textField = new JTextField(maxLength);
         textField.setText(defaultText);
@@ -156,6 +173,17 @@ public class ExcessReportPanel{
         return textField;
     }
 
+    /**
+     * Fetches a report of excess ingredients based on the provided date and time.
+     *
+     * @param month   The month part of the date.
+     * @param day     The day part of the date.
+     * @param year    The year part of the date.
+     * @param hour    The hour part of the time.
+     * @param minute  The minute part of the time.
+     * @param second  The second part of the time.
+     * @return A list containing the report data.
+     */
     public List<List<String>> getExcessReport(String month, String day, String year, String hour, String minute, String second){
 
         String date = year+"-"+month+"-"+day;
@@ -201,7 +229,11 @@ public class ExcessReportPanel{
         
     }
 
-
+    /**
+     * Updates the report panel with the given table data.
+     *
+     * @param tableData The data to be displayed in the table format.
+     */
     public void updateReportPanel(List<List<String>> tableData) {
         // Remove all previous components from the resultRow
         resultRow.removeAll();
@@ -230,6 +262,11 @@ public class ExcessReportPanel{
         resultRow.revalidate();
     }
 
+    /**
+     * Updates the report panel with the given message.
+     *
+     * @param message The message to be displayed.
+     */
     public void updateReportPanel(String message){
         resultRow.removeAll();
         resultRow.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -240,6 +277,11 @@ public class ExcessReportPanel{
         resultRow.revalidate();
     }
 
+    /**
+     * Returns the excess report panel.
+     *
+     * @return The excess report panel.
+     */
     public JPanel getExcessReportPanel(){
         return this.excessReportPanel;
     }

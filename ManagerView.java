@@ -10,6 +10,11 @@ import javax.swing.border.*;
 import javax.tools.JavaFileManager;
 import java.awt.event.*;
 
+/**
+ * The ManagerView class represents the view for the manager operations.
+ * It provides different GUI panels to manage inventory, menu items, order history, and items with low stock.
+ * @author Quenten Hua
+ */
 public class ManagerView {
     public static int lowStockNumber = 33;
     // Class contains all methods associated with the pages for the Manager view
@@ -20,14 +25,22 @@ public class ManagerView {
     static JPanel menuItemPage = new JPanel(new FlowLayout(0));
     static JPanel orderHistoryPage;
 
-
+    /**
+     * Generates and returns a panel representing the order history.
+     *
+     * @return A JPanel representing the order history.
+     */
     static public JPanel orderHistoryPage(){
         orderHistoryPage = new JPanel(new GridLayout(0, 5, 5, 5));
         orderHistoryPage.add(new JLabel("TEST"));
         return orderHistoryPage;
     }
 
-
+    /**
+     * Generates and returns a panel representing the menu items.
+     *
+     * @return A JPanel representing the menu items.
+     */
     static public JPanel menuItemPage(){
         menuItemPage = new JPanel(new GridLayout(0, 5, 5, 5));
         menuItemPage.setBorder(new EmptyBorder(20, 40, 200, 40));
@@ -77,6 +90,11 @@ public class ManagerView {
         return menuItemPage;       
     }
 
+    /**
+     * Generates and returns a panel representing the inventory.
+     *
+     * @return A JPanel representing the inventory.
+     */
     static public JPanel inventoryPage(){
         //Method contains commands to format inventory page
         inventoryPage = new JPanel(new GridLayout(0, 5, 5, 5));
@@ -148,6 +166,11 @@ public class ManagerView {
         
     }
 
+    /**
+     * Generates and returns a panel showcasing items that are low in stock.
+     *
+     * @return A JPanel representing the low stock items.
+     */
     static public JPanel lowStockPage(){
         int count = 0;
         //Method contains commands to format inventory page
@@ -217,7 +240,9 @@ public class ManagerView {
         
     }
 
-
+    /**
+     * Constructor for the ManagerView. Sets up the database connection and initial view configurations.
+     */
      ManagerView(){
 
      //Building the connection with your credentials

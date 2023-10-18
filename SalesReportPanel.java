@@ -10,10 +10,18 @@ import java.util.Set;
 import java.awt.event.*;
 import javax.swing.border.*;
 
+/**
+ * Represents a sales report panel.
+ * 
+ * @author Quenten Hua
+ */
 public class SalesReportPanel{
     public JPanel salesReportPanel;
     private JPanel resultRow;
 
+    /**
+     * Initializes a new instance of the SalesReportPanel.
+     */
     public SalesReportPanel(){
         this.salesReportPanel = new JPanel();
         salesReportPanel.setLayout(new GridBagLayout());
@@ -147,6 +155,13 @@ public class SalesReportPanel{
         salesReportPanel.add(resultRow, resultRowConstraints);
     }
 
+    /**
+     * Creates and returns a JTextField initialized with the given text and maximum length.
+     *
+     * @param defaultText The default text to display in the JTextField.
+     * @param maxLength The maximum number of characters the JTextField can accept.
+     * @return A JTextField object initialized with the given parameters.
+     */
     public JTextField getTextFieldWithText(String defaultText, int maxLength){
         JTextField textField = new JTextField(maxLength);
         textField.setText(defaultText);
@@ -167,7 +182,16 @@ public class SalesReportPanel{
         return textField;
     }
 
-
+    /**
+     * Retrieves and updates the sales report based on the given start and end date.
+     *
+     * @param startMonth The starting month.
+     * @param startDay The starting day.
+     * @param startYear The starting year.
+     * @param endMonth The ending month.
+     * @param endDay The ending day.
+     * @param endYear The ending year.
+     */
     public void getSalesReport(String startMonth, String startDay, String startYear,
                                             String endMonth, String endDay, String endYear){
 
@@ -196,7 +220,11 @@ public class SalesReportPanel{
         
     }
 
-
+     /**
+     * Updates the result row with the sales report data.
+     *
+     * @param salesReport A list containing rows of sales report data.
+     */
     public void updateReportPanel(List<List<String>> salesReport) {
         // Remove all previous components from the resultRow
         resultRow.removeAll();
@@ -226,6 +254,11 @@ public class SalesReportPanel{
         resultRow.revalidate();
     }
 
+    /**
+     * Updates the result row with a given message.
+     *
+     * @param message The message to display.
+     */
     public void updateReportPanel(String message){
         resultRow.removeAll();
         resultRow.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -236,6 +269,11 @@ public class SalesReportPanel{
         resultRow.revalidate();
     }
 
+    /**
+     * Returns the sales report panel.
+     *
+     * @return The sales report panel.
+     */
     public JPanel getSalesReportPanel(){
         return this.salesReportPanel;
     }

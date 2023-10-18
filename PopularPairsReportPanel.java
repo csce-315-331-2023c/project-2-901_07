@@ -10,10 +10,19 @@ import java.util.Set;
 import java.awt.event.*;
 import javax.swing.border.*;
 
+/**
+ * Panel to generate and display reports about popular pairings of items 
+ * within a specified date range.
+ * 
+ * @author Alexandra Saxton
+ */
 public class PopularPairsReportPanel{
     public JPanel popularPairsReportPanel;
     private JPanel resultRow;
 
+    /**
+     * Constructs a new PopularPairsReportPanel.
+     */
     public PopularPairsReportPanel(){
         this.popularPairsReportPanel = new JPanel();
         popularPairsReportPanel.setLayout(new GridBagLayout());
@@ -150,26 +159,19 @@ public class PopularPairsReportPanel{
         popularPairsReportPanel.add(resultRow, resultRowConstraints);
     }
 
-    public JTextField getTextFieldWithText(String defaultText, int maxLength){
-        JTextField textField = new JTextField(maxLength);
-        textField.setText(defaultText);
-        textField.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (textField.getText().equals(defaultText)) {
-                    textField.setText("");
-                }
-            }
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (textField.getText().isEmpty()) {
-                    textField.setText(defaultText);
-                }
-            }
-        });
-        return textField;
-    }
+    
 
+    /**
+     * Fetches popular pairs of items from the database based on orders between the specified dates.
+     * 
+     * @param startMonth Start date's month.
+     * @param startDay Start date's day.
+     * @param startYear Start date's year.
+     * @param endMonth End date's month.
+     * @param endDay End date's day.
+     * @param endYear End date's year.
+     * @return A list of popular pairs.
+     */
     public List<List<String>> getPopularPairs(String startMonth, String startDay, String startYear,
                                             String endMonth, String endDay, String endYear){
 
@@ -209,6 +211,11 @@ public class PopularPairsReportPanel{
         
     }
 
+    /**
+     * Updates the report panel to display the given popular pairs.
+     * 
+     * @param popularPairs A list of popular pairs to display.
+     */
     public void updateReportPanel(List<List<String>> popularPairs) {
         // Remove all previous components from the resultRow
         resultRow.removeAll();
@@ -238,6 +245,11 @@ public class PopularPairsReportPanel{
         resultRow.revalidate();
     }
 
+    /**
+     * Updates the report panel to display the given message.
+     * 
+     * @param message The message to display.
+     */
     public void updateReportPanel(String message){
         resultRow.removeAll();
         resultRow.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -247,7 +259,12 @@ public class PopularPairsReportPanel{
         resultRow.repaint();
         resultRow.revalidate();
     }
-
+    
+    /**
+     * Returns the main JPanel for this report panel.
+     * 
+     * @return The main JPanel.
+     */
     public JPanel getPopularPairsReportPanel(){
         return this.popularPairsReportPanel;
     }

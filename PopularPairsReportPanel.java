@@ -62,7 +62,6 @@ public class PopularPairsReportPanel{
                 String endDateDay = endDateDayField.getText();
                 String endDateYear = endDateYearField.getText();
                 // valiate user input
-                // ?if (startDateMonthField.getText() == "MM")
                 try{
                     Integer.parseInt(startDateMonth);
                     Integer.parseInt(startDateDay);
@@ -72,7 +71,6 @@ public class PopularPairsReportPanel{
                     Integer.parseInt(endDateYear);
                 }
                 catch(NumberFormatException except){
-                    // do something
                     System.out.println("user input error for date");
                 }
                 getPopularPairs(startDateMonth, startDateDay, startDateYear,
@@ -178,7 +176,6 @@ public class PopularPairsReportPanel{
         
     }
 
-    // public JPanel resulingPopularPairs(List )
 
     public void updateReportPanel(List<List<String>> popularPairs) {
         // Remove all previous components from the resultRow

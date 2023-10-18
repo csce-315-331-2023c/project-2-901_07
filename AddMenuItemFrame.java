@@ -96,7 +96,6 @@ public class AddMenuItemFrame {
         addIngredientButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if(ingredientList.getSelectedValue() != null){
-                    //System.out.println(ingredientList.getSelectedValue());
                     newDrinkIngredientListModel.addElement(ingredientList.getSelectedValue());
                 }
             }
@@ -108,7 +107,6 @@ public class AddMenuItemFrame {
         removeIngredientButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if(newDrinkIngredientList.getSelectedValue() != null){
-                    //System.out.println(newDrinkIngredientList.getSelectedValue());
                     newDrinkIngredientListModel.removeElement(newDrinkIngredientList.getSelectedValue());
 
                 }
@@ -177,7 +175,6 @@ public class AddMenuItemFrame {
                             """.formatted(itemName,itemType,floatValueItemPrice));
                             priceTextField.setText("");
                             itemNameLabel.setText("");
-                            //TODO: add mapping of ingredients to add to menu_item_ingredient_map
                             //get all the ingredients for the new item
                             for (int i = 0; i < newDrinkIngredientListModel.getSize(); i++) {
                                 String ingredient = newDrinkIngredientListModel.getElementAt(i);

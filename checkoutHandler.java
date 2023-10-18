@@ -19,6 +19,12 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+
+/**
+ * The checkoutHandler class manages the checkout process, allows users to add and remove drinks,
+ * update toppings and ingredients, and finalize their order.
+ */
+
 public class checkoutHandler {
     private JFrame checkoutFrame;
     private String customerName = null;
@@ -26,6 +32,12 @@ public class checkoutHandler {
     private String order;
     private double totalCost;
     private JPanel contentPanel;
+
+
+    /**
+    * Initializes the checkout UI, allowing users to view their drink orders,
+    * add toppings and ingredients, and finalize their order by inserting or tapping a card.
+    */
 
     public void checkoutFrame_() {
         checkoutFrame = new JFrame();
@@ -72,7 +84,6 @@ public class checkoutHandler {
                 // Call the category handler and pass the selected category.
                 for (drinkDetailDatabase drinkDetail : DatabaseHandler.listOrderingDrink){
                     // Get the drink details from the current drinkDetailDatabase object
-                    drinkDetail.printDrinkDetail();
                     updateToppingsAndIngredients(drinkDetail);
                 }
                 
@@ -128,10 +139,6 @@ public class checkoutHandler {
                 }
                 
 
-                // Debug and Reset
-                //System.out.println("Customer ID: " + customerID + "     customer Name: " + customerName);
-                //System.out.println(DatabaseHandler.ingredientUsed);
-                //System.out.println(DatabaseHandler.toppingUsed);
                 for (Integer ingredientID : DatabaseHandler.ingredientUsed.keySet()){
                     DatabaseHandler.ingredientUsed.put(ingredientID, 0);
                 }
@@ -149,6 +156,12 @@ public class checkoutHandler {
         checkoutFrame.add(contentPanel, BorderLayout. PAGE_START);
         checkoutFrame.add(payButton, BorderLayout.EAST);
     }
+
+
+    /**
+    * Populates the checkout frame with the current drink orders, 
+    * displaying details such as drink name, ice level, sugar level, and total price.
+    */
 
     private void populateDrinkOrder() {
         // Create a StringBuilder to collect all order details
@@ -214,6 +227,12 @@ public class checkoutHandler {
             contentPanel.add(drinkPanel);
         }
     }
+
+
+
+    /**
+    * Updates the total cost of the order by summing up the prices of all drinks in the order.
+    */
     
     private void updateTotalCost() {
         // Calculate the updated total cost
@@ -221,8 +240,14 @@ public class checkoutHandler {
         for (drinkDetailDatabase drinkDetails : DatabaseHandler.listOrderingDrink) {
             totalCost += drinkDetails.totalPrice_;
         }
-        //System.out.println("Final: " + totalCost);
     }
+
+
+    /**
+    * Updates the quantities of toppings and ingredients based on the drink's specifications.
+    * 
+    * @param drinkDetail The detail of the drink order, containing specifics about toppings and ingredients.
+    */
 
     private void updateToppingsAndIngredients(drinkDetailDatabase drinkDetail) {
         for (HashMap<String, Integer> toppingList : drinkDetail.toppingList_) {

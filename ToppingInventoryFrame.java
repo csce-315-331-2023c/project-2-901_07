@@ -15,7 +15,6 @@ public class ToppingInventoryFrame{
     
     private JPanel changePricePanel(){
 		JPanel changePricePanel = new JPanel();
-		//changePricePanel.setBackground(new Color(50, 240, 240));
         changePricePanel.setBounds(0, 0, 354, 160);
 		changePricePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -69,7 +68,6 @@ public class ToppingInventoryFrame{
                     validationLabel.setForeground(Color.red);
                     validationLabel.setText("ERROR: No price inputted.");
                 }
-                // TODO : add validation for numbers with 2 decimal places or less
                 else{
                     try {
                         float floatValue = Float.parseFloat(newPrice);
@@ -112,7 +110,6 @@ public class ToppingInventoryFrame{
 
     private JPanel changeStockPanel(){
 		JPanel changePricePanel = new JPanel();
-		//changePricePanel.setBackground(new Color(144, 44, 62));
         changePricePanel.setBounds(0, 0, 354, 160);
 		changePricePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -166,7 +163,6 @@ public class ToppingInventoryFrame{
                     validationLabel.setForeground(Color.red);
                     validationLabel.setText("ERROR: No Stock inputted.");
                 }
-                // TODO : add validation for numbers with 2 decimal places or less
                 else{
                     try {
                         float floatValue = Float.parseFloat(newStock);
@@ -234,7 +230,6 @@ public class ToppingInventoryFrame{
         // //Add different pages
         contentPanel.add(changePricePanel, "Price Page");
         contentPanel.add(changeStockPanel, "Stock Page");
-        // centerPanel.add(inventoryPage, "Inventory Page");
 
         topPanel.add(contentPanel);
         //setContentPane(changePricePanel(topping));
@@ -257,20 +252,6 @@ public class ToppingInventoryFrame{
             }
         });
 
-        //deleteItem_Button
-        // JButton deleteItem_Button = new JButton("Delete Item");
-        // deleteItem_Button.setForeground(Color.white);
-        // deleteItem_Button.setBackground(Color.red);
-		// deleteItem_Button.addActionListener(new ActionListener() {
-		// 	public void actionPerformed(ActionEvent e) {
-        //         boolean ranSuccessfully = run_SQL_Command("topping", 
-        //         """
-        //         DELETE FROM topping
-        //         WHERE name = '%s';
-        //         """.formatted(topping.get(1)));
-        //     }
-        // });
-     
 
 
         JPanel bottomPanel = new JPanel();
@@ -280,7 +261,6 @@ public class ToppingInventoryFrame{
 		bottomPanel.setLayout(new GridLayout(1, 3, 0, 0));
         bottomPanel.add(adjustPrice_Button);
         bottomPanel.add(adjustStock_Button);
-        //bottomPanel.add(deleteItem_Button);
         frame.add(bottomPanel);
         /////////////////////////////////////////////////////////////////////
 		

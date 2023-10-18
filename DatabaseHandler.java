@@ -41,7 +41,7 @@ public class DatabaseHandler {
     // Currently Use Topping and Ingredient
     public static HashMap<Integer, Integer> toppingUsed;
     public static HashMap<Integer, Integer> ingredientUsed;
-    // I dont know
+
     public static List<List<String>> toppings;
     // List of Chosen Drink
     public static List<drinkDetailDatabase> listOrderingDrink = new ArrayList<>();
@@ -88,7 +88,6 @@ public class DatabaseHandler {
             ingredientNameIdMap.put(ingredient.get(1),Integer.parseInt(ingredient.get(0)));
             ingredientNames.add(ingredient.get(1));
         }
-        //System.out.println(drinkTypeMap);
         
         
         // Set up drinkIngredientMap
@@ -121,15 +120,12 @@ public class DatabaseHandler {
             DatabaseHandler.conn = DriverManager.getConnection(DatabaseHandler.dbConnectionString, dbSetup.user, dbSetup.pswd);
         } catch (Exception e) {
             e.printStackTrace();
-            //System.err.println(e.getClass().getName()+": "+e.getMessage());
             System.exit(0);
         }
-        //System.out.println("Opened database successfully");
         try{
             Statement createStmt = conn.createStatement();
-            //System.out.println("Running command: " + command);
             ResultSet result = conn.createStatement().executeQuery(command);
-            //System.out.println("--------------------Query Results--------------------");
+
             while (result.next()) {
                List<String> rowInfo = new ArrayList<>();
                for (String columnName: columnNames) {
@@ -137,22 +133,18 @@ public class DatabaseHandler {
                }
                output.add(rowInfo);
             }
-            //System.out.println(output);
-            //System.out.println(result);
+
             
         } catch (Exception e){
             e.printStackTrace();
-            //System.err.println(e.getClass().getName()+": "+e.getMessage());
             System.exit(0);
         }
 
         //closing the connection
         try {
             conn.close();
-            //System.out.println("Connection Closed.");
             return output;
         } catch(Exception e) {
-            //System.out.println("Connection NOT Closed.");
         }//end try catch
         return null;
     }
@@ -164,31 +156,20 @@ public class DatabaseHandler {
                conn = DriverManager.getConnection(dbConnectionString, dbSetup.user, dbSetup.pswd);
            } catch (Exception e) {
                e.printStackTrace();
-               //System.err.println(e.getClass().getName()+": "+e.getMessage());
-               //System.exit(0);
            }
-   
-           //System.out.println("\nOpened database successfully");
-           //System.out.println("Executing SQL Command: \"%s\"".formatted(command));
-   
+
            try{
                Statement createStmt = conn.createStatement();
                boolean executed = conn.createStatement().execute(command);
-               //System.out.println("COMMAND OUTPUT: " + executed);
-               //System.out.println("Command executed successfully \n");
            } catch (Exception e){
                e.printStackTrace();
-               //System.err.println(e.getClass().getName()+": "+e.getMessage());
-               //System.exit(0);
            }
    
            //closing the connection
            try {
                conn.close();
-               //System.out.println("Connection Closed.\n\n");
                return true;
            } catch(Exception e) {
-               //System.out.println("Connection NOT Closed.");
            }//end try catch
            return false;
        }
@@ -391,97 +372,3 @@ public class DatabaseHandler {
 
 
 }
-
-
-
-
-// Sales Report
-/*
-    WITH DrinksInRange AS (
-    SELECT d.menu_item_id
-    FROM orders o
-    JOIN drink d ON o.order_id = d.order_id
-    WHERE o.date BETWEEN '2023-01-01' AND '2023-10-16 23:59:59'  -- Replace START and END with the actual dates
-)
-
-    SELECT mi.name, COUNT(dri.menu_item_id) as order_count
-    FROM DrinksInRange dri
-    JOIN menu_item mi ON dri.menu_item_id = mi.menu_item_id
-    GROUP BY mi.name
-    ORDER BY order_count DESC;
-*/
-
-
-
-
-
-
-
-// Restock Report
-/*
-    SELECT name, availability
-    FROM ingredients
-    WHERE availability < (Restock Amount);  -- replace with the amount you want to set to be the restock limit
-*/
-
-
-
-
-
-
-// What Sales Together
-/*
-    WITH PairedDrinks AS (
-        SELECT
-            d1.order_id,
-            d1.menu_item_id AS menu_item_id1,
-            d2.menu_item_id AS menu_item_id2
-        FROM drink d1
-        JOIN drink d2 ON d1.order_id = d2.order_id AND d1.menu_item_id < d2.menu_item_id
-        JOIN orders o ON d1.order_id = o.order_id
-        WHERE o.date BETWEEN 'START' AND 'END'  -- Replace START and END with the actual dates
-    )
-
-    SELECT
-        p.menu_item_id1,
-        mi1.name AS menu_item_name1,
-        p.menu_item_id2,
-        mi2.name AS menu_item_name2,
-        COUNT(*) AS frequency
-    FROM PairedDrinks p
-    JOIN menu_item mi1 ON p.menu_item_id1 = mi1.menu_item_id
-    JOIN menu_item mi2 ON p.menu_item_id2 = mi2.menu_item_id
-    GROUP BY p.menu_item_id1, mi1.name, p.menu_item_id2, mi2.name
-    ORDER BY frequency DESC;
-
-
-*/
-
-
-
-
-// Excess Report
-/*
-    WITH IngredientUsage AS (
-        -- Calculate total ingredient usage in the time range
-        SELECT
-            mim.ingredients_id,
-            COUNT(mim.menu_item_id) as ingredients_used_count
-        FROM drink d
-        JOIN menu_ingredients_mapper mim ON d.menu_item_id = mim.menu_item_id
-        JOIN orders o ON d.order_id = o.order_id
-        WHERE o.date >= '2022-12-31 09:00:00'  -- Change to your desired start date and time
-        GROUP BY mim.ingredients_id
-    )
-
-    SELECT 
-        iu.ingredients_id,
-        i.name,
-        iu.ingredients_used_count
-    FROM IngredientUsage iu
-    JOIN ingredients i ON iu.ingredients_id = i.ingredients_id
-    WHERE iu.ingredients_used_count < 1000
-    ORDER BY iu.ingredients_used_count DESC;
-
-
-*/

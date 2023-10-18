@@ -37,9 +37,7 @@ public class GUI{
     public JPanel bottomPanel() {
         // Bottom panel
         int panelHeight = screenSize.height / 10;
-        int panelWidth = 0; // value does not matter
-        //bottomPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
-        //bottomPanel.setBackground(Color.gray);
+        int panelWidth = 0;
         bottomPanelCardLayout = new CardLayout();
         bottomPanel = new JPanel(bottomPanelCardLayout);
         bottomPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
@@ -53,9 +51,7 @@ public class GUI{
         //manager view bottom panel
         JPanel managerView = new JPanel(new GridLayout(1, 5, 30, 10));
         managerView.setBorder(new EmptyBorder(20, 20, 20, 20));
-        //managerView.add(home_button());
         managerView.add(home_button());
-        //managerView.add(orderHistory_button());
         managerView.add(inventory_button());
         managerView.add(menuItem_button());
         managerView.add(trends_button());
@@ -91,7 +87,6 @@ public class GUI{
         orderHistoryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //System.out.println("orderHistoryButton clicked");
                 centerPanelCardLayout.show(centerPanel, "Order History Page");
             }
         });
@@ -105,7 +100,6 @@ public class GUI{
         menuItemButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //System.out.println("menuItemButton clicked");
                 centerPanelCardLayout.show(centerPanel, "Menu Item Page");
             }
         });
@@ -119,7 +113,6 @@ public class GUI{
         inventoryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //System.out.println("inventoryButton clicked");
                 centerPanelCardLayout.show(centerPanel, "Inventory Page");
             }
         });
@@ -132,7 +125,6 @@ public class GUI{
         lowStockButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //System.out.println("Low Stock Button Clicked");
                 GUI.centerPanel.add(new JScrollPane(ManagerView.lowStockPage()), "Low Stock Page");
                 centerPanelCardLayout.show(centerPanel, "Low Stock Page");
             }
@@ -146,7 +138,6 @@ public class GUI{
         homeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //System.out.println("homeButton clicked");
                 centerPanelCardLayout.show(centerPanel, "Home Page");
             }
         });
@@ -159,7 +150,6 @@ public class GUI{
         trendsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //System.out.println("trendsButton clicked");
                 centerPanelCardLayout.show(centerPanel, "Trends Page");
             }
         });
@@ -183,10 +173,7 @@ public class GUI{
             if (employee_id == null){
                 break;
             }
-            //System.out.println(ids);
         }while(!ids.contains(employee_id));
-        //System.out.println("\n\n\n\n\n\n");
-        //System.out.println(employeeInformation.get(Integer.parseInt(employee_id)));
         employeeName = (employeeInformation.get(Integer.parseInt(employee_id))).get(2);
         // Right panel
         int panelHeight = 0; // value does not matter
@@ -221,11 +208,6 @@ public class GUI{
         rightPanel.add(currentViewLabel);
 
         rightPanel.add(changeEmployee_button());
-        // rightPanel.add(toGo_button());
-        // rightPanel.add(addCustomer_button());
-        // rightPanel.add(totalCharge_button());
-        // rightPanel.add(tickets_button());
-
         return rightPanel;
         
     }
@@ -238,7 +220,6 @@ public class GUI{
         changeEmployeeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //System.out.println("changeEmployeeButton clicked");
                 List<List<String>> employeeInformation = DatabaseHandler.employeeData;
                 List<String> ids = new ArrayList<>();
                 List<String> manager_ids = new ArrayList<>();
@@ -250,24 +231,20 @@ public class GUI{
                         }
                     }
                 }
-                //System.out.println("REAL " + ids);
 
                 do{
                         employee_id = JOptionPane.showInputDialog("Enter Employee ID:");
                         if (employee_id == null){
                             break;
                         }
-                        //System.out.println(ids);
                 }while(!ids.contains(employee_id));
                 System.out.println(employee_id);
                 Integer employee_id_index = Integer.parseInt(employee_id);
                 if(employeeInformation.get(employee_id_index).get(1).equals("t")){
-                    //System.out.println("MANAGER");
                     current_view = "Manager";
                     bottomPanelCardLayout.show(bottomPanel, "Manager View");
                 }
                 else{
-                    //System.out.println("NOT MANAGER");
                     current_view = "Cashier";
                     bottomPanelCardLayout.show(bottomPanel, "Cashier View");
                 }
@@ -280,37 +257,7 @@ public class GUI{
         return changeEmployeeButton;
     }
 
-    // 2. To Go 
-    public JButton toGo_button() {
-        toGoButton = new JButton("To Go");
-        toGoButton.setBounds(200, 100, 100, 50);
-        toGoButton.setFont(new Font("Calibri", Font.BOLD, 16));
-        return toGoButton;
-    }
-
-    // 3. Add Customer 
-    public JButton addCustomer_button() {
-        addCustomerButton = new JButton("Add Customer");
-        addCustomerButton.setBounds(200, 100, 100, 50);
-        addCustomerButton.setFont(new Font("Calibri", Font.BOLD, 16));
-        return addCustomerButton;
-    }
-
-    // 4. Total Charge 
-    public JButton totalCharge_button() {
-        totalChargeButton = new JButton("Total Charge");
-        totalChargeButton.setBounds(200, 100, 100, 50);
-        totalChargeButton.setFont(new Font("Calibri", Font.BOLD, 16));
-        return totalChargeButton;
-    }
-
-    // 5. Tickets
-    public JButton tickets_button() {
-        ticketsButton = new JButton("Tickets");
-        ticketsButton.setBounds(200, 100, 100, 50);
-        ticketsButton.setFont(new Font("Calibri", Font.BOLD, 16));
-        return ticketsButton;
-    }
+    
 
     
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -434,12 +381,10 @@ public class GUI{
     ////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public GUI() {
-        // FRAMES TUTORIAL
         JFrame frame = new JFrame();
 
         frame.setTitle("Sharetea - Glory of Taiwan!"); // sets title of frame
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // exit out of application
-        // frame.setResizable(false); //prevent frame from being resized
         frame.setSize(screenSize.width, screenSize.height); // sets the x-dimension, and y-dimension of frame
         ImageIcon image = new ImageIcon("assets/sharetealogo.png");
         frame.setIconImage(image.getImage());
@@ -465,7 +410,7 @@ public class GUI{
         }
         currentViewLabel.setText("Current View: " + current_view);
         frame.setVisible(true); // make frame visible
-        // END OF FRAMES TUTORIAL
+
 
     }
 

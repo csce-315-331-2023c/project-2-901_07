@@ -97,8 +97,11 @@ public class PopularPairsReportPanel{
 
                 }
                 catch(NumberFormatException except){
+
+
                     updateReportPanel("Invalid input. Please enter numerical values for the date.");
                     return;
+
                 }
                 
                 List<List<String>> result = getPopularPairs(startDateMonth, startDateDay, startDateYear,

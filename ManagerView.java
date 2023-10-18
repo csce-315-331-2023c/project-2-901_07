@@ -241,8 +241,14 @@ public class ManagerView {
 
         // Add the titleAndStockPanel to the main panel
         lowStockPage.add(titleAndStockPanel);
+        if( count == 0){
+            pageTitle.setText("There are no items that are low in stock");
+        }else if(count == 1){
+            pageTitle.setText("There is 1 item that is low in stock");
+        }else{
+            pageTitle.setText("There are " + count + " items low in stock");
+        }
         
-        pageTitle.setText(count + " items are low in stock");
         return lowStockPage;
     }
     

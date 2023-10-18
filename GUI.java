@@ -378,19 +378,6 @@ public class GUI{
         });
         navBar.add(btnExcessReport);
 
-        // restock report
-        JPanel restockReportPanel = new JPanel();
-        restockReportPanel.add(new JLabel("Restock Report Content"));
-        contentPanel.add(restockReportPanel, "Restock Report");
-
-        JButton btnRestockReport = new JButton("Restock Report");
-        btnRestockReport.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cardLayout.show(contentPanel, "Restock Report");
-            }
-        });
-        navBar.add(btnRestockReport);
         
         // popular pairs
          PopularPairsReportPanel popularPairsHandler = new PopularPairsReportPanel();

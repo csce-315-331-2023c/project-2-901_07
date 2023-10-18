@@ -7,6 +7,11 @@ import java.util.List;
 import java.util.Set;
 import java.sql.*;
 
+/**
+ * This class is used to initialize, update, refresh database
+ * between temporary database from application and SQL database from server
+ * @see DatabaseHandler
+*/
 public class DatabaseHandler {
     static private Connection conn = null;
     static private String teamName = "01g";
@@ -25,30 +30,71 @@ public class DatabaseHandler {
 
     static List<String> ingredientNames;
 
-    // Drink
+    /**
+     * HashMap for Name and ID of drink 
+    */
     public static HashMap<String, Integer> drinkNameIdMap;
+    
+    /**
+     * HashMap for Name and ID of drink 
+    */
     public static HashMap<Integer, List<Integer>> drinkIngredientMap; 
+    
+    /**
+     * HashMap for drink and its price
+     */
     public static HashMap<String, Double> drinkPriceMap;
+    
+    /**
+     * HashMap for drink and its type
+     */
     public static HashMap<String, List<String>> drinkTypeMap;
-    //Ingredients
+    
+    /**
+     * HashMap for Name and ID of ingredient
+     */
     public static HashMap<String, Integer> ingredientNameIdMap;
-
-    // drink Type
+    
+    /**
+     * Set of all Drink's Type available
+     */    
     public static Set<String> typeList;
-    // Topping
+    
+    /**
+     * HashMap for Topping Name and Topping ID
+     */
     public static HashMap<String, Integer> toppingIdMap;
+    
+    /**
+     * HashMap for Topping Name and Topping Price
+     */
     public static HashMap<String, Double> toppingPriceMap;
-    // Currently Use Topping and Ingredient
+    
+    /**
+     * HashMap for Name of Topping Used and amount of Topping Used
+     */
     public static HashMap<Integer, Integer> toppingUsed;
+    
+    /**
+     * HashMap for Name of Ingredient Used and amount of Ingredient Used
+     */
     public static HashMap<Integer, Integer> ingredientUsed;
-
-    public static List<List<String>> toppings;
-    // List of Chosen Drink
+    
+    /**
+     * List of all Drinks are currently added to the processing order
+     */
     public static List<drinkDetailDatabase> listOrderingDrink = new ArrayList<>();
-    // Customer 
+    
+    /**
+     * HashMap for Name of Customer and ID of Customer
+     */
     public static HashMap<String, Integer> customerNameIdMap;
 
-
+    /**
+     * This function set up all HashMap from member variable by pulling data from 
+     * Database containing data imported from SQL.
+     * @see setUpHashMap
+    */
     public static void setUpHashMap(){
         // Setup Topping
         toppingIdMap = new HashMap<>();
@@ -114,6 +160,14 @@ public class DatabaseHandler {
         }
     }
 
+    /**
+     * This function set up all HashMap from member variable by pulling data from 
+     * Database containing data imported from SQL.
+     * @param command command used to pull data from database
+     * @param columnNames List of columns' name 
+     * @return Return List of columns pulled from SQL. Each columns is a list of data elements
+     * @see query_SQL
+    */
     static List<List<String>> query_SQL(String command, List<String> columnNames){
         List<List<String>> output = new ArrayList<>();
         try {
@@ -149,7 +203,13 @@ public class DatabaseHandler {
         return null;
     }
 
-
+    /**
+     * This function is used to update table if there is new data needed to be added to database
+     * @param tableName Name of table which will be updated
+     * @param command Command line used to update table
+     * @return return the boolean: Fail means not success, True means success
+     * @see run_SQL_Command
+    */
     public static boolean run_SQL_Command(String tableName, String command){
         //Building the connection with your credentials
            try {
@@ -173,7 +233,11 @@ public class DatabaseHandler {
            }//end try catch
            return false;
        }
-
+    
+    /**
+     * This function refreshs new database of Menu Items data to the application
+     * @see updateMenuItems
+    */
     public static void updateMenuItems(){
         //query menu_item table
         String queryCommand = 
@@ -213,6 +277,10 @@ public class DatabaseHandler {
         }
     }
 
+    /**
+     * This function refreshs new database of ingredient data to the application
+     * @see updateIngredients
+    */
     public static void updateIngredients(){
         //query ingredients table
         String queryCommand = 
@@ -238,6 +306,10 @@ public class DatabaseHandler {
         }
     }
 
+    /**
+     * This function refreshs new database of topping data to the application
+     * @see updateToppings
+    */
     public static void updateToppings(){
         //query topping table
         String queryCommand = 
@@ -267,7 +339,10 @@ public class DatabaseHandler {
         }
     }
 
-
+    /**
+     * This function query all data from SQL database
+     * @see queryData
+    */
     public static void queryData(){
         //query topping table
         String queryCommand = 
@@ -364,7 +439,10 @@ public class DatabaseHandler {
         DatabaseHandler.customerData = DatabaseHandler.query_SQL(queryCommand,columnNames);
     }
 
-
+    /**
+     * Constructor to call queryData and setupHashMap to initilize application database when app is started
+     * @see DatabaseHandler
+     */
     public DatabaseHandler(){
         queryData();
         setUpHashMap();

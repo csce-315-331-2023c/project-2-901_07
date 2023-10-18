@@ -41,7 +41,7 @@ public class DatabaseHandler {
     // Currently Use Topping and Ingredient
     public static HashMap<Integer, Integer> toppingUsed;
     public static HashMap<Integer, Integer> ingredientUsed;
-    // I dont know
+
     public static List<List<String>> toppings;
     // List of Chosen Drink
     public static List<drinkDetailDatabase> listOrderingDrink = new ArrayList<>();

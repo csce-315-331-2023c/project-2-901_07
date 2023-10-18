@@ -173,7 +173,6 @@ public class GUI{
             if (employee_id == null){
                 break;
             }
-            //System.out.println(ids);
         }while(!ids.contains(employee_id));
         employeeName = (employeeInformation.get(Integer.parseInt(employee_id))).get(2);
         // Right panel
@@ -395,12 +394,10 @@ public class GUI{
     ////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public GUI() {
-        // FRAMES TUTORIAL
         JFrame frame = new JFrame();
 
         frame.setTitle("Sharetea - Glory of Taiwan!"); // sets title of frame
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // exit out of application
-        // frame.setResizable(false); //prevent frame from being resized
         frame.setSize(screenSize.width, screenSize.height); // sets the x-dimension, and y-dimension of frame
         ImageIcon image = new ImageIcon("assets/sharetealogo.png");
         frame.setIconImage(image.getImage());
@@ -426,7 +423,7 @@ public class GUI{
         }
         currentViewLabel.setText("Current View: " + current_view);
         frame.setVisible(true); // make frame visible
-        // END OF FRAMES TUTORIAL
+
 
     }
 

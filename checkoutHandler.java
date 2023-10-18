@@ -19,10 +19,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /** 
-* Create Frame to include Button of Each Drink of specified Drink Type.
-* @author Quy Van
+* The checkoutHandler class manages the checkout process, allows users to add and remove drinks,
+* update toppings and ingredients, and finalize their order.* @author Quy Van
 * @see checkoutHandler
 */
+
 public class checkoutHandler {
     private JFrame checkoutFrame;
     private String customerName = null;
@@ -37,6 +38,7 @@ public class checkoutHandler {
      * and order will be updated.
      * @see checkoutFrame_
     */
+
     public void checkoutFrame_() {
         checkoutFrame = new JFrame();
         checkoutFrame.setTitle("Drink Customization Panel");
@@ -221,6 +223,12 @@ public class checkoutHandler {
             contentPanel.add(drinkPanel);
         }
     }
+
+
+
+    /**
+    * Updates the total cost of the order by summing up the prices of all drinks in the order.
+    */
     
     /**
      * Helper function: 

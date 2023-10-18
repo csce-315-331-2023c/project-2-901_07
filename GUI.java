@@ -365,8 +365,8 @@ public class GUI{
 
 
         // excess report
-        JPanel excessReportPanel = new JPanel();
-        excessReportPanel.add(new JLabel("Excess Report Content"));
+        ExcessReportPanel excessReportHandler = new ExcessReportPanel();
+        JPanel excessReportPanel = excessReportHandler.getExcessReportPanel();
         contentPanel.add(excessReportPanel, "Excess Report");
 
         JButton btnExcessReport = new JButton("Excess Report");

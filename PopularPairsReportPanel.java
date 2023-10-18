@@ -28,9 +28,9 @@ public class PopularPairsReportPanel{
         JTextField startDateYearField = getTextFieldWithText("YYYY",4);
         startDateYearField.setMargin(new Insets(5, 5, 5, 5));
         JLabel endDateLabel = new JLabel("End Date:");
-        JTextField endDateMonthField = getTextFieldWithText("MM",2);
+        JTextField endDateMonthField = getTextFieldWithText("MM",3);
         endDateMonthField.setMargin(new Insets(5, 5, 5, 5));
-        JTextField endDateDayField = getTextFieldWithText("DD",2);
+        JTextField endDateDayField = getTextFieldWithText("DD",3);
         endDateDayField.setMargin(new Insets(5, 5, 5, 5));
         JTextField endDateYearField = getTextFieldWithText("YYYY",4);
         endDateYearField.setMargin(new Insets(5, 5, 5, 5));
@@ -62,7 +62,6 @@ public class PopularPairsReportPanel{
                 String endDateDay = endDateDayField.getText();
                 String endDateYear = endDateYearField.getText();
                 // valiate user input
-                // ?if (startDateMonthField.getText() == "MM")
                 try{
                     int startMonth = Integer.parseInt(startDateMonth);
                     int startDay = Integer.parseInt(startDateDay);
@@ -79,27 +78,38 @@ public class PopularPairsReportPanel{
                        endDay < 1 || endDay > 31 ||
                        endYear < 2000 || endYear > 3000){
                         updateReportPanel("Invalid input. Please enter a valid date.");
+                        return;
                        }
                     
                     // check if date 2 is greater than date 1
                     if (startYear > endYear){
                         updateReportPanel("Invalid input. Make sure the start date preceeds the end date.");
+                        return;
                     }
                     if (startYear == endYear && startMonth > endMonth){
                         updateReportPanel("Invalid input. Make sure the start date preceeds the end date.");
+                        return;
                     }
                     if(startYear == endYear && startMonth == endMonth && startDay > endDay){
                         updateReportPanel("Invalid input. Make sure the start date preceeds the end date.");
+                        return;
                     }
 
                 }
                 catch(NumberFormatException except){
-                    // do something
-                    System.out.println("Invalid input. Please enter numerical values for the date");
+                    updateReportPanel("Invalid input. Please enter numerical values for the date.");
+                    return;
                 }
                 
-                getPopularPairs(startDateMonth, startDateDay, startDateYear,
+                List<List<String>> result = getPopularPairs(startDateMonth, startDateDay, startDateYear,
                                     endDateMonth, endDateDay, endDateYear);
+
+                if(result.size()==0){
+                    updateReportPanel("No orders were found in this date range.");
+                    return;
+                }
+
+                updateReportPanel(result);
             }
         });
 
@@ -117,10 +127,6 @@ public class PopularPairsReportPanel{
 
         resultRow = new JPanel();
         resultRow.setLayout(new BorderLayout());
-        // JTextArea textArea = new JTextArea(10, 30);
-        // textArea.setWrapStyleWord(true);
-        // textArea.setLineWrap(true);
-        // textArea.setEditable(false)
         updateReportPanel("Please enter date range to view popular item pairings.");
 
         // Create GridBagConstraints for dateEntryRow and resultRow
@@ -161,7 +167,7 @@ public class PopularPairsReportPanel{
         return textField;
     }
 
-    public void getPopularPairs(String startMonth, String startDay, String startYear,
+    public List<List<String>> getPopularPairs(String startMonth, String startDay, String startYear,
                                             String endMonth, String endDay, String endYear){
 
         String start = startYear+"-"+startMonth+"-"+startDay;
@@ -196,12 +202,9 @@ public class PopularPairsReportPanel{
         columnNames.add("menu_item_name2");
         columnNames.add("frequency");
 
-        List<List<String>> result = DatabaseHandler.query_SQL(sql_cmd, columnNames);
-        updateReportPanel(result);
+        return DatabaseHandler.query_SQL(sql_cmd, columnNames);
         
     }
-
-    // public JPanel resulingPopularPairs(List )
 
     public void updateReportPanel(List<List<String>> popularPairs) {
         // Remove all previous components from the resultRow
@@ -238,6 +241,8 @@ public class PopularPairsReportPanel{
         JLabel messageLabel = new JLabel(message);
         messageLabel.setFont(new Font("Calibri", Font.BOLD, 32));
         resultRow.add(messageLabel);
+        resultRow.repaint();
+        resultRow.revalidate();
     }
 
     public JPanel getPopularPairsReportPanel(){

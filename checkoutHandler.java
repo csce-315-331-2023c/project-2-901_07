@@ -1,7 +1,6 @@
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.xml.crypto.Data;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,24 +18,25 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-
-/**
- * The checkoutHandler class manages the checkout process, allows users to add and remove drinks,
- * update toppings and ingredients, and finalize their order.
- */
+/** 
+* The checkoutHandler class manages the checkout process, allows users to add and remove drinks,
+* update toppings and ingredients, and finalize their order.* @author Quy Van
+* @see checkoutHandler
+*/
 
 public class checkoutHandler {
     private JFrame checkoutFrame;
     private String customerName = null;
     private Integer customerID;
-    private String order;
     private double totalCost;
     private JPanel contentPanel;
 
-
     /**
-    * Initializes the checkout UI, allowing users to view their drink orders,
-    * add toppings and ingredients, and finalize their order by inserting or tapping a card.
+     * Create a Frame to contain all the Panel created by populateDrinkOrder
+     * and a button to submit the final order. If the button is clicked, the order
+     * will be placed. Moreover, the database of topping, ingredient availability,
+     * and order will be updated.
+     * @see checkoutFrame_
     */
 
     public void checkoutFrame_() {
@@ -138,7 +138,6 @@ public class checkoutHandler {
                     System.err.println("ERROR");
                 }
                 
-
                 for (Integer ingredientID : DatabaseHandler.ingredientUsed.keySet()){
                     DatabaseHandler.ingredientUsed.put(ingredientID, 0);
                 }
@@ -157,12 +156,12 @@ public class checkoutHandler {
         checkoutFrame.add(payButton, BorderLayout.EAST);
     }
 
-
     /**
-    * Populates the checkout frame with the current drink orders, 
-    * displaying details such as drink name, ice level, sugar level, and total price.
+     * This function create multiple Panel. Each Panel contains Detail of each Drink Customization
+     * (Sugar Level, Ice Level, Toppings, and Total Cost of this Drink) and a button to remove 
+     * this order as the customer wishs. 
+     * @see populateDrinkOrder
     */
-
     private void populateDrinkOrder() {
         // Create a StringBuilder to collect all order details
         List<String> orderDetails = new ArrayList<String>();
@@ -211,10 +210,7 @@ public class checkoutHandler {
     
             // Add the Remove button to the drink panel
             drinkPanel.add(removeButton);
-    
-            // Set the order details for the current drink in the "Order" text field
-            order = orderDetails.toString();
-    
+        
             // Update the text fields with the order and total cost
             for (String line : orderDetails) {
                 JLabel orderText = new JLabel(line);    
@@ -234,7 +230,14 @@ public class checkoutHandler {
     * Updates the total cost of the order by summing up the prices of all drinks in the order.
     */
     
-    private void updateTotalCost() {
+    /**
+     * Helper function: 
+     * Calculate total cost of all customer's drinks. They list of
+     * customer drink is stored in the member variable listOrderingDrink
+     * from DataBaseHandler class
+     * @see updateTotalCost
+    */
+    public void updateTotalCost() {
         // Calculate the updated total cost
         totalCost = 0.0;
         for (drinkDetailDatabase drinkDetails : DatabaseHandler.listOrderingDrink) {
@@ -242,14 +245,15 @@ public class checkoutHandler {
         }
     }
 
-
     /**
-    * Updates the quantities of toppings and ingredients based on the drink's specifications.
-    * 
-    * @param drinkDetail The detail of the drink order, containing specifics about toppings and ingredients.
+     * Summarize the Topping and Ingredient is used before placing order
+     * This function is helper function to the Check out Handler to make
+     * sure that the ingredient and topping availability is updated 
+     * correctly following the drinks that were ordered.
+     * @param drinkDetail drinkDetailDatabase object
+     * @see updateToppingsAndIngredients
     */
-
-    private void updateToppingsAndIngredients(drinkDetailDatabase drinkDetail) {
+    public void updateToppingsAndIngredients(drinkDetailDatabase drinkDetail) {
         for (HashMap<String, Integer> toppingList : drinkDetail.toppingList_) {
             String toppingName = toppingList.keySet().toArray()[0].toString();
             Integer toppingCount = toppingList.get(toppingName);

@@ -1,7 +1,6 @@
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.xml.crypto.Data;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,18 +11,28 @@ import java.util.Map;
 import java.util.Set;
 import java.util.List;
 
+/** 
+* Create Frame to include Button of Each Drink of specified Drink Type.
+* @author Quy Van
+* @see drinkHandler
+*/
 
-class drinkHandler {
-
+public class drinkHandler {
     private drinkDetailDatabase thisDrink = new drinkDetailDatabase();
-
     private static JLabel sugarLevelLabel;
     private static JLabel iceLevelLabel;
     private static JLabel drinkDetaiLabel;
     private static JPanel drinkDetailPanel;
     private static JFrame customFrame;
 
-    public JPanel DrinkHandlerPanel(String drink, Double price) {
+    /** 
+    * Create Frame to include Button sugar level, ice level, and topping list
+    * When the button is clicked, the information is added to temporary HashMap
+    * @param drink name of drink
+    * @param price price of the specified drink
+    * @see DrinkHandlerPanel
+    */
+    public void DrinkHandlerPanel(String drink, Double price) {
         // Set up data
         thisDrink.drinkPrice_ = price;
         thisDrink.drinkName_ = drink;
@@ -58,21 +67,19 @@ class drinkHandler {
                     Double toppingPrice = DatabaseHandler.toppingPriceMap.get(toppingName);
                     thisDrink.totalPrice_  += toppingPrice * toppingCount;
                 }
-
                 JOptionPane.showMessageDialog(null, "An order has been added - Total Price: $" + thisDrink.totalPrice_);
-                
                 DatabaseHandler.listOrderingDrink.add(thisDrink);
-
                 customFrame.dispose();
             }
         });
-
         customFrame.add(submitButton, BorderLayout.WEST);
-
-        return drinkDetailPanel;
     }
 
-    // Create a JPanel for the content of the popup
+    /** 
+    * Create a Panel containing ice level and sugar level
+    * @return Returns Panel containing ice level and sugar level
+    * @see iceAndSugar_
+    */  
     public JPanel iceAndSugar_() {
         JPanel iceAndSugar = new JPanel(new GridLayout(2, 0, 0, 0));
         iceAndSugar.add(icePanel_());
@@ -80,7 +87,11 @@ class drinkHandler {
         return iceAndSugar;
     }
 
-    // Section for ice level
+    /** 
+    * Create a Panel containing all buttons for each ice level option
+    * @return Returns Panel containing all buttons for each ice level option
+    * @see icePanel_
+    */    
     public JPanel icePanel_(){
         JLabel iceLabel = new JLabel("Ice Level:");
         JPanel icePanel = new JPanel(new GridLayout(1, 0, 20, 20));
@@ -104,7 +115,11 @@ class drinkHandler {
         return icePanel;
     }
 
-    // Section for sugar level
+    /** 
+    * Create a Panel containing all buttons for each sugar level option
+    * @return Returns Panel containing all buttons for each sugar level option
+    * @see sugarLevel_
+    */
     public JPanel sugarLevel_() {
         JLabel sugarLabel = new JLabel("Sugar Level:");
         JPanel sugarPanel = new JPanel(new GridLayout(1, 0, 20, 20));
@@ -129,7 +144,12 @@ class drinkHandler {
         return sugarPanel;
     }
 
-
+    /** 
+    * This function pull list of topping from database and display
+    * them in 1 scroll panel. 
+    * @return Return Scroll Panel for list of toppings
+    * @see toppingPanel_
+    */
     public JScrollPane toppingPanel_() {
         JLabel toppingLabel = new JLabel("Toppings:");
         JPanel toppingPanel = new JPanel(new GridLayout(10, 2, 20, 20));
@@ -179,7 +199,14 @@ class drinkHandler {
         return scrollPane;
     }
     
-
+    /** 
+    * This function add Label of drink information to 1 Panel then return
+    * the Panel to be added to Frame.
+    * @param drink name of drink
+    * @param drinkPrice price of the specified drink
+    * @return return Panel containing all drink detail for this drink 
+    * @see drinkDetail_
+    */
     public JPanel drinkDetail_(String drink, Double drinkPrice){
         drinkDetaiLabel = new JLabel("Drink Details:" + drink + " ($" + drinkPrice + ")");
         drinkDetailPanel = new JPanel(new GridLayout(10, 2, 20, 20));
@@ -198,6 +225,11 @@ class drinkHandler {
         return drinkDetailPanel;
     }    
 
+    /** 
+    * Function to update the Panel of drink information if sugar level,
+    * ice level, or topping is changed during customization process
+    * @see updateDrinkDetailPanel
+    */
     public void updateDrinkDetailPanel() {
         drinkDetailPanel.removeAll(); // Clear the existing components
     
@@ -235,6 +267,11 @@ class drinkHandler {
         drinkDetailPanel.repaint();
     }
     
+    /** 
+    * Update topping count from toppingList_ variable of drinkDetailDatabase object
+    * @param toppingName name of topping to remove from topping list
+    * @see removeTopping
+    */
     public void removeTopping(String toppingName) {
         // Iterate through the toppingList_ and find the matching topping to remove
         for (HashMap<String, Integer> toppingMap : thisDrink.toppingList_) {
@@ -254,4 +291,3 @@ class drinkHandler {
         }
     }
 }
-

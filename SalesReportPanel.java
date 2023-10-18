@@ -24,17 +24,16 @@ public class SalesReportPanel{
         /////
         JTextField startDateMonthField = getTextFieldWithText("MM",3);
         startDateMonthField.setMargin(new Insets(5, 5, 5, 5));
-        //Choice startDateMonthField = getChoiceMonth();
+
         
 
         /////
         JTextField startDateDayField = getTextFieldWithText("DD",3);
         startDateDayField.setMargin(new Insets(5, 5, 5, 5));
-        //Choice startDateDayField = getChoiceDay();
+
         /////
         JTextField startDateYearField = getTextFieldWithText("YYYY", 4);
         startDateYearField.setMargin(new Insets(5, 5, 5, 5));
-        //Choice startDateYearField = getChoiceYear();
 
         JLabel endDateLabel = new JLabel("End Date:");
         JTextField endDateMonthField = getTextFieldWithText("MM",3);
@@ -168,38 +167,6 @@ public class SalesReportPanel{
         return textField;
     }
 
-    public Choice getChoiceMonth(){
-        Choice choice = new Choice();
-        choice.add("MM"); // This will be the default selection
-        choice.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                System.out.println("new month selected");
-            }
-        });
-        return choice;
-    }   
-
-    public Choice getChoiceDay(){
-        Choice choice = new Choice();
-        choice.add("DD"); // This will be the default selection
-        choice.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                System.out.println("new day selected");
-            }
-        });
-        return choice;
-    }   
-
-    public Choice getChoiceYear(){
-        Choice choice = new Choice();
-        choice.add("YEAR"); // This will be the default selection
-        choice.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                System.out.println("new year selected");
-            }
-        });
-        return choice;
-    }  
 
     public void getSalesReport(String startMonth, String startDay, String startYear,
                                             String endMonth, String endDay, String endYear){
@@ -229,7 +196,6 @@ public class SalesReportPanel{
         
     }
 
-    // public JPanel resulingSalesReport(List )
 
     public void updateReportPanel(List<List<String>> salesReport) {
         // Remove all previous components from the resultRow

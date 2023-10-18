@@ -72,8 +72,6 @@ class drinkHandler {
         return drinkDetailPanel;
     }
 
-    // public static JPanel. 
-
     // Create a JPanel for the content of the popup
     public JPanel iceAndSugar_() {
         JPanel iceAndSugar = new JPanel(new GridLayout(2, 0, 0, 0));

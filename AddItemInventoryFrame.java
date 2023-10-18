@@ -83,9 +83,6 @@ public class AddItemInventoryFrame {
                 String itemName = itemNameTextField.getText();
                 String itemType = choice.getSelectedItem();
                 String itemStock = stockTextField.getText();
-                //System.out.println("itenName: " + itemName);
-                //System.out.println("itenType: " + itemType);
-                //System.out.println("itenStock: " + itemStock);
                 List<String> columnNames = new ArrayList<>();
                 columnNames.add("name");
                 List<List<String>> result = DatabaseHandler.query_SQL( 
@@ -159,7 +156,6 @@ public class AddItemInventoryFrame {
                                     }     
         
                                     
-                                    //TODO: ADD NEW WINDOW
                                 }
                                 else{//if itemType is ingredient
                                     boolean ranSuccessfully = DatabaseHandler.run_SQL_Command("ingredient", 
@@ -177,7 +173,6 @@ public class AddItemInventoryFrame {
                                         ingredientsButton.addActionListener(new ActionListener() {
                                             @Override
                                             public void actionPerformed(ActionEvent e) {
-                                                //System.out.println(ingredient.get(0));
                                                 ManagerView.frameOpened.dispose();
                                                 ingredientsButton.setBackground(Color.pink);
                                                 IngredientInventoryFrame tempIngredientInventoryFrame = new IngredientInventoryFrame(ingredientsButton, ingredient);
@@ -185,7 +180,6 @@ public class AddItemInventoryFrame {
                                             }
                                         });
                                     ManagerView.inventoryPage.add(ingredientsButton);
-                                    //TODO: ADD NEW WINDOW
                                     DatabaseHandler.updateIngredients();
                                 }
                                 itemNameTextField.setText("");

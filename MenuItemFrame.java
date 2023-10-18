@@ -15,7 +15,6 @@ public class MenuItemFrame {
 
     private JPanel changePricePanel(){
 		JPanel changePricePanel = new JPanel();
-		//changePricePanel.setBackground(new Color(50, 240, 240));
         changePricePanel.setBounds(0, 0, 354, 160);
 		changePricePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -64,7 +63,6 @@ public class MenuItemFrame {
 		changePrice_Button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
                 String newPrice = newPriceTextField.getText();
-                //System.out.println("input: \"%s\"".formatted(newPrice));
                 if (newPrice.trim().isEmpty()){
                     validationLabel.setForeground(Color.red);
                     validationLabel.setText("ERROR: No price inputted.");
@@ -78,7 +76,6 @@ public class MenuItemFrame {
                             validationLabel.setText("ERROR: $%s is an invalid price.".formatted(newPrice));                            
                         }
                         else{
-                            //System.out.println("Converted float value: " + floatValue);
                             boolean ranSuccessfully = DatabaseHandler.run_SQL_Command("topping", 
                             """
                             UPDATE menu_item SET price = 
@@ -132,10 +129,8 @@ public class MenuItemFrame {
 
         // //Add different pages
         contentPanel.add(changePricePanel, "Price Page");
-        // centerPanel.add(inventoryPage, "Inventory Page");
 
         topPanel.add(contentPanel);
-        //setContentPane(changePricePanel(topping));
 
         ///////BOTTOM PANEL COMPONENTS//////////////
 
@@ -153,7 +148,6 @@ public class MenuItemFrame {
 
 		bottomPanel.setLayout(new GridLayout(1, 3, 0, 0));
         bottomPanel.add(adjustPrice_Button);
-        //bottomPanel.add(deleteItem_Button);
         frame.add(bottomPanel);
         /////////////////////////////////////////////////////////////////////
 		

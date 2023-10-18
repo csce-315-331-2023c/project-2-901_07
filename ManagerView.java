@@ -1,14 +1,20 @@
-import javax.swing.*;
-import java.awt.*;
-import java.sql.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import javax.naming.spi.DirStateFactory.Result;
-import java.util.Set;
-import javax.swing.border.*;
-import javax.tools.JavaFileManager;
-import java.awt.event.*;
+
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 /**
  * The ManagerView class represents the view for the manager operations.
@@ -171,74 +177,78 @@ public class ManagerView {
      *
      * @return A JPanel representing the low stock items.
      */
-    static public JPanel lowStockPage(){
+    public static JPanel lowStockPage() {
+        
         int count = 0;
-        //Method contains commands to format inventory page
-        lowStockPage = new JPanel(new GridLayout(0, 5, 5, 5));
-        lowStockPage.setBorder(new EmptyBorder(20, 40, 200, 40));
+    
+        JPanel lowStockPage = new JPanel();
+        lowStockPage.setLayout(new BoxLayout(lowStockPage, BoxLayout.Y_AXIS));
+        
+        // Create a top-level panel for title and stock panels
+        JPanel titleAndStockPanel = new JPanel();
+        titleAndStockPanel.setLayout(new BoxLayout(titleAndStockPanel, BoxLayout.Y_AXIS));
+        
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+        
+        // Title label
         JLabel pageTitle = new JLabel("");
         pageTitle.setFont(new Font("Calibri", Font.BOLD, 30));
         lowStockPage.add(pageTitle);
-        lowStockPage.add(new JLabel());
-        lowStockPage.add(new JLabel());
-        lowStockPage.add(new JLabel());
-        lowStockPage.add(new JLabel());
+        for(int i = 0; i < 10; i++){
+            lowStockPage.add(new JLabel());
+        }
 
-        lowStockPage.setBackground(Color.white);
-        lowStockPage.setAutoscrolls(true);
-
-        List<String> columnNames = new ArrayList<>();
-        columnNames.add("name");
-        columnNames.add("price");
-        columnNames.add("availability");
-
+        // Create a new panel for the stock panel
+        JPanel stockPanel = new JPanel();
+        stockPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10)); // Set horizontal gap to 0
+    
         
-
         for (List<String> topping : DatabaseHandler.toppingData) {
-            if(Integer.parseInt(topping.get(3)) <= lowStockNumber){
+            if (Integer.parseInt(topping.get(3)) <= lowStockNumber) {
                 count++;
-                JButton toppingButton = new JButton( "<html>%s<br>Price: $%s<br>Stock: %s</html>".formatted(topping.get(1),topping.get(2),topping.get(3)));
-                toppingButton.setPreferredSize(new Dimension(100, 40));
+                JButton toppingButton = new JButton("<html>%s<br>Price: $%s<br>Stock: %s</html>".formatted(topping.get(1), topping.get(2), topping.get(3)));
+                toppingButton.setPreferredSize(new Dimension(170, 100));
                 toppingButton.setBackground(Color.orange);
-                    toppingButton.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            frameOpened.dispose();
-                            ToppingInventoryFrame tempToppingInventoryFrame = new ToppingInventoryFrame(toppingButton, topping);
-                            frameOpened = tempToppingInventoryFrame.frame;
-
-                        }
-                    });
-                lowStockPage.add(toppingButton);
+                toppingButton.addActionListener(e -> {
+                    frameOpened.dispose();
+                    ToppingInventoryFrame tempToppingInventoryFrame = new ToppingInventoryFrame(toppingButton, topping);
+                    frameOpened = tempToppingInventoryFrame.frame;
+                });
+                stockPanel.add(toppingButton);
             }
-          
         }
-
-        columnNames.clear();
-        columnNames.add("name");
-        columnNames.add("availability");
-
+    
         for (List<String> ingredient : DatabaseHandler.ingredientData) {
-            if(Integer.parseInt(ingredient.get(2)) <= lowStockNumber){
+            if (Integer.parseInt(ingredient.get(2)) <= lowStockNumber) {
                 count++;
-                JButton ingredientsButton = new JButton( "<html>%s<br>Stock:%s</html>".formatted(ingredient.get(1),ingredient.get(2)));
-                ingredientsButton.setPreferredSize(new Dimension(100, 40));
+                JButton ingredientsButton = new JButton("<html>%s<br>Stock:%s</html>".formatted(ingredient.get(1), ingredient.get(2)));
+                ingredientsButton.setPreferredSize(new Dimension(170, 100));
                 ingredientsButton.setBackground(Color.orange);
-                    ingredientsButton.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            frameOpened.dispose();
-                            IngredientInventoryFrame tempIngredientInventoryFrame = new IngredientInventoryFrame(ingredientsButton, ingredient);
-                            frameOpened = tempIngredientInventoryFrame.frame;
-                        }
-                    });
-                lowStockPage.add(ingredientsButton);
+                ingredientsButton.addActionListener(e -> {
+                    frameOpened.dispose();
+                    IngredientInventoryFrame tempIngredientInventoryFrame = new IngredientInventoryFrame(ingredientsButton, ingredient);
+                    frameOpened = tempIngredientInventoryFrame.frame;
+                });
+                stockPanel.add(ingredientsButton);
             }
         }
+        titlePanel.setBorder(null);
+        stockPanel.setBorder(null);
+        // Add the panels with buttons to the main panel
+        // titleAndStockPanel.add(titlePanel);
+        titleAndStockPanel.add(stockPanel);
+
+        // Add the titleAndStockPanel to the main panel
+        lowStockPage.add(titleAndStockPanel);
+        
         pageTitle.setText(count + " items are low in stock");
         return lowStockPage;
-        
     }
+    
+    
+    
+    
 
     /**
      * Constructor for the ManagerView. Sets up the database connection and initial view configurations.

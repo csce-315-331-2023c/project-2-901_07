@@ -1,14 +1,26 @@
-import java.awt.*;
-import java.sql.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.awt.event.*;
-import javax.swing.border.*;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 /**
  * GUI class provides the graphical representation of the application
@@ -428,8 +440,9 @@ public class GUI{
         //inventory page panel
         JScrollPane scrollPaneInventoryPage = new JScrollPane(ManagerView.inventoryPage());
         JScrollPane scrollPaneMenuItemPage = new JScrollPane(ManagerView.menuItemPage());
+        
         JScrollPane scrollPaneLowStockPage = new JScrollPane(ManagerView.lowStockPage());
-
+        scrollPaneLowStockPage.getViewport().setPreferredSize(new Dimension(panelWidth, panelHeight));
         centerPanel.add(homePage(), "Home Page");
         centerPanel.add(trendsPage(), "Trends Page");
         centerPanel.add(scrollPaneInventoryPage, "Inventory Page");

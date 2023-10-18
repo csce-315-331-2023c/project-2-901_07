@@ -1,9 +1,20 @@
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.event.*;
-import java.awt.*;
-import java.util.*;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 /**
  * ToppingInventoryFrame is responsible for displaying a frame that
@@ -71,7 +82,7 @@ public class ToppingInventoryFrame{
 		changePrice_Button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
                 String newPrice = newPriceTextField.getText();
-                System.out.println("input: \"%s\"".formatted(newPrice));
+                // //System.out.println("input: \"%s\"".formatted(newPrice));
                 if (newPrice.trim().isEmpty()){
                     validationLabel.setForeground(Color.red);
                     validationLabel.setText("ERROR: No price inputted.");
@@ -85,7 +96,7 @@ public class ToppingInventoryFrame{
                             validationLabel.setText("ERROR: $%s is an invalid price.".formatted(newPrice));                            
                         }
                         else{
-                            System.out.println("Converted float value: " + floatValue);
+                            //System.out.println("Converted float value: " + floatValue);
                             boolean ranSuccessfully = DatabaseHandler.run_SQL_Command("topping", 
                             """
                             UPDATE topping SET price = 
@@ -170,7 +181,7 @@ public class ToppingInventoryFrame{
 		changePrice_Button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
                 String newStock = newPriceTextField.getText();
-                System.out.println("input: \"%s\"".formatted(newStock));
+                //System.out.println("input: \"%s\"".formatted(newStock));
                 if (newStock.trim().isEmpty()){
                     validationLabel.setForeground(Color.red);
                     validationLabel.setText("ERROR: No Stock inputted.");
@@ -185,7 +196,7 @@ public class ToppingInventoryFrame{
                         }
                         else{
                             int intValue = Integer.parseInt(newStock);
-                            System.out.println("Converted float value: " + intValue);
+                            //System.out.println("Converted float value: " + intValue);
                             boolean ranSuccessfully = DatabaseHandler.run_SQL_Command("topping", 
                             """
                             UPDATE topping SET availability = 
